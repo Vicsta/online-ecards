@@ -3,27 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <title>Online E-Card</title>
-    <link rel="stylesheet" href="freeCards/static/css/card.css">
+    <link rel="stylesheet" href="static/css/card.css">
 </head>
 <body>
-<div class="scene">
-    <div class="cardFront">
-        <div class="card_face card_face--front">
-            Hey, you. Yes, you Thomas [redacted] [redacted].
-            <img class="buttonNext" src="freeCards/static/images/Arrow%20Right.png" alt="Next"></div>
-        <div class="card_face card_face--inside-left">What are you doing?
-            <img class="buttonPrev" src="freeCards/static/images/Arrow%20Right.png" alt="Prev"></div>
-    </div>
-    <div class="cardBack">
-        <div class="card_face card_face--inside-right">Dang hope u feel better
-            <img class="buttonNext" src="freeCards/static/images/Arrow%20Right.png" alt="Next"></div>
-        <div class="card_face card_face--back">What did you expect to find here?
-            <img class="buttonPrev" src="freeCards/static/images/Arrow%20Right.png" alt="Prev"></div>
-    </div>
 
-</div>
-<script src="freeCards/static/js/js.js"></script>
-<script src="freeCards/static/js/card.js"></script>
-<script src="freeCards/static/js/jquery-3.7.1.min.js"></script>
+<div id="cardContainer"></div>
+
+<script>
+    fetch('templates/card.html') // Adjust the path as necessary
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.text();
+        })
+        .then(html => {
+            document.getElementById('cardContainer').innerHTML = html;
+        })
+        .catch(error => {
+            console.error('Error loading the card:', error);
+        });
+</script>
+
+<script src="static/js/js.js"></script>
+<script src="static/js/card.js"></script>
+<script src="static/js/jquery-3.7.1.min.js"></script>
 </body>
 </html>
