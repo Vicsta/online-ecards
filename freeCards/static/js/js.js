@@ -15,7 +15,6 @@ window.addEventListener("load", function () {
             }
 
             console.log("inside redirect");
-
             console.log(redirect);
 
             let check = redirect.replace("online-ecards.com", "");
