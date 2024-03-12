@@ -6,6 +6,9 @@ window.addEventListener("load", function () {
     (function () {
         let redirect = sessionStorage.redirect;
         delete sessionStorage.redirect;
+        console.log("in the load");
+        console.log(redirect);
+        console.log(location.href);
         if (redirect && redirect !== location.href) {
             if (redirect.substring(redirect.length - 1) === "/") {
                 redirect = redirect.substring(0, redirect.length - 1);
