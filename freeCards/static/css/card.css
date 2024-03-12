@@ -38,7 +38,7 @@ body, html {
 }
 
 .cardFront, .cardBack {
-    box-shadow: 5px 10px 20px 0 rgba(1,1,1,0.5);
+    box-shadow: 5px 10px 20px 0 rgba(1, 1, 1, 0.5);
 }
 
 .card_face {
@@ -65,13 +65,13 @@ body, html {
     transform: rotateY(-180deg); /* Adjust if needed for initial state */
     /*left: 50%; !* Position inside pages to the right for a book effect *!*/
     box-sizing: border-box;
-    border-right: 1px solid rgba(1,1,1,0.2); /* Example border */
+    border-right: 1px solid rgba(1, 1, 1, 0.2); /* Example border */
 }
 
 .card_face--inside-right {
     background-color: #add8e6;
     box-sizing: border-box; /* Include padding and border in the element's total width and height */
-    border-left: 1px solid rgba(1,1,1,0.2); /* Example border */
+    border-left: 1px solid rgba(1, 1, 1, 0.2); /* Example border */
 }
 
 .card.is-flipped .card_face--inside-left, .card.is-flipped .card_face--back {
@@ -101,3 +101,19 @@ body, html {
     transform: rotateY(180deg);
 }
 
+/*
+
+
+*/
+
+.testBox {
+    position: absolute;
+    height: 100px;
+    width: 100px;
+    background: white;
+    border: solid black 1px;
+    box-sizing: border-box;
+    display: flex;
+    align-content: center;
+    justify-items: center;
+}
