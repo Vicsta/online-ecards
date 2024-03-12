@@ -1,4 +1,4 @@
-const pages = ["about", "view", "home", "not"];
+const pages = ["about", "view", "home", "not", "create"];
 let curPage = 0;
 
 window.addEventListener("load", function () {
