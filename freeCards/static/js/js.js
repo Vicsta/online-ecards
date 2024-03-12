@@ -14,16 +14,19 @@ window.addEventListener("load", function () {
                 redirect = redirect.substring(0, redirect.length - 1);
             }
 
+            console.log("inside redirect");
+
             console.log(redirect);
 
             let check = redirect.replace("online-ecards.com", "");
+            console.log("check " + check);
             if (pages.indexOf(check) < 0) {
                 check = "not";
                 redirect = "404"
             }
-            // history.replaceState(null, "", redirect);
-            document.getElementsByClassName(pages[curPage])[0].style.display = "none";
-            document.getElementsByClassName(check)[0].style.display = "block";
+            history.replaceState(null, "", redirect);
+            // document.getElementsByClassName(pages[curPage])[0].style.display = "none";
+            // document.getElementsByClassName(check)[0].style.display = "block";
             curPage = pages.indexOf(check);
         } else {
             $("#main").fadeIn("slow", function () {});
