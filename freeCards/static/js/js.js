@@ -18,7 +18,7 @@ window.addEventListener("load", function () {
                 check = "not";
                 redirect = "404"
             }
-            history.replaceState(null, "", redirect);
+            // history.replaceState(null, "", redirect);
             document.getElementsByClassName(pages[curPage])[0].style.display = "none";
             document.getElementsByClassName(check)[0].style.display = "block";
             curPage = pages.indexOf(check);
