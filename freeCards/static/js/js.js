@@ -11,6 +11,8 @@ window.addEventListener("load", function () {
                 redirect = redirect.substring(0, redirect.length - 1);
             }
 
+            console.log(redirect);
+
             let check = redirect.replace("online-ecards.com", "");
             if (pages.indexOf(check) < 0) {
                 check = "not";
