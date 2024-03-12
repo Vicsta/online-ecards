@@ -9,24 +9,37 @@
 
 <div id="cardContainer"></div>
 
+<script src="static/js/js.js"></script>
+
 <script>
-    fetch('templates/card.html') // Adjust the path as necessary
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.text();
-        })
-        .then(html => {
-            document.getElementById('cardContainer').innerHTML = html;
-        })
-        .catch(error => {
-            console.error('Error loading the card:', error);
-        });
+    function loadScript(src) {
+        const script = document.createElement('script');
+        script.src = src;
+        script.async = false; // This ensures the script is executed in order
+        document.head.appendChild(script); // You can also append to body if preferred
+    }
+
+    function loadPage(page, elementToReplace, pageScript) {
+        fetch(page)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.text();
+            })
+            .then(html => {
+                document.getElementById(elementToReplace).innerHTML = html;
+                if(pageScript) loadScript(pageScript);
+            })
+            .catch(error => {
+                console.error('Error loading the card:', error);
+            });
+    }
+
+    loadPage("templates/card.html", "cardContainer", "static/js/card.js");
+
 </script>
 
-<script src="static/js/js.js"></script>
-<script src="static/js/card.js"></script>
 <script src="static/js/jquery-3.7.1.min.js"></script>
 </body>
 </html>
