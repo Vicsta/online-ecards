@@ -6,16 +6,22 @@
     <link rel="stylesheet" href="freeCards/static/css/card.css">
 </head>
 <body>
+<div class="scene">
+    <div class="cardFront">
+        <div class="card_face card_face--front">
+            Hey, you. Yes, you Thomas [redacted] [redacted].
+            <img class="buttonNext" src="freeCards/static/images/Arrow%20Right.png" alt="Next"></div>
+        <div class="card_face card_face--inside-left">What are you doing?
+            <img class="buttonPrev" src="freeCards/static/images/Arrow%20Right.png" alt="Prev"></div>
+    </div>
+    <div class="cardBack">
+        <div class="card_face card_face--inside-right">Dang hope u feel better
+            <img class="buttonNext" src="freeCards/static/images/Arrow%20Right.png" alt="Next"></div>
+        <div class="card_face card_face--back">What did you expect to find here?
+            <img class="buttonPrev" src="freeCards/static/images/Arrow%20Right.png" alt="Prev"></div>
+    </div>
 
-<div id="includedContent"></div>
-
-<script>
-    fetch('templates/card.html')
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('includedContent').innerHTML = data;
-        });
-</script>
+</div>
 <script src="freeCards/static/js/card.js"></script>
 <script src="freeCards/static/js/jquery-3.7.1.min.js"></script>
 </body>
