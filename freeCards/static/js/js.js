@@ -11,7 +11,7 @@ window.addEventListener("load", function () {
                 redirect = redirect.substring(0, redirect.length - 1);
             }
 
-            let check = redirect.replace("vicsta.github.io/online-e-card/", "");
+            let check = redirect.replace("online-ecards.com", "");
             if (pages.indexOf(check) < 0) {
                 check = "not";
                 redirect = "404"
@@ -25,22 +25,9 @@ window.addEventListener("load", function () {
         }
     })();
 
-// const alerts = "As of 10/3, this site is under heavy maintenance on both ends. Thank you.";
-    const alerts = "";
-    if (alerts !== "") {
-        let div = document.createElement("div");
-        div.className = "alerts";
-        document.getElementsByClassName("main")[0].appendChild(div);
-        div.innerText = "ALERTS:\r\n" + alerts;
-        setTimeout(function () {
-            $(div).fadeOut("slow");
-        }, 5000)
-    }
-
-// Setting back and forward button behaviors
     window.onpopstate = function () {
         let toPage = location.href;
-        let ext = toPage.replace("vicsta.github.io/online-e-card/", "");
+        let ext = toPage.replace("online-ecards.com", "");
         if (ext === "") {
             ext = "main";
         }
