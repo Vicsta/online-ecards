@@ -10,9 +10,8 @@
 <body>
 
 
-
-<div id="mainPlaceholder"></div>
-<div id="viewPlaceholder"></div>
+<div class="fullPage" id="main"></div>
+<div class="fullPage" id="view"></div>
 
 <script>
     function loadScript(src) {
@@ -31,9 +30,7 @@
                 return response.text();
             })
             .then(html => {
-                const temp = document.createElement('div');
-                temp.innerHTML = html;
-                document.getElementById(elementToReplace).replaceWith(temp.firstElementChild);
+                document.getElementById(elementToReplace).innerHTML = html;
                 console.log("trying to load " + pageScript);
                 if(pageScript) loadScript(pageScript);
             })
