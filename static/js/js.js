@@ -55,7 +55,7 @@ window.addEventListener("load", function () {
             console.log("finished loading out " + curPage);
             document.body.scrollTop = 0; // For Chrome, Safari and Opera
             document.documentElement.scrollTop = 0; // For IE and Firefox
-            $("#" + pages[x]).fadeIn("slow", function () {
+            $("#" + pages[x]).css("display", "flex").hide().fadeIn("slow", function () {
                 console.log("finised loading in " + curPage);
                 curPage = x;
             });

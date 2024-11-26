@@ -1,15 +1,17 @@
 .fullPage {
+    height: 100%;
     display: none;
+    justify-content: center;
+    align-items: center;
 }
 
 /* Navigation bar styling */
 .navbar {
-    display: flex;
     justify-content: space-around;
     align-items: flex-start;
     background-color: #333;
     padding: 10px 0;
-    position: sticky;
+    position: fixed;
     top: 0;
     z-index: 1000;
 }

@@ -1,8 +1,4 @@
 body, html {
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     background-color: #333; /* Dark background for contrast */
     margin: 0;
     padding: 0;
