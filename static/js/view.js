@@ -1,0 +1,1 @@
+console.log("loaded the view js successfully");

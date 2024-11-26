@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <title>Online E-Card</title>
@@ -12,14 +12,13 @@
     <div id="cardContainer"></div>
 </div>
 
-<div class="fullPage" id="view">
-    <p>YO IM VIEW PAGE</p>
-</div>
+<div id="viewPlaceholder"></div>
 
 
 <script src="static/js/js.js"></script>
 <script src="static/js/ads.js"></script>
 <script src="static/js/create.js"></script>
+
 
 <script>
     function loadScript(src) {
@@ -47,6 +46,7 @@
     }
 
     loadPage("templates/card.html", "cardContainer", "static/js/card.js");
+    loadPage("templates/view.html", "viewPlaceholder", null);
 
 </script>
 
