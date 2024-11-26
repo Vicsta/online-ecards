@@ -14,12 +14,6 @@
 
 <div id="viewPlaceholder"></div>
 
-
-<script src="static/js/js.js"></script>
-<script src="static/js/ads.js"></script>
-<script src="static/js/create.js"></script>
-
-
 <script>
     function loadScript(src) {
         const script = document.createElement('script');
@@ -37,7 +31,9 @@
                 return response.text();
             })
             .then(html => {
-                document.getElementById(elementToReplace).innerHTML = html;
+                const temp = document.createElement('div');
+                temp.innerHTML = html;
+                document.getElementById(elementToReplace).replaceWith(temp.firstElementChild);
                 console.log("trying to load " + pageScript);
                 if(pageScript) loadScript(pageScript);
             })
@@ -50,6 +46,10 @@
     loadPage("templates/view.html", "viewPlaceholder", null);
 
 </script>
+
+<script src="static/js/js.js"></script>
+<script src="static/js/ads.js"></script>
+<script src="static/js/create.js"></script>
 
 <script src="static/js/jquery-3.7.1.min.js"></script>
 </body>
