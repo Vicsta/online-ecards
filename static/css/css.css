@@ -1,3 +1,31 @@
 .fullPage {
     display: none;
 }
+
+/* Navigation bar styling */
+.navbar {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    background-color: #333;
+    padding: 10px 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+/* Link styling */
+.nav-link {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    padding: 8px 15px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Link hover effect */
+.nav-link:hover {
+    background-color: #575757;
+    color: #ddd;
+    border-radius: 5px;
+}
