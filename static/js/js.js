@@ -29,7 +29,7 @@ window.addEventListener("load", function () {
             curPage = pages.indexOf(check);
             loadPage(pages.indexOf(check))
         } else {
-            $("#main").fadeIn("slow", function () {});
+            $("#main").css("display", "flex").hide().fadeIn("slow", function () {});
         }
     })();
 
