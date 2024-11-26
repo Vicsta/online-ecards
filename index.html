@@ -5,13 +5,13 @@
     <title>Online E-Card</title>
     <link rel="stylesheet" href="static/css/card.css">
     <link rel="stylesheet" href="static/css/css.css">
+    <link rel="stylesheet" href="static/css/view.css">
 </head>
 <body>
 
-<div class="fullPage" id="main">
-    <div id="cardContainer"></div>
-</div>
 
+
+<div id="mainPlaceholder"></div>
 <div id="viewPlaceholder"></div>
 
 <script>
@@ -42,6 +42,7 @@
             });
     }
 
+    loadPage("templates/main.html", "mainPlaceholder", null);
     loadPage("templates/card.html", "cardContainer", "static/js/card.js");
     loadPage("templates/view.html", "viewPlaceholder", "static/js/view.js");
 

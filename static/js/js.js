@@ -52,9 +52,11 @@ window.addEventListener("load", function () {
 
         $("#" + pages[curPage]).fadeOut("slow", function () {
             // let $win = $(window);
+            console.log("finished loading out " + curPage);
             document.body.scrollTop = 0; // For Chrome, Safari and Opera
             document.documentElement.scrollTop = 0; // For IE and Firefox
             $("#" + pages[x]).fadeIn("slow", function () {
+                console.log("finised loading in " + curPage);
                 curPage = x;
             });
         });
