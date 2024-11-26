@@ -48,6 +48,8 @@ window.addEventListener("load", function () {
 
     function loadPage(x) {
         console.log("loading page " + x);
+        console.log($("#" + pages[curPage]));
+
         $("#" + pages[curPage]).fadeOut("slow", function () {
             // let $win = $(window);
             document.body.scrollTop = 0; // For Chrome, Safari and Opera
