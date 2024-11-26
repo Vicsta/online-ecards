@@ -27,6 +27,7 @@ window.addEventListener("load", function () {
             // document.getElementsByClassName(pages[curPage])[0].style.display = "none";
             // document.getElementsByClassName(check)[0].style.display = "block";
             curPage = pages.indexOf(check);
+            loadPage(pages.indexOf(check))
         } else {
             $("#main").fadeIn("slow", function () {});
         }
