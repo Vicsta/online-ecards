@@ -38,6 +38,7 @@
             })
             .then(html => {
                 document.getElementById(elementToReplace).innerHTML = html;
+                console.log("trying to load " + pageScript);
                 if(pageScript) loadScript(pageScript);
             })
             .catch(error => {
