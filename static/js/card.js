@@ -57,9 +57,28 @@ class Card {
     }
 }
 
-document.querySelectorAll(".scene").forEach(scene => {
-    new Card(scene);
-});
+function replaceCardsWithTemplate(templateUrl) {
+    fetch(templateUrl) // Fetch the card template (card.html)
+        .then(response => response.text())
+        .then(html => {
+            document.querySelectorAll(".card").forEach(cardElement => {
+                cardElement.innerHTML = html; // Replace the .card element with the template content
+                initializeCards(cardElement); // Initialize the card inside it
+            });
+        })
+        .catch(error => console.error("Error loading card template:", error));
+}
+
+function initializeCards(container) {
+    container.querySelectorAll(".scene").forEach(scene => {
+        new Card(scene); // Attach a new Card instance
+    });
+}
+
+window.onload = () => {
+    replaceCardsWithTemplate("templates/card.html");
+};
+
 
 //
 // let state = 0; // 0: front view, 1: inside view, 2: back view
