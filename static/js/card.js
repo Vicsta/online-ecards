@@ -62,6 +62,8 @@ function replaceCardsWithTemplate(templateUrl) {
         .then(response => response.text())
         .then(html => {
             document.querySelectorAll(".card").forEach(cardElement => {
+                console.log(this);
+                console.log(html);
                 cardElement.innerHTML = html; // Replace the .card element with the template content
                 initializeCards(cardElement); // Initialize the card inside it
             });
@@ -76,6 +78,7 @@ function initializeCards(container) {
 }
 
 window.onload = () => {
+    console.log("Trying to replace");
     replaceCardsWithTemplate("templates/card.html");
 };
 
