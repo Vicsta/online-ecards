@@ -58,9 +58,11 @@ class Card {
 }
 
 function replaceCardsWithTemplate(templateUrl) {
+    console.log("trying to fetch");
     fetch(templateUrl) // Fetch the card template (card.html)
         .then(response => response.text())
         .then(html => {
+            console.log("fetched");
             document.querySelectorAll(".card").forEach(cardElement => {
                 console.log(this);
                 console.log(html);
