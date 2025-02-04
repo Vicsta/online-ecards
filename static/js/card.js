@@ -64,7 +64,7 @@ function replaceCardsWithTemplate(templateUrl) {
         .then(html => {
             console.log("fetched");
             document.querySelectorAll(".cardContainer").forEach(cardElement => {
-                console.log(this);
+                console.log(cardElement);
                 console.log(html);
                 cardElement.innerHTML = html; // Replace the .card element with the template content
                 initializeCards(cardElement); // Initialize the card inside it
