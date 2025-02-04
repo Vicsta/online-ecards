@@ -63,7 +63,7 @@ function replaceCardsWithTemplate(templateUrl) {
         .then(response => response.text())
         .then(html => {
             console.log("fetched");
-            document.querySelectorAll(".card").forEach(cardElement => {
+            document.querySelectorAll(".cardContainer").forEach(cardElement => {
                 console.log(this);
                 console.log(html);
                 cardElement.innerHTML = html; // Replace the .card element with the template content
