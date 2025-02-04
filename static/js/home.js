@@ -6,6 +6,7 @@ console.log(replaceCardsWithTemplate);
 
 function runHomePage() {
     console.log("Running home page");
+    replaceCardsWithTemplate("templates/card.html");
 }
 
 // Ensure this runs if the script is executed after DOM is ready
