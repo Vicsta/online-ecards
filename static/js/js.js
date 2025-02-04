@@ -36,6 +36,7 @@ window.addEventListener("load", function () {
     window.onpopstate = function () {
         let toPage = location.href;
         let ext = toPage.replace("online-ecards.com", "");
+        console.log("Ext is: " + ext);
         if (ext === "") {
             ext = "main";
         }
