@@ -17,7 +17,10 @@
 </div>
 
 <div class="fullPage" id="main"></div>
+<div class="fullPage" id="home"></div>
 <div class="fullPage" id="view"></div>
+
+<script src="static/js/js.js"></script>
 
 <script>
     function loadScript(src) {
@@ -45,12 +48,16 @@
             });
     }
 
+    for(const page of pages) {
+        console.log("Page : " + page);
+    }
+
     loadPage("templates/main.html", "main", "static/js/main.js");
+    loadPage("templates/home.html", "home", "static/js/home.js");
     loadPage("templates/view.html", "view", "static/js/view.js");
 
 </script>
 
-<script src="static/js/js.js"></script>
 <script src="static/js/ads.js"></script>
 <script src="static/js/create.js"></script>
 
