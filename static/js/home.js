@@ -5,7 +5,7 @@ let mainCard = null;
 
 function runHomePage() {
     console.log("Running home page");
-    replaceElementWithCard(document.getElementById("mainCard"), "templates/card.html").then(
+    replaceElementWithCard(document.getElementById("mainCard"), "templates/cards/cardV1.html").then(
         card => {
             mainCard = card;
             applyCustomizationToCardV1(cardExample1, mainCard);

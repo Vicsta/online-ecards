@@ -22,6 +22,30 @@ body, html {
     transform-style: preserve-3d;
     transition: transform 1s;
     transform-origin: left center; /* Rotate around the left side */
+    flex-direction: column;
+}
+
+.card_section {
+    width: 100%; /* Take up full width */
+    height: 33.33%; /* Each section takes up 1/3rd of the height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+/* Individual section styling */
+.top_section {
+    background-color: #f4a261; /* Light orange */
+}
+
+.middle_section {
+    background-color: #2a9d8f; /* Teal */
+}
+
+.bottom_section {
+    background-color: #e76f51; /* Red */
 }
 
 .cardBack {
