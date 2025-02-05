@@ -22,7 +22,6 @@ body, html {
     transform-style: preserve-3d;
     transition: transform 1s;
     transform-origin: left center; /* Rotate around the left side */
-    flex-direction: column;
 }
 
 .card_section {
@@ -70,6 +69,7 @@ body, html {
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
 }
 
 .card_face--front, .card_face--back {
