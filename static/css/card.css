@@ -70,6 +70,7 @@ body, html {
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    box-sizing: border-box;
 }
 
 .card_face--front, .card_face--back {

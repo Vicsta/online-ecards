@@ -108,6 +108,12 @@ function applyCustomizationToCardV1(json, cardObj) {
 
     let card = cardObj.scene;
 
+    card.style.fontFamily = json.font; // Set font
+    card.style.fontSize = json.fontSize; // Set font size
+    card.style.alignItems = json.alignItems; // Vertical alignment
+    card.style.justifyContent = json.justifyContent; // Horizontal alignment
+    card.style.padding = json.padding; // Padding for the entire card
+
     // Assign text to the front page
     let frontSections = card.querySelector(".card_face--front").querySelectorAll(".card_section");
     if (frontSections.length === 3) {
