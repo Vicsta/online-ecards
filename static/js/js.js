@@ -9,6 +9,7 @@ window.addEventListener("load", function () {
         console.log("in the load");
         console.log(redirect);
         console.log(location.href);
+
         if (redirect && redirect !== location.href) {
             if (redirect.substring(redirect.length - 1) === "/") {
                 redirect = redirect.substring(0, redirect.length - 1);
@@ -29,7 +30,7 @@ window.addEventListener("load", function () {
             curPage = pages.indexOf(check);
             loadPage(pages.indexOf(check))
         } else {
-            $("#main").css("display", "flex").hide().fadeIn("slow", function () {});
+            $("#home").css("display", "flex").hide().fadeIn("slow", function () {});
         }
     })();
 
@@ -49,7 +50,7 @@ window.addEventListener("load", function () {
 
     function loadPage(x) {
         console.log("loading page " + x);
-        console.log($("#" + pages[curPage]));
+        // console.log($("#" + pages[curPage]));
 
         $("#" + pages[curPage]).fadeOut("slow", function () {
             // let $win = $(window);
