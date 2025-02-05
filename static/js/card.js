@@ -104,7 +104,10 @@ function initializeCards(container) {
 }
 
 // Version 1
-function applyCustomizationToCardV1(json, card) {
+function applyCustomizationToCardV1(json, cardObj) {
+
+    let card = cardObj.scene;
+
     // Assign text to the front page
     let frontSections = card.querySelector(".card_face--front").querySelectorAll(".card_section");
     if (frontSections.length === 3) {
