@@ -38,7 +38,7 @@ window.addEventListener("load", function () {
         let ext = toPage.replace("online-ecards.com", "");
         console.log("Ext is: " + ext);
         if (ext === "") {
-            ext = "main";
+            ext = "home";
         }
         if (ext === "404") {
             ext = "not";
