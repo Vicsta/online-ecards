@@ -35,17 +35,17 @@ body, html {
 }
 
 /* Individual section styling */
-.top_section {
-    background-color: #f4a261; /* Light orange */
-}
+/*.top_section {*/
+/*    background-color: #f4a261; !* Light orange *!*/
+/*}*/
 
-.middle_section {
-    background-color: #2a9d8f; /* Teal */
-}
+/*.middle_section {*/
+/*    background-color: #2a9d8f; !* Teal *!*/
+/*}*/
 
-.bottom_section {
-    background-color: #e76f51; /* Red */
-}
+/*.bottom_section {*/
+/*    background-color: #e76f51; !* Red *!*/
+/*}*/
 
 .cardBack {
     bottom: 100%;

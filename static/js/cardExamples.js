@@ -1,10 +1,27 @@
 cardExample1 = {
     version: 1.0,
 
-    front1: "",
+    // Backgrounds
+    front: "",
     page1: "",
     page2: "",
-    back1: "",
+    back: "",
+
+    s1: "#f4a261",
+    s2: "#2a9d8f",
+    s3: "#e76f51",
+
+    s4: "#f4a261",
+    s5: "#2a9d8f",
+    s6: "#e76f51",
+
+    s7: "#f4a261",
+    s8: "#2a9d8f",
+    s9: "#e76f51",
+
+    s10: "#f4a261",
+    s11: "#2a9d8f",
+    s12: "#e76f51",
 
     font: "fangsong",
     fontSize: "12",

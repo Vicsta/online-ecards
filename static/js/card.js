@@ -112,7 +112,25 @@ function applyCustomizationToCardV1(json, cardObj) {
     card.style.fontSize = json.fontSize; // Set font size
     card.style.alignItems = json.alignItems; // Vertical alignment
     card.style.justifyContent = json.justifyContent; // Horizontal alignment
-    card.style.padding = json.padding; // Padding for the entire card
+    // card.style.padding = json.padding; // Padding for the entire card
+
+    let frontFace = card.querySelector(".card_face--front");
+    let insideLeftFace = card.querySelector(".card_face--inside-left");
+    let insideRightFace = card.querySelector(".card_face--inside-right");
+    let backFace = card.querySelector(".card_face--back");
+
+    if (frontFace) frontFace.style.backgroundImage = json.front1 ? `url(${json.front1})` : "none";
+    if (insideLeftFace) insideLeftFace.style.backgroundImage = json.page1 ? `url(${json.page1})` : "none";
+    if (insideRightFace) insideRightFace.style.backgroundImage = json.page2 ? `url(${json.page2})` : "none";
+    if (backFace) backFace.style.backgroundImage = json.back1 ? `url(${json.back1})` : "none";
+
+    [frontFace, insideLeftFace, insideRightFace, backFace].forEach(face => {
+        if (face) {
+            face.style.backgroundSize = "cover"; // Ensures the image covers the full page
+            face.style.backgroundPosition = "center"; // Centers the background image
+            face.style.backgroundRepeat = "no-repeat"; // Prevents image repetition
+        }
+    });
 
     // Assign text to the front page
     let frontSections = card.querySelector(".card_face--front").querySelectorAll(".card_section");
@@ -145,4 +163,51 @@ function applyCustomizationToCardV1(json, cardObj) {
         backSections[1].textContent = json.text11; // Middle Section
         backSections[2].textContent = json.text12; // Bottom Section
     }
+
+    console.log("Page backgrounds applied successfully!");
+
+    function applySectionStyles(sections, textValues, bgValues) {
+        if (sections.length === 3) {
+            for (let i = 0; i < 3; i++) {
+                sections[i].textContent = textValues[i] || ""; // Apply text
+
+                let bg = bgValues[i];
+
+                if (bg.startsWith("#") || bg.startsWith("rgb")) {
+                    sections[i].style.backgroundColor = bg;
+                    sections[i].style.backgroundImage = "none"; // Remove any previous image
+                } else if (bg) {
+                    sections[i].style.backgroundImage = `url(${bg})`;
+                    sections[i].style.backgroundSize = "cover";
+                    sections[i].style.backgroundPosition = "center";
+                    sections[i].style.backgroundRepeat = "no-repeat";
+                }
+            }
+        }
+    }
+
+
+    applySectionStyles(
+        frontFace?.querySelectorAll(".card_section") || [],
+        [json.text1, json.text2, json.text3],
+        [json.s1, json.s2, json.s3]
+    );
+
+    applySectionStyles(
+        insideLeftFace?.querySelectorAll(".card_section") || [],
+        [json.text4, json.text5, json.text6],
+        [json.s4, json.s5, json.s6]
+    );
+
+    applySectionStyles(
+        insideRightFace?.querySelectorAll(".card_section") || [],
+        [json.text7, json.text8, json.text9],
+        [json.s7, json.s8, json.s9]
+    );
+
+    applySectionStyles(
+        backFace?.querySelectorAll(".card_section") || [],
+        [json.text10, json.text11, json.text12],
+        [json.s10, json.s11, json.s12]
+    );
 }
