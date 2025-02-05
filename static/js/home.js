@@ -1,12 +1,16 @@
 console.log("in home.js");
 // loadPage("templates/card.html", "cardContainer", "static/js/card.js");
 
-console.log("started onloading");
-console.log(replaceCardsWithTemplate);
+let mainCard = null;
 
 function runHomePage() {
     console.log("Running home page");
-    replaceCardsWithTemplate("templates/card.html");
+    replaceElementWithCard(document.getElementById("mainCard"), "templates/card.html").then(
+        card => {
+            mainCard = card;
+            applyCustomizationToCardV1(cardExample1, mainCard);
+        }
+    );
 }
 
 // Ensure this runs if the script is executed after DOM is ready
