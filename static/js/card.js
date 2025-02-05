@@ -105,6 +105,35 @@ function initializeCards(container) {
 
 // Version 1
 function applyCustomizationToCardV1(json, card) {
-    console.log(json);
-    console.log(card);
+    // Assign text to the front page
+    let frontSections = card.querySelector(".card_face--front").querySelectorAll(".card_section");
+    if (frontSections.length === 3) {
+        frontSections[0].textContent = json.text1; // Top Section
+        frontSections[1].textContent = json.text2; // Middle Section
+        frontSections[2].textContent = json.text3; // Bottom Section
+    }
+
+    // Assign text to the inside-left page
+    let insideLeftSections = card.querySelector(".card_face--inside-left").querySelectorAll(".card_section");
+    if (insideLeftSections.length === 3) {
+        insideLeftSections[0].textContent = json.text4; // Top Section
+        insideLeftSections[1].textContent = json.text5; // Middle Section
+        insideLeftSections[2].textContent = json.text6; // Bottom Section
+    }
+
+    // Assign text to the inside-right page
+    let insideRightSections = card.querySelector(".card_face--inside-right").querySelectorAll(".card_section");
+    if (insideRightSections.length === 3) {
+        insideRightSections[0].textContent = json.text7; // Top Section
+        insideRightSections[1].textContent = json.text8; // Middle Section
+        insideRightSections[2].textContent = json.text9; // Bottom Section
+    }
+
+    // Assign text to the back page
+    let backSections = card.querySelector(".card_face--back").querySelectorAll(".card_section");
+    if (backSections.length === 3) {
+        backSections[0].textContent = json.text10; // Top Section
+        backSections[1].textContent = json.text11; // Middle Section
+        backSections[2].textContent = json.text12; // Bottom Section
+    }
 }
