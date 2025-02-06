@@ -9,6 +9,10 @@ function runHomePage() {
         card => {
             mainCard = card;
             applyCustomizationToCardV1(cardExample1, mainCard);
+
+            let t = encodeCardJSON(cardExample1);
+            console.log(t);
+            console.log(decodeURI(t));
         }
     );
 }

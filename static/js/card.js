@@ -186,7 +186,6 @@ function applyCustomizationToCardV1(json, cardObj) {
         }
     }
 
-
     applySectionStyles(
         frontFace?.querySelectorAll(".card_section") || [],
         [json.text1, json.text2, json.text3],
@@ -211,3 +210,29 @@ function applyCustomizationToCardV1(json, cardObj) {
         [json.s10, json.s11, json.s12]
     );
 }
+
+function encodeCardJSON(cardData) {
+    try {
+        // Step 1: Convert JSON to a compact string
+        let jsonString = JSON.stringify(cardData);
+
+        // Step 2: Compress the JSON string using LZString
+        let compressedString = LZString.compressToEncodedURIComponent(jsonString);
+
+        return compressedString;
+    } catch (error) {
+        console.error("Error encoding card JSON:", error);
+        return null;
+    }
+}
+
+function decodeCardJSON(encodedString) {
+    try {
+        let decompressedString = LZString.decompressFromEncodedURIComponent(encodedString);
+        return JSON.parse(decompressedString);
+    } catch (error) {
+        console.error("Error decoding card JSON:", error);
+        return null;
+    }
+}
+
