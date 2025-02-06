@@ -12,7 +12,7 @@ function runHomePage() {
 
             let t = encodeCardJSON(cardExample1);
             console.log(t);
-            console.log(decodeURI(t));
+            console.log(decodeCardJSON(t));
         }
     );
 }
