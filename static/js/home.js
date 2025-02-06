@@ -13,6 +13,9 @@ function runHomePage() {
             let t = encodeCardJSON(cardExample1);
             console.log(t);
             console.log(decodeCardJSON(t));
+
+            let shareableURL = `https://online-ecards.com/view?c=${t}`;
+            console.log("Compressed URL String:", shareableURL);
         }
     );
 }
