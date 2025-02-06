@@ -5,7 +5,7 @@ let viewCard = null;
 
 function runViewPage() {
     console.log("Running home page");
-    replaceElementWithCard(document.getElementById("mainCard"), "templates/cards/cardV1.html").then(
+    replaceElementWithCard(document.getElementById("viewCard"), "templates/cards/cardV1.html").then(
         card => {
             viewCard = card;
 
