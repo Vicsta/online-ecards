@@ -217,9 +217,7 @@ function encodeCardJSON(cardData) {
         let jsonString = JSON.stringify(cardData);
 
         // Step 2: Compress the JSON string using LZString
-        let compressedString = LZString.compressToEncodedURIComponent(jsonString);
-
-        return compressedString;
+        return LZString.compressToEncodedURIComponent(jsonString);
     } catch (error) {
         console.error("Error encoding card JSON:", error);
         return null;
