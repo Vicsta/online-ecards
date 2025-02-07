@@ -7,19 +7,34 @@
         <div class="menuPageTab">Page 4</div>
     </div>
 
-    <div id="settingMenu">
+    <div id="settingMenu" class="leftMenu">
+        <!-- Font Size -->
+        <label for="fontSizeInput">Font Size</label>
+        <input id="fontSizeInput" type="number" min="8" max="72" value="16">
+
+        <!-- Font Style -->
+        <label for="fontStyleInput">Font Style</label>
+        <select id="fontStyleInput">
+            <option value="Arial">Arial</option>
+            <option value="Times New Roman">Times New Roman</option>
+            <option value="Courier New">Courier New</option>
+            <option value="fangsong" selected>FangSong</option>
+        </select>
+
+        <!-- Padding -->
+        <label for="paddingInput">Padding</label>
+        <input id="paddingInput" type="number" min="0" max="50" value="10">
+    </div>
+
+    <div id="menu1" class="leftMenu">
         <div></div>
     </div>
 
-    <div id="menu1">
-        <div></div>
-    </div>
+    <div id="menu2" class="leftMenu"></div>
 
-    <div id="menu2"></div>
+    <div id="menu3" class="leftMenu"></div>
 
-    <div id="menu3"></div>
-
-    <div id="menu4"></div>
+    <div id="menu4" class="leftMenu"></div>
 </div>
 
 <div id="createCard"></div>
