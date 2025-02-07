@@ -1,0 +1,11 @@
+#createLeftMenu {
+    height: 800px;
+    width: 500px;
+    background: lightblue;
+    margin-right: 250px;
+    left: 30px;
+}
+
+#create {
+    justify-content: flex-start;
+}
