@@ -15,8 +15,16 @@
     --numTabs:5;
 }
 
+#menuPageBar {
+    height: 15%;
+}
+
 .menuPageTab {
     width: calc(100% / var(--numTabs));
-    height: 15%;
+    height: 100%;
     float: left;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: cornflowerblue;
 }
