@@ -22,7 +22,9 @@
 }
 
 .menuPageTab:hover {
-    box-shadow: 1px 1px 1px 1px #333333;
+    background-color: #575757;
+    color: #ddd;
+    border-radius: 5px;
 }
 
 .menuPageTabSelected {
@@ -37,4 +39,5 @@
     align-items: center;
     justify-content: center;
     background: cornflowerblue;
+    transition: background-color 0.3s, color 0.3s;
 }
