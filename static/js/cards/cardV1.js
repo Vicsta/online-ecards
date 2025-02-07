@@ -1,4 +1,4 @@
-cardExample1 = {
+cardV1 = {
     version: 1.0,
 
     // Backgrounds
