@@ -10,3 +10,13 @@
 #create {
     justify-content: flex-start;
 }
+
+:root {
+    --numTabs:5;
+}
+
+.menuPageTab {
+    width: calc(100% / var(--numTabs));
+    height: 15%;
+    float: left;
+}
