@@ -49,3 +49,7 @@
     align-items: start;
     flex-direction: column;
 }
+
+.hidden {
+    display: none; /* Completely removes the element from the layout */
+}
