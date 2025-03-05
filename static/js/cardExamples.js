@@ -79,17 +79,17 @@ cardExample2 = {
 
     text1: "HAPPY BIRTHDAY",
     text2: "",
-    text3: ":D",
+    text3: "Cake :D",
 
     text4: "",
     text5: "",
     text6: "Meow meow meow",
 
-    text7: "Dear Diana",
-    text8: "Happy Birthday",
-    text9: "Love, V",
+    text7: "Happy Birthday, Diana! 🎉🎂🎈",
+    text8: "I know you're working hard and pouring everything into your studies to become an incredible vet, and I have no doubt you'll get there! But today, take a moment to celebrate you—because you deserve it. Wishing you a day filled with joy, a little bit of relaxation, and maybe even some cute animal videos for inspiration.",
+    text9: "You've got this, future Dr. Diana! 🩺🐾💙 Enjoy your special day! 🎊🎁 Love, V",
 
-    text10: "",
+    text10: "Hi you found the back",
     text11: "",
     text12: "Vicsta™",
 };
