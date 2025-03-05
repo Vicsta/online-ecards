@@ -72,7 +72,7 @@ cardExample2 = {
     s12: "#e76f51",
 
     font: "fangsong",
-    fontSize: "12",
+    fontSize: "19px",
     alignItems: "center",
     justifyContent: "center",
     padding: "10px",
