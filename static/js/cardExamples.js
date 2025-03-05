@@ -59,7 +59,7 @@ cardExample2 = {
     s2: "https://upload.wikimedia.org/wikipedia/commons/b/b2/Red_Velvet_Cake_Waldorf_Astoria.jpg",
     s3: "#e76f51",
 
-    s4: "#f4a261",
+    s4: "https://bestanimations.com/media/birthday-cats/1592298522funny-happy-birthday-party-cats-cake-gif.gif",
     s5: "https://i.pinimg.com/originals/bc/ee/87/bcee87eb77aa2f400e935ad5ae114166.gif",
     s6: "#e76f51",
 
