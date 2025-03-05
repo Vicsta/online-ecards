@@ -10,7 +10,7 @@ function runHomePage() {
             mainCard = card;
             applyCustomizationToCardV1(cardExample1, mainCard);
 
-            let t = encodeCardJSON(cardExample1);
+            let t = encodeCardJSON(cardExample2);
             console.log(t);
             console.log(decodeCardJSON(t));
 
