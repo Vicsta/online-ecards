@@ -98,7 +98,7 @@
 /* Hero Section */
 .hero-section {
     text-align: center;
-    padding: 20px 0 60px;
+    padding: 30px 0 60px;
     border-bottom: 1px solid #333;
     margin-bottom: 40px;
 }
@@ -384,4 +384,37 @@ input:checked + .slider:before {
     outline: none;
     border-color: #8ab4f8;
     box-shadow: 0 0 8px rgba(138, 180, 248, 0.4);
+}
+
+/* --- DONATE BUTTON (POLISHED) --- */
+.nav-donate-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none !important; /* Forces the underline to disappear */
+    margin-right: 20px;
+    transition: transform 0.2s ease;
+    cursor: pointer;
+}
+
+.donate-icon {
+    font-size: 1.2rem;
+    filter: drop-shadow(0 0 5px rgba(0,0,0,0.5)); /* Makes the emoji pop */
+}
+
+.donate-text {
+    color: #8ab4f8 !important; /* Forces your brand blue */
+    font-weight: bold;
+    font-size: 0.95rem;
+    text-decoration: none !important;
+}
+
+/* Hover State */
+.nav-donate-btn:hover .donate-text {
+    color: #a0c4ff !important; /* Brighter blue on hover */
+    text-decoration: none !important;
+}
+
+.nav-donate-btn:hover .donate-icon {
+    transform: rotate(-12deg) scale(1.1);
 }

@@ -115,23 +115,24 @@ window.addEventListener("load", function () {
         });
     }
 
-    // --- AD TOGGLE LOGIC ---
-    const adToggle = document.getElementById("adToggleSwitch");
+    // --- SAFE TOGGLE LOGIC ---
+    const toggleSwitch = document.getElementById("supportToggleSwitch");
 
-    // 1. Check if they have a saved preference (Default to true/ads on)
-    let adsEnabled = localStorage.getItem("adsEnabled") !== "false";
-    adToggle.checked = adsEnabled;
+    if (toggleSwitch) {
+        // Check saved preference using a safe keyword
+        let supportMode = localStorage.getItem("supportMode") !== "false";
+        toggleSwitch.checked = supportMode;
 
-    // 2. Listen for them clicking the switch
-    adToggle.addEventListener("change", function() {
-        if (this.checked) {
-            localStorage.setItem("adsEnabled", "true");
-            // Logic to turn ads back on goes here later
-            console.log("Ads are ON");
-        } else {
-            localStorage.setItem("adsEnabled", "false");
-            // Logic to hide ads goes here later
-            console.log("Ads are OFF");
-        }
-    });
+        toggleSwitch.addEventListener("change", function() {
+            if (this.checked) {
+                localStorage.setItem("supportMode", "true");
+                console.log("Support features ON");
+                // Logic to show banners goes here
+            } else {
+                localStorage.setItem("supportMode", "false");
+                console.log("Support features OFF");
+                // Logic to hide banners goes here
+            }
+        });
+    }
 });
