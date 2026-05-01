@@ -1,47 +1,31 @@
-console.log("in view.js");
-// loadPage("templates/card.html", "cardContainer", "static/js/card.js");
-
 let viewCard = null;
 
 function runViewPage() {
-    console.log("Running view page");
-
-    // Ensure you have a <div id="viewCard"></div> in your HTML where the view page lives
     let container = document.getElementById("viewCard");
+    if (!container) return;
 
-    if (!container) {
-        console.error("Could not find element with id 'viewCard'");
-        return;
-    }
+    let targetUrl = sessionStorage.redirect ? sessionStorage.redirect : window.location.href;
+    let urlObj = new URL(targetUrl, window.location.origin);
+    let params = new URLSearchParams(urlObj.search);
+    let encodedString = params.get("c");
 
-    replaceElementWithCard(container, "templates/cards/cardV1.html").then(
-        card => {
+    if (encodedString) {
+        let cardData = decodeCardJSON(encodedString);
+        let template = CardRegistry[cardData.version];
+        if (!template) return console.error("Unknown card version!");
+
+        // CHANGED THIS LINE (Pass the template instead of template.cardHtml):
+        replaceElementWithCard(container, template).then(card => {
             viewCard = card;
-
-            // 1. Prioritize the saved redirect URL from the 404 hack, fallback to current window URL
-            let targetUrl = sessionStorage.redirect ? sessionStorage.redirect : window.location.href;
-
-            // 2. Parse the URL safely
-            let urlObj = new URL(targetUrl, window.location.origin);
-            let params = new URLSearchParams(urlObj.search);
-            let encodedString = params.get("c");
-
-            if (encodedString) {
-                let cardData = decodeCardJSON(encodedString);
-                console.log("Decoded JSON:", cardData);
-                applyCustomizationToCardV1(cardData, viewCard);
-            } else {
-                console.log("No card data found in URL.");
-            }
-        }
-    ).catch(err => console.error("Failed to load card template:", err));
+            template.applyStyles(cardData, viewCard);
+        });
+    } else {
+        container.innerHTML = "<h2>No Card Data Found</h2>";
+    }
 }
 
-// Ensure this runs if the script is executed after DOM is ready
 if (document.readyState === "complete" || document.readyState === "interactive") {
-    console.log("ready state");
     runViewPage();
 } else {
-    console.log("adding event listener");
     document.addEventListener("DOMContentLoaded", runViewPage);
 }

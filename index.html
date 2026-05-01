@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/html">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Online E-Card</title>
@@ -17,7 +17,6 @@
     <a href="/create" class="nav-link">Create</a>
 </div>
 
-<!--<div class="fullPage" id="main"></div>-->
 <div class="fullPage" id="home"></div>
 <div class="fullPage" id="view"></div>
 <div class="fullPage" id="about"></div>
@@ -26,51 +25,42 @@
 <script src="static/js/lz-string.min.js"></script>
 <script src="static/js/jquery-3.7.1.min.js"></script>
 
-<script src="static/js/cards/cardV1.js"></script>
-
+<!-- Core Logic -->
 <script src="static/js/js.js"></script>
 <script src="static/js/card.js"></script>
-<script src="static/js/ads.js"></script>
-<script src="static/js/cardExamples.js"></script>
+
+<!-- Card Templates & Registry -->
+<script src="static/js/cards/cardV1.js"></script>
+<script src="static/js/registry.js"></script>
+
+<!-- (You can remove ads.js/cardExamples.js if you aren't using them right now) -->
 
 <script>
     function loadScript(src) {
         const script = document.createElement('script');
         script.src = src;
-        script.async = false; // This ensures the script is executed in order
-        document.head.appendChild(script); // You can also append to body if preferred
+        script.async = false;
+        document.head.appendChild(script);
     }
 
     function loadPage(page, elementToReplace, pageScript) {
         fetch(page)
             .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
+                if (!response.ok) throw new Error('Network response was not ok');
                 return response.text();
             })
             .then(html => {
                 document.getElementById(elementToReplace).innerHTML = html;
-                console.log("trying to load " + pageScript);
                 if(pageScript) loadScript(pageScript);
             })
-            .catch(error => {
-                console.error('Error loading the card:', error);
-            });
+            .catch(error => console.error('Error loading page:', error));
     }
 
-    for(const page of pages) {
-        console.log("Page : " + page);
-    }
-
-    // loadPage("templates/main.html", "main", "static/js/main.js");
     loadPage("templates/home.html", "home", "static/js/home.js");
     loadPage("templates/view.html", "view", "static/js/view.js");
     loadPage("templates/about.html", "about", "static/js/about.js");
     loadPage("templates/create.html", "create", "static/js/create.js");
-
 </script>
-
 
 </body>
 </html>

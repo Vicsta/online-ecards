@@ -1,173 +1,104 @@
-console.log("in create.js");
-
-let createCard = null; // Stores the card instance
-// Deep copy of cardV1 for modifications (assumes cardV1 is defined globally in another script)
-let cardData = JSON.parse(JSON.stringify(cardV1));
+let createCard = null;
+let cardData = null;
 
 function runCreatePage() {
-    console.log("Running create page");
+    let container = document.getElementById("createCard");
+    let menuArea = document.getElementById("dynamicMenuArea");
 
-    replaceElementWithCard(document.getElementById("createCard"), "templates/cards/cardV1.html").then(
-        card => {
-            createCard = card;
-            updateCard(); // Apply current `cardData` values immediately
-        }
-    );
+    if (!container || !menuArea) return console.error("Create DOM elements missing!");
 
-    // --- Tab Switching Logic ---
-    const tabs = document.querySelectorAll(".menuPageTab");
-    const menus = document.querySelectorAll(".leftMenu");
+    // Default to 'v1' if not provided in URL
+    let params = new URLSearchParams(window.location.search);
+    let selectedVersion = params.get("v") || "v1";
 
-    function switchMenu(index) {
-        menus.forEach(menu => menu.classList.add("hidden")); // Hide all menus
-        menus[index].classList.remove("hidden"); // Show selected menu
+    let template = CardRegistry[selectedVersion];
+    if (!template) return console.error("Template not found in Registry!");
 
-        tabs.forEach(tab => tab.classList.remove("menuPageTabSelected")); // Remove highlight
-        tabs[index].classList.add("menuPageTabSelected"); // Highlight active tab
+    cardData = template.defaultData();
 
-        // NEW: Auto-flip the 3D card based on the active tab
-        if (createCard) {
-            if (index === 1) {
-                // Front Tab
-                createCard.state = 0;
-            } else if (index === 2 || index === 3) {
-                // Inside L or Inside R Tabs
-                createCard.state = 1;
-            } else if (index === 4) {
-                // Back Tab
-                createCard.state = 2;
-            }
-            // If index === 0 (Settings), it just leaves the card wherever it currently is
+    // Fetch both the Menu and the Card HTML simultaneously
+Promise.all([
+        fetch(template.menuHtml).then(res => res.text()),
+        fetch(template.cardHtml).then(res => res.text())
+    ]).then(([menuHtml, cardHtml]) => {
+        menuArea.innerHTML = menuHtml;
+        container.innerHTML = cardHtml;
 
-            createCard.updateCardState(); // Trigger the CSS 3D transition
-        }
-        }
+        // CHANGED THIS LINE:
+        createCard = template.initCard(container);
 
-    tabs.forEach((tab, index) => {
-        tab.addEventListener("click", () => switchMenu(index));
+        template.applyStyles(cardData, createCard);
+        setupDynamicBindings(template.bindings(), template);
+        setupTabs(template);
     });
-
-    // --- Live Preview Updater ---
-    function updateCard() {
-        if (!createCard) return;
-        applyCustomizationToCardV1(cardData, createCard);
-    }
-
-    // --- The Master Binding Dictionary ---
-    function setupInputBindings() {
-        const bindings = {
-            // General Settings
-            "fontSizeInput": "fontSize",
-            "fontStyleInput": "font",
-            "paddingInput": "padding",
-
-            // Full Page Backgrounds
-            "bgFront": "front",
-            "bgPage1": "page1",
-            "bgPage2": "page2",
-            "bgBack": "back",
-
-            // Front Page (Page 1)
-            "text1Top": "text1",
-            "text1Middle": "text2",
-            "text1Bottom": "text3",
-            "bg1Top": "s1",
-            "bg1Middle": "s2",
-            "bg1Bottom": "s3",
-
-            // Inside Left (Page 2)
-            "text2Top": "text4",
-            "text2Middle": "text5",
-            "text2Bottom": "text6",
-            "bg2Top": "s4",
-            "bg2Middle": "s5",
-            "bg2Bottom": "s6",
-
-            // Inside Right (Page 3)
-            "text3Top": "text7",
-            "text3Middle": "text8",
-            "text3Bottom": "text9",
-            "bg3Top": "s7",
-            "bg3Middle": "s8",
-            "bg3Bottom": "s9",
-
-            // Back Page (Page 4)
-            "text4Top": "text10",
-            "text4Middle": "text11",
-            "text4Bottom": "text12",
-            "bg4Top": "s10",
-            "bg4Middle": "s11",
-            "bg4Bottom": "s12",
-        };
-
-        Object.keys(bindings).forEach(inputId => {
-            const key = bindings[inputId];
-            const input = document.getElementById(inputId);
-
-            if (input) {
-                // Remove 'px' if it exists just for setting the initial input value
-                let initialValue = cardData[key] || "";
-                if (typeof initialValue === "string" && initialValue.endsWith("px")) {
-                    initialValue = initialValue.replace("px", "");
-                }
-                input.value = initialValue;
-
-                // Update `cardData` and refresh the card when input changes
-                input.addEventListener("input", (event) => {
-                    let val = event.target.value;
-
-                    // Crucial Fix: CSS needs 'px' to apply properly
-                    if (inputId === "fontSizeInput" || inputId === "paddingInput") {
-                        if (val !== "") val += "px";
-                    }
-
-                    cardData[key] = val;
-                    updateCard();
-                });
-            }
-        });
-    }
 
     // --- Export Link Logic ---
     document.getElementById("exportBtn").addEventListener("click", () => {
-            // 1. Encode the current state of the card
-            let compressedData = encodeCardJSON(cardData);
+        let compressedData = encodeCardJSON(cardData);
+        let baseUrl = window.location.origin;
+        let clipboardUrl = baseUrl + "/view?c=" + compressedData;
+        let testUrl = clipboardUrl;
 
-            // 2. Get the dynamic base URL (e.g., http://localhost:63342 or https://online-ecards.com)
-            let baseUrl = window.location.origin;
+        if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+            let rootPath = window.location.pathname.replace("/create", "");
+            if (rootPath === "") rootPath = "/";
+            testUrl = baseUrl + rootPath + "?c=" + compressedData;
+        }
 
-            // 3. Build the true, dynamic clipboard URL
-            let clipboardUrl = baseUrl + "/view?c=" + compressedData;
-
-            // 4. Build a local-friendly test URL for the clickable button ONLY
-            let testUrl = clipboardUrl;
-            if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
-                let rootPath = window.location.pathname.replace("/create", "");
-                if (rootPath === "") rootPath = "/";
-                testUrl = baseUrl + rootPath + "?c=" + compressedData;
-            }
-
-            // 5. Update the UI
-            let resultDiv = document.getElementById("exportResult");
-            resultDiv.style.display = "block";
-            resultDiv.innerHTML = `<a href="${testUrl}" target="_blank" style="color: blue; text-decoration: underline;">Click to Test Link</a><br><br><small>Link copied to clipboard!</small>`;
-
-            // 6. Copy the dynamic link to the clipboard
-            navigator.clipboard.writeText(clipboardUrl).catch(err => {
-                console.error('Could not copy text: ', err);
-            });
-        });
-
-    // Initialize Bindings and activate the first tab
-    setupInputBindings();
-    tabs[0].classList.add("menuPageTabSelected");
+        let resultDiv = document.getElementById("exportResult");
+        resultDiv.style.display = "block";
+        resultDiv.innerHTML = `<a href="${testUrl}" target="_blank" style="color: blue; text-decoration: underline;">Click to Test Link</a><br><br><small>Link copied to clipboard!</small>`;
+        navigator.clipboard.writeText(clipboardUrl).catch(err => console.error(err));
+    });
 }
 
-// ✅ Ensure this runs when the DOM is ready
+function setupDynamicBindings(bindingsMap, template) {
+    Object.keys(bindingsMap).forEach(inputId => {
+        let key = bindingsMap[inputId];
+        let input = document.getElementById(inputId);
+
+        if (input) {
+            let initialValue = cardData[key] || "";
+            if (typeof initialValue === "string" && initialValue.endsWith("px")) {
+                initialValue = initialValue.replace("px", "");
+            }
+            input.value = initialValue;
+
+            input.addEventListener("input", (event) => {
+                let val = event.target.value;
+                if ((inputId.toLowerCase().includes("size") || inputId.toLowerCase().includes("padding")) && val !== "") {
+                    val += "px";
+                }
+                cardData[key] = val;
+                template.applyStyles(cardData, createCard);
+            });
+        }
+    });
+}
+
+function setupTabs(template) {
+    const tabs = document.querySelectorAll(".menuPageTab");
+    const menus = document.querySelectorAll(".leftMenu");
+
+    tabs.forEach((tab, index) => {
+        tab.addEventListener("click", () => {
+            menus.forEach(menu => menu.classList.add("hidden"));
+            menus[index].classList.remove("hidden");
+            tabs.forEach(t => t.classList.remove("menuPageTabSelected"));
+            tabs[index].classList.add("menuPageTabSelected");
+
+            // Use the template's custom flipping logic
+            if (createCard && template.onTabSwitch) {
+                template.onTabSwitch(index, createCard);
+            }
+        });
+    });
+
+    if(tabs.length > 0) tabs[0].classList.add("menuPageTabSelected");
+}
+
 if (document.readyState === "complete" || document.readyState === "interactive") {
-    console.log("ready state");
     runCreatePage();
 } else {
-    console.log("adding event listener");
     document.addEventListener("DOMContentLoaded", runCreatePage);
 }
