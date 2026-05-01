@@ -68,7 +68,7 @@ const cardV1_bindings = {
 function applyCustomizationToCardV1(json, cardObj) {
     // --- NEW SAFETY CHECK ---
     if (!cardObj || !cardObj.scene) {
-        console.warn("Card not ready for styling yet.");
+        console.warn("Card HTML not loaded. Cannot apply styles yet.");
         return;
     }
 

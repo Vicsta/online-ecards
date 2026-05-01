@@ -91,22 +91,32 @@ function runCreatePage(selectedVersion) {
 
     cardData = template.defaultData();
 
-    // --- UNIVERSAL RELATIVE PATH FIX ---
-    // We use no leading slash. This makes the fetch relative to the
-    // current root directory of the project, not the server root.
-    let menuUrl = template.menuHtml;
-    let cardUrl = template.cardHtml;
+    // --- THE BULLETPROOF PATH BUILDER ---
+    // This finds the true root of your website, even if you are deep in a virtual SPA route
+    let rootPath = window.location.pathname;
+    ["/create", "/view", "/home", "/about"].forEach(page => {
+        if (rootPath.includes(page)) {
+            rootPath = rootPath.split(page)[0]; // Cut off the virtual route
+        }
+    });
+    if (!rootPath.endsWith("/")) rootPath += "/";
+    let basePath = window.location.origin + rootPath;
+
+    let absoluteMenuUrl = basePath + template.menuHtml;
+    let absoluteCardUrl = basePath + template.cardHtml;
 
     Promise.all([
-        fetch(menuUrl).then(res => {
-            if (!res.ok) throw new Error(`Menu not found at ${menuUrl}`);
-            return res.text();
-        }),
-        fetch(cardUrl).then(res => {
-            if (!res.ok) throw new Error(`Card not found at ${cardUrl}`);
-            return res.text();
-        })
+        fetch(absoluteMenuUrl).then(res => res.text()),
+        fetch(absoluteCardUrl).then(res => res.text())
     ]).then(([menuHtml, cardHtml]) => {
+
+        // --- THE FAKE RESPONSE CHECK ---
+        // If the server gave us a 404 page disguised as a success, catch it here!
+        if (!cardHtml.includes('class="scene"')) {
+            console.error("Fetched file did not contain the 3D scene! Server returned:", cardHtml.substring(0, 100));
+            return alert("Failed to fetch the true card HTML. The server intercepted the request.");
+        }
+
         menuArea.innerHTML = menuHtml;
         container.innerHTML = cardHtml;
 
@@ -117,7 +127,6 @@ function runCreatePage(selectedVersion) {
         setupTabs(template);
     }).catch(err => {
         console.error("Fetch Error details:", err);
-        alert("Failed to load: " + err.message);
     });
 
     // --- Export Link Logic ---
@@ -128,9 +137,9 @@ function runCreatePage(selectedVersion) {
         let testUrl = clipboardUrl;
 
         if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
-            let rootPath = window.location.pathname.replace("/create", "");
-            if (rootPath === "") rootPath = "/";
-            testUrl = baseUrl + rootPath + "?c=" + compressedData;
+            let localRoot = window.location.pathname.replace("/create", "").replace("index.html", "");
+            if (localRoot === "") localRoot = "/";
+            testUrl = baseUrl + localRoot + "?c=" + compressedData;
         }
 
         let resultDiv = document.getElementById("exportResult");
