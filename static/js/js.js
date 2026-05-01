@@ -9,15 +9,19 @@ window.addEventListener("load", function () {
         let redirect = sessionStorage.redirect;
         delete sessionStorage.redirect;
 
-        if (redirect && redirect !== location.href) {
-            // Use the URL object to parse the link safely
-            let urlObj = new URL(redirect);
+        let targetUrl = redirect ? redirect : location.href;
 
-            // Extract just the last part of the path (e.g., "home" from "/home")
+        if (targetUrl !== location.href || redirect) {
+            let urlObj = new URL(targetUrl);
             let check = urlObj.pathname.split("/").pop().split("?")[0];
 
-            // If the path is empty or just index.html, default to home
-            if (check === "" || check === "index.html") {
+            // --- NEW MAGIC RULE ---
+            // If the URL contains our card data parameter, force it to the View page!
+            if (urlObj.searchParams.has("c")) {
+                check = "view";
+            }
+            // Otherwise, apply the normal default logic
+            else if (check === "" || check === "index.html") {
                 check = "home";
             }
 
@@ -26,12 +30,19 @@ window.addEventListener("load", function () {
                 redirect = "/404";
             }
 
-            history.replaceState(null, "", redirect);
-//            curPage = pages.indexOf(check);
-            loadPage(curPage);
+            history.replaceState(null, "", targetUrl);
+            curPage = pages.indexOf(check);
+            $("#" + check).css("display", "flex").hide().fadeIn("slow");
+
         } else {
-            // Default load behavior
-            $("#home").css("display", "flex").hide().fadeIn("slow", function () {});
+            // Check for the 'c' parameter on standard loads too (for localhost testing)
+            let urlObj = new URL(location.href);
+            if (urlObj.searchParams.has("c")) {
+                curPage = pages.indexOf("view");
+                $("#view").css("display", "flex").hide().fadeIn("slow");
+            } else {
+                $("#home").css("display", "flex").hide().fadeIn("slow");
+            }
         }
     })();
 

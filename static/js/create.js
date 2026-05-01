@@ -113,22 +113,33 @@ function runCreatePage() {
 
     // --- Export Link Logic ---
     document.getElementById("exportBtn").addEventListener("click", () => {
-        // Encode the current state of the card
-        let compressedData = encodeCardJSON(cardData);
+            // 1. Encode the current state of the card
+            let compressedData = encodeCardJSON(cardData);
 
-        // Build the final URL (Ensure your encode function is accessible)
-        let finalUrl = "https://online-ecards.com/view?c=" + compressedData;
+            // 2. Get the dynamic base URL (e.g., http://localhost:63342 or https://online-ecards.com)
+            let baseUrl = window.location.origin;
 
-        // Display the result
-        let resultDiv = document.getElementById("exportResult");
-        resultDiv.style.display = "block";
-        resultDiv.innerHTML = `<a href="${finalUrl}" target="_blank" style="color: blue; text-decoration: underline;">Test Link</a><br><br><small>Link copied to clipboard!</small>`;
+            // 3. Build the true, dynamic clipboard URL
+            let clipboardUrl = baseUrl + "/view?c=" + compressedData;
 
-        // Copy to clipboard
-        navigator.clipboard.writeText(finalUrl).catch(err => {
-            console.error('Could not copy text: ', err);
+            // 4. Build a local-friendly test URL for the clickable button ONLY
+            let testUrl = clipboardUrl;
+            if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+                let rootPath = window.location.pathname.replace("/create", "");
+                if (rootPath === "") rootPath = "/";
+                testUrl = baseUrl + rootPath + "?c=" + compressedData;
+            }
+
+            // 5. Update the UI
+            let resultDiv = document.getElementById("exportResult");
+            resultDiv.style.display = "block";
+            resultDiv.innerHTML = `<a href="${testUrl}" target="_blank" style="color: blue; text-decoration: underline;">Click to Test Link</a><br><br><small>Link copied to clipboard!</small>`;
+
+            // 6. Copy the dynamic link to the clipboard
+            navigator.clipboard.writeText(clipboardUrl).catch(err => {
+                console.error('Could not copy text: ', err);
+            });
         });
-    });
 
     // Initialize Bindings and activate the first tab
     setupInputBindings();
