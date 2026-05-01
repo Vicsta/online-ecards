@@ -5,11 +5,10 @@ window.addEventListener("load", function () {
     (function () {
         let redirect = sessionStorage.redirect;
         delete sessionStorage.redirect;
-
-        let targetUrl = redirect ? redirect : location.href;
-
-        if (targetUrl !== location.href || redirect) {
-            let urlObj = new URL(targetUrl);
+    
+        // Only attempt redirect if the session variable actually existed
+        if (redirect) {
+            let urlObj = new URL(redirect);
             let check = urlObj.pathname.split("/").pop().split("?")[0];
 
             if (urlObj.searchParams.has("c")) {
@@ -20,19 +19,25 @@ window.addEventListener("load", function () {
 
             if (!pages.includes(check)) {
                 check = "not";
-                targetUrl = "/404";
             }
 
-            history.replaceState(null, "", targetUrl);
+            // Use the absolute redirect path
+            history.replaceState(null, "", redirect);
             curPage = pages.indexOf(check);
-            $("#" + check).css("display", "flex").hide().fadeIn("slow");
+
+            // Force hide all and only show the target
+            $(".fullPage").hide();
+            $("#" + check).css("display", "flex").show();
         } else {
+            // Normal entry (home)
             let urlObj = new URL(location.href);
             if (urlObj.searchParams.has("c")) {
                 curPage = pages.indexOf("view");
-                $("#view").css("display", "flex").hide().fadeIn("slow");
+                $(".fullPage").hide();
+                $("#view").css("display", "flex").show();
             } else {
-                $("#home").css("display", "flex").hide().fadeIn("slow");
+                $(".fullPage").hide();
+                $("#home").css("display", "flex").show();
             }
         }
     })();

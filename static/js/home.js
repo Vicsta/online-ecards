@@ -5,7 +5,6 @@ let mainCard = null;
 
 function runHomePage() {
     console.log("Running home page");
-
 }
 
 // Ensure this runs if the script is executed after DOM is ready
