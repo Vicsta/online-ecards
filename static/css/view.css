@@ -1,4 +1,8 @@
 /* --- VIEW PAGE EMPTY STATE --- */
+#noCardData {
+    margin-top: 100px;
+}
+
 .empty-state-container {
     background: #2a2a2a;
     border-radius: 15px;
