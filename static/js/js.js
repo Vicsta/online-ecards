@@ -1,4 +1,4 @@
-const pages = ["home", "about", "view", "create", "not"];
+const pages = ["home", "about", "view", "create", "contact", "not"];
 let curPage = 0; // Default index
 
 window.addEventListener("load", function () {
@@ -114,4 +114,24 @@ window.addEventListener("load", function () {
             $("#" + pages[curPage]).stop(true, true).css("display", "flex").hide().fadeIn("slow");
         });
     }
+
+    // --- AD TOGGLE LOGIC ---
+    const adToggle = document.getElementById("adToggleSwitch");
+
+    // 1. Check if they have a saved preference (Default to true/ads on)
+    let adsEnabled = localStorage.getItem("adsEnabled") !== "false";
+    adToggle.checked = adsEnabled;
+
+    // 2. Listen for them clicking the switch
+    adToggle.addEventListener("change", function() {
+        if (this.checked) {
+            localStorage.setItem("adsEnabled", "true");
+            // Logic to turn ads back on goes here later
+            console.log("Ads are ON");
+        } else {
+            localStorage.setItem("adsEnabled", "false");
+            // Logic to hide ads goes here later
+            console.log("Ads are OFF");
+        }
+    });
 });

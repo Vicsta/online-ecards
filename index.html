@@ -17,12 +17,30 @@
     <!-- Brand Name locked to the left -->
     <a href="/home" class="nav-brand">Online E-Cards</a>
 
-    <!-- The container that stretches the buttons -->
+    <!-- The container that stretches the buttons (Centered) -->
     <div class="nav-links-container">
         <a href="/home" class="nav-link">Home</a>
         <a href="/about" class="nav-link">About</a>
         <a href="/view" class="nav-link">View</a>
         <a href="/create" class="nav-link">Create</a>
+        <a href="/contact" class="nav-link">Contact</a> <!-- Added Contact! -->
+    </div>
+
+    <!-- NEW: Ad Controls locked to the right -->
+    <div class="nav-ad-controls">
+        <span class="ad-label">Ads</span>
+        <label class="switch">
+            <input type="checkbox" id="adToggleSwitch" checked>
+            <span class="slider round"></span>
+        </label>
+
+        <!-- The Tooltip -->
+        <div class="tooltip-container">
+            <div class="tooltip-icon">?</div>
+            <div class="tooltip-text">
+                This site is supported by standard banners and an optional short video when generating a link. You can disable them completely here!
+            </div>
+        </div>
     </div>
 </nav>
 
@@ -30,6 +48,7 @@
 <div class="fullPage" id="view"></div>
 <div class="fullPage" id="about"></div>
 <div class="fullPage" id="create"></div>
+<div class="fullPage" id="contact"></div>
 
 <script src="/static/js/lz-string.min.js"></script>
 <script src="/static/js/jquery-3.7.1.min.js"></script>
@@ -38,8 +57,6 @@
 <script src="/static/js/cards/cardV1.js"></script>
 <script src="/static/js/cards/cardV2.js"></script>
 <script src="/static/js/registry.js"></script>
-
-<!-- (You can remove ads.js/cardExamples.js if you aren't using them right now) -->
 
 <script>
     function loadScript(src) {
@@ -65,6 +82,7 @@
     loadPage("templates/home.html", "home", "/static/js/home.js");
     loadPage("templates/view.html", "view", "/static/js/view.js?v=4");
     loadPage("templates/about.html", "about", "/static/js/about.js");
+    loadPage("templates/contact.html", "contact", "/static/js/contact.js");
     loadPage("templates/create.html", "create", "/static/js/create.js?v=3");
 </script>
 
