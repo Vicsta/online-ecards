@@ -75,7 +75,7 @@ body, html {
 
 .card_face--front, .card_face--back {
     width: 100%; /* Full width for front and back */
-    background-color: #f0e68c; /* Light yellow for the front and back */
+    background-color: #edecce; /* Light yellow for the front and back */
 }
 
 .card_face--back {
@@ -83,7 +83,7 @@ body, html {
 }
 
 .card_face--inside-left {
-    background-color: #add8e6; /* Light blue for the inside pages */
+    background-color: #dff7ff; /* Light blue for the inside pages */
     transform: rotateY(-180deg); /* Adjust if needed for initial state */
     /*left: 50%; !* Position inside pages to the right for a book effect *!*/
     box-sizing: border-box;
@@ -91,7 +91,7 @@ body, html {
 }
 
 .card_face--inside-right {
-    background-color: #add8e6;
+    background-color: #dff7ff;
     box-sizing: border-box; /* Include padding and border in the element's total width and height */
     border-left: 1px solid rgba(1, 1, 1, 0.2); /* Example border */
 }

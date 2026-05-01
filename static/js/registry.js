@@ -3,7 +3,7 @@ const CardRegistry = {
         id: "v1",
         name: "Classic Greeting Card",
         description: "A traditional card that opens to reveal left and right inner pages.",
-        stats: "4 Pages • 3 Sections per page",
+        stats: "4 Pages • 3 Rows per page",
         previewImg: "",
         tags: ["3D Fold", "Classic"],
         cardHtml: "templates/cards/v1_card.html",
@@ -27,7 +27,7 @@ const CardRegistry = {
             id: "v2",
             name: "Infinite Book Card",
             description: "A dynamic card allowing unlimited pages and rows.",
-            stats: "Infinite Sheets • 1-10 Rows/Page",
+            stats: "Unlimited Pages • 1-10 Rows per page",
             previewImg: "",
             tags: ["3D Book", "Advanced"],
 
@@ -89,7 +89,7 @@ const CardRegistry = {
                             <input type="text" placeholder="URL or Hex (#ffcc00)" value="${faceData.bg || ''}" id="bgInputFace${f}">
                             <hr style="width: 100%; margin: 10px 0;">
 
-                            <label style="color: blue;"><b>Number of Rows (1-10)</b></label>
+                            <label style="color: #8ab4f8;"><b>Number of Rows (1-10)</b></label>
                             <input type="number" min="1" max="10" value="${faceData.rows}" id="rowCounterFace${f}">
                             <hr style="width: 100%; margin: 10px 0;">
 

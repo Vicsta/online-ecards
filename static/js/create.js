@@ -147,7 +147,7 @@ function runCreatePage(selectedVersion) {
 
         let resultDiv = document.getElementById("exportResult");
         resultDiv.style.display = "block";
-        resultDiv.innerHTML = `<a href="${testUrl}" target="_blank" style="color: blue; text-decoration: underline;">Click to Test Link</a><br><br><small>Link copied to clipboard!</small>`;
+        resultDiv.innerHTML = `<a href="${testUrl}" target="_blank" style="color: #8ab4f8; text-decoration: underline;">Click to Test Link</a><br><br><small style="color: #bbb;">Link copied to clipboard!</small>`;
         navigator.clipboard.writeText(clipboardUrl).catch(err => console.error(err));
     };
 }
