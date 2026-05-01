@@ -27,7 +27,7 @@ window.addEventListener("load", function () {
             }
 
             history.replaceState(null, "", redirect);
-            curPage = pages.indexOf(check);
+//            curPage = pages.indexOf(check);
             loadPage(curPage);
         } else {
             // Default load behavior
