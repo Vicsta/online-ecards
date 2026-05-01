@@ -73,6 +73,14 @@
     align-items: center;
 }
 
+/* Override for scrolling pages to prevent them from centering off-screen */
+#home, #about {
+    align-items: flex-start; /* Forces content to start at the top */
+    height: auto;            /* Lets the page grow dynamically */
+    min-height: 100vh;       /* Ensures the dark background fills the screen */
+    padding-top: 80px;       /* Adds a bumper so it clears the fixed navbar! */
+}
+
 /* --- PAGES LAYOUT (Home & About) --- */
 .page-container {
     max-width: 1000px;
