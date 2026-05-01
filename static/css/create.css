@@ -11,6 +11,12 @@
     overflow: hidden; /* Clips the child elements to the rounded corners */
 }
 
+/* Forces the Create page (both grid and editor) to start at the top */
+#create {
+    align-items: flex-start !important;
+    padding-top: 80px !important; /* This clears your 60px fixed navbar */
+}
+
 /* --- THE TABS & SCROLLBAR --- */
 #menuPageBar {
     display: flex;
