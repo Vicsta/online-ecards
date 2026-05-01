@@ -1,47 +1,67 @@
 /* Navigation bar styling */
 .navbar {
     display: flex;
-    justify-content: center; /* Centers the whole group */
+    justify-content: space-between; /* Puts Brand on left, Links on right/center */
     align-items: center;
     background-color: #222;
-    padding: 15px 20px; /* Added side padding so buttons don't touch the screen edge */
+    padding: 10px 30px; /* Wider padding for the brand */
     position: fixed;
     top: 0;
     width: 100%;
-    box-sizing: border-box; /* Ensures padding doesn't push the bar off-screen */
+    box-sizing: border-box;
     z-index: 1000;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
 }
 
+/* The Brand Name (Logo) Styling */
+.nav-brand {
+    color: #8ab4f8; /* Matches your pale blue accent */
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color 0.3s ease;
+}
+
+.nav-brand:hover {
+    color: #fff; /* Brightens on hover */
+}
+
+/* Container holding the buttons */
+.nav-links-container {
+    display: flex;
+    flex: 1; /* Takes up remaining space */
+    justify-content: center; /* Centers the buttons inside the remaining space */
+    max-width: 800px; /* Prevents the buttons from getting too wide */
+    margin: 0 auto; /* Keeps the block centered on big screens */
+}
+
 /* Link styling */
 .nav-link {
-    flex: 1; /* This forces the buttons to stretch and fill the space */
-    max-width: 250px; /* Prevents them from becoming absurdly wide on huge monitors */
-    margin: 0 10px; /* The "little margin" between buttons */
-    text-align: center; /* Centers the text inside the stretched button */
-
+    flex: 1;
+    margin: 0 5px;
+    text-align: center;
     color: #eee;
     text-decoration: none;
     font-size: 1.1rem;
     font-weight: 500;
-    padding: 10px 0; /* Vertical padding only, width is handled by flex */
+    padding: 10px 0;
     border-radius: 5px;
     transition: all 0.3s ease;
 }
 
-/* Hover state */
+/* Hover & Active states */
 .nav-link:hover {
-    background-color: #8ab4f8; /* Pale light blue hover */
+    background-color: #8ab4f8;
     color: #111;
     transform: translateY(-2px);
 }
 
-/* The "Currently Selected Page" state */
 .nav-link.active {
     background-color: #8ab4f8;
     color: #111;
     font-weight: bold;
-    box-shadow: inset 0 0 5px rgba(0,0,0,0.2); /* Slight inset shadow makes it look "pressed" */
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
 }
 
 .fullPage {

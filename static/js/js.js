@@ -2,29 +2,22 @@ const pages = ["about", "view", "home", "not", "create"];
 let curPage = 2; // Default to 'home'
 
 document.addEventListener("DOMContentLoaded", () => {
-    // Get the exact URL the user is currently on
-    const currentUrl = window.location.href.split('?')[0]; // Ignores extra URL parameters
-    const currentPath = window.location.pathname;
+    // 1. Get the current browser URL, remove query parameters (?v=v2), and remove trailing slashes
+    const currentUrl = window.location.href.split('?')[0].replace(/\/$/, "");
 
     const navLinks = document.querySelectorAll(".nav-link");
 
-    // Loop through all nav links
     navLinks.forEach(link => {
-        // Strip out the base URL to just compare paths (makes it work on localhost and GitHub Pages perfectly)
-        const linkPath = new URL(link.href).pathname;
+        // 2. Do the exact same cleanup to the button's href attribute
+        const linkUrl = link.href.split('?')[0].replace(/\/$/, "");
 
-        // If the current path matches the link's path, make it active
-        if (currentPath === linkPath) {
+        // 3. If they match exactly, it's the active page!
+        if (currentUrl === linkUrl) {
             link.classList.add("active");
         } else {
             link.classList.remove("active");
         }
     });
-
-    // Fallback: If we are on the exact root domain (Home), make sure the first link is active
-    if (currentPath === "/" || currentPath === "/index.html") {
-        if(navLinks[0]) navLinks[0].classList.add("active");
-    }
 });
 
 window.addEventListener("load", function () {
