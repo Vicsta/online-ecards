@@ -84,7 +84,7 @@ function applyCustomizationToCardV2(json, cardObj) {
     // Helper
     function applyBg(element, bgValue) {
         if (!bgValue || bgValue.trim() === "") {
-            element.style.backgroundColor = "transparent";
+            element.style.backgroundColor = "";
             element.style.backgroundImage = "none";
         } else if (bgValue.includes("http") || bgValue.includes("data:image") || bgValue.includes("/")) {
             element.style.backgroundColor = "transparent";
