@@ -1,3 +1,6 @@
+const pages = ["home", "about", "view", "create", "not"];
+let curPage = 0; // Default index
+
 window.addEventListener("load", function () {
 
     // --- BULLETPROOF NAV HIGHLIGHTER ---
