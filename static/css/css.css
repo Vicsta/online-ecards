@@ -81,6 +81,12 @@
     padding-top: 80px;       /* Adds a bumper so it clears the fixed navbar! */
 }
 
+/* Ensure centered pages don't slide under the 60px fixed navbar */
+#create, #view {
+    padding-top: 70px; /* 60px navbar + 10px breathing room */
+    box-sizing: border-box;
+}
+
 /* --- PAGES LAYOUT (Home & About) --- */
 .page-container {
     max-width: 1000px;

@@ -10,6 +10,11 @@ function runViewPage() {
     let encodedString = params.get("c");
 
     if (encodedString) {
+        // Hide the empty state and show the card container
+        document.getElementById("noCardData").style.display = "none";
+        document.getElementById("cardViewContainer").style.display = "flex";
+
+        // (Then append your card to #cardViewContainer instead of the raw body or #view)
         let cardData = decodeCardJSON(encodedString);
         let template = CardRegistry[cardData.version];
         if (!template) return console.error("Unknown card version!");

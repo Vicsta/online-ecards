@@ -1,1 +1,47 @@
-<div id="viewCard" style="display: flex; justify-content: center; align-items: center; width: 100%; height: 100%;"></div>
+<!-- The beautiful empty state (Shows when no ?c= data is in the URL) -->
+<div id="noCardData" class="empty-state-container">
+    <div class="empty-state-icon">📭</div>
+    <h2>No Card Found</h2>
+    <p>We couldn't find any card data in this link. If your friend sent you a link, paste it below, or start making your own!</p>
+
+    <div class="paste-link-box">
+        <input type="text" id="pasteCardUrl" placeholder="Paste the https:// link here...">
+        <button onclick="loadPastedLink()" class="button">Load Card</button>
+    </div>
+
+    <div class="divider"><span>OR</span></div>
+
+    <!-- Uses the same hero-btn class from your Home page! -->
+    <a href="/create" class="nav-link hero-btn">Start Creating Now</a>
+</div>
+
+<!-- The container for the actual 3D card (Shows when data IS found) -->
+<div id="cardViewContainer" style="display: none;">
+    <!-- Your JS will inject the built card here -->
+</div>
+
+<script>
+    // Logic to handle pasted links
+    function loadPastedLink() {
+        let urlStr = document.getElementById("pasteCardUrl").value.trim();
+        if (!urlStr) return;
+
+        try {
+            // Check if it's a full URL
+            let url = new URL(urlStr);
+            if (url.searchParams.has("c")) {
+                // If valid, just navigate the browser to the pasted link
+                window.location.href = urlStr;
+            } else {
+                alert("That link doesn't seem to contain any saved card data.");
+            }
+        } catch (e) {
+            // If they just pasted the raw encrypted string instead of a URL
+            if (urlStr.length > 50) {
+                 window.location.href = "/view?c=" + urlStr;
+            } else {
+                 alert("Please paste a valid card link.");
+            }
+        }
+    }
+</script>
