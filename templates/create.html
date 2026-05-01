@@ -7,7 +7,7 @@
         <div class="menuPageTab">Back</div>
     </div>
 
-    <!-- Settings Menu (Visible by default) -->
+    <!-- Settings Menu -->
     <div id="settingMenu" class="leftMenu">
         <label for="fontSizeInput">Font Size</label>
         <input id="fontSizeInput" type="number" min="8" max="72" value="16">
@@ -21,26 +21,15 @@
         </select>
 
         <label for="paddingInput">Card Padding</label>
-        <input id="paddingInput" type="number" min="0" max="50" value="10">
-
-        <hr style="width: 100%; margin: 15px 0;">
-
-        <!-- Full Page Backgrounds -->
-        <label for="bgFront">Front Page Background</label>
-        <input id="bgFront" type="text" placeholder="URL or Hex Color (e.g., #ffcc00)">
-
-        <label for="bgPage1">Inside Left Background</label>
-        <input id="bgPage1" type="text" placeholder="URL or Hex Color">
-
-        <label for="bgPage2">Inside Right Background</label>
-        <input id="bgPage2" type="text" placeholder="URL or Hex Color">
-
-        <label for="bgBack">Back Page Background</label>
-        <input id="bgBack" type="text" placeholder="URL or Hex Color">
+        <input id="paddingInput" type="number" min="0" max="50" value="0">
     </div>
 
-    <!-- Front Page Menu (Hidden) -->
+    <!-- Front Page Menu -->
     <div id="menu1" class="leftMenu hidden">
+        <label for="bgFront"><b>Full Page Background</b></label>
+        <input id="bgFront" type="text" placeholder="URL or Hex Color (e.g., #ffcc00)">
+        <hr style="width: 100%; margin: 10px 0;">
+
         <label for="text1Top">Top Text</label>
         <input id="text1Top" type="text" placeholder="Enter top text">
         <label for="bg1Top">Top Background</label>
@@ -57,8 +46,12 @@
         <input id="bg1Bottom" type="text" placeholder="URL or Hex Color">
     </div>
 
-    <!-- Inside Left Menu (Hidden) -->
+    <!-- Inside Left Menu -->
     <div id="menu2" class="leftMenu hidden">
+        <label for="bgPage1"><b>Full Page Background</b></label>
+        <input id="bgPage1" type="text" placeholder="URL or Hex Color">
+        <hr style="width: 100%; margin: 10px 0;">
+
         <label for="text2Top">Top Text</label>
         <input id="text2Top" type="text" placeholder="Enter top text">
         <label for="bg2Top">Top Background</label>
@@ -75,8 +68,12 @@
         <input id="bg2Bottom" type="text" placeholder="URL or Hex Color">
     </div>
 
-    <!-- Inside Right Menu (Hidden) -->
+    <!-- Inside Right Menu -->
     <div id="menu3" class="leftMenu hidden">
+        <label for="bgPage2"><b>Full Page Background</b></label>
+        <input id="bgPage2" type="text" placeholder="URL or Hex Color">
+        <hr style="width: 100%; margin: 10px 0;">
+
         <label for="text3Top">Top Text</label>
         <input id="text3Top" type="text" placeholder="Enter top text">
         <label for="bg3Top">Top Background</label>
@@ -93,8 +90,12 @@
         <input id="bg3Bottom" type="text" placeholder="URL or Hex Color">
     </div>
 
-    <!-- Back Page Menu (Hidden) -->
+    <!-- Back Page Menu -->
     <div id="menu4" class="leftMenu hidden">
+        <label for="bgBack"><b>Full Page Background</b></label>
+        <input id="bgBack" type="text" placeholder="URL or Hex Color">
+        <hr style="width: 100%; margin: 10px 0;">
+
         <label for="text4Top">Top Text</label>
         <input id="text4Top" type="text" placeholder="Enter top text">
         <label for="bg4Top">Top Background</label>
@@ -119,5 +120,3 @@
         <div id="exportResult" style="padding-top: 10px; word-break: break-all; display: none; text-align: center;"></div>
     </div>
 </div>
-
-<div id="createCard"></div>

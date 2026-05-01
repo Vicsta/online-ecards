@@ -24,7 +24,24 @@ function runCreatePage() {
 
         tabs.forEach(tab => tab.classList.remove("menuPageTabSelected")); // Remove highlight
         tabs[index].classList.add("menuPageTabSelected"); // Highlight active tab
-    }
+
+        // NEW: Auto-flip the 3D card based on the active tab
+        if (createCard) {
+            if (index === 1) {
+                // Front Tab
+                createCard.state = 0;
+            } else if (index === 2 || index === 3) {
+                // Inside L or Inside R Tabs
+                createCard.state = 1; 
+            } else if (index === 4) {
+                // Back Tab
+                createCard.state = 2;
+            }
+            // If index === 0 (Settings), it just leaves the card wherever it currently is
+
+            createCard.updateCardState(); // Trigger the CSS 3D transition
+        }
+        }
 
     tabs.forEach((tab, index) => {
         tab.addEventListener("click", () => switchMenu(index));
