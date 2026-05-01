@@ -1,33 +1,38 @@
+/* Navigation bar styling */
+.navbar {
+    display: flex;
+    justify-content: space-around;
+    align-items: center; /* Centers items vertically in the taller bar */
+    background-color: #222; /* Slightly darker than the background for contrast */
+    padding: 15px 0; /* Taller padding */
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); /* Clean drop shadow */
+}
+
+/* Link styling */
+.nav-link {
+    color: #eee;
+    text-decoration: none;
+    font-size: 1.1rem; /* Larger, more readable font */
+    font-weight: 500;
+    padding: 10px 20px;
+    border-radius: 5px;
+    transition: all 0.3s ease; /* Smooth hover transition */
+}
+
+/* Link hover effect */
+.nav-link:hover {
+    background-color: #8ab4f8; /* Pale light blue hover */
+    color: #111; /* Dark text on light background for contrast */
+    transform: translateY(-2px); /* Slight lift effect */
+}
+
 .fullPage {
     height: 100%;
     display: none;
     justify-content: center;
     align-items: center;
-}
-
-/* Navigation bar styling */
-.navbar {
-    justify-content: space-around;
-    align-items: flex-start;
-    background-color: #333;
-    padding: 10px 0;
-    position: fixed;
-    top: 0;
-    z-index: 1000;
-}
-
-/* Link styling */
-.nav-link {
-    color: white;
-    text-decoration: none;
-    font-size: 16px;
-    padding: 8px 15px;
-    transition: background-color 0.3s, color 0.3s;
-}
-
-/* Link hover effect */
-.nav-link:hover {
-    background-color: #575757;
-    color: #ddd;
-    border-radius: 5px;
 }

@@ -1,42 +1,39 @@
 #createLeftMenu {
     height: 800px;
     width: 500px;
-    background: lightblue;
+    background: #2a2a2a; /* Sleek dark panel */
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5); /* Floats off the background */
     margin-right: 250px;
     margin-left: 30px;
-    left: 30px;
+    display: flex;
+    flex-direction: column; /* Ensures tabs stay at the top, content fills the rest */
+    overflow: hidden; /* Clips the child elements to the rounded corners */
 }
 
-#create {
-    justify-content: flex-start;
-}
-
-:root {
-    --numTabs:5;
-}
-
+/* --- THE TABS & SCROLLBAR --- */
 #menuPageBar {
     display: flex;
     flex-wrap: nowrap;
     overflow-x: auto;
-    background-color: cornflowerblue;
-
-    /* Give it a thin, elegant scrollbar instead of hiding it entirely */
-    scrollbar-width: thin;
-    scrollbar-color: rgba(255, 255, 255, 0.6) transparent;
-    padding-bottom: 2px; /* tiny buffer so the scrollbar doesn't clip text */
+    background-color: #1a1a1a;
+    min-height: 50px; /* Gives the scrollbar room to breathe */
+    scrollbar-color: #8ab4f8 #1a1a1a; /* Firefox fallback */
 }
 
-/* Webkit specific styling for a sleek, modern scrollbar on Chrome/Edge/Safari */
 #menuPageBar::-webkit-scrollbar {
-    height: 6px;
+    height: 8px; /* Thicker, visible scrollbar */
 }
 #menuPageBar::-webkit-scrollbar-track {
-    background: transparent;
+    background: #1a1a1a;
 }
 #menuPageBar::-webkit-scrollbar-thumb {
-    background-color: rgba(255, 255, 255, 0.6);
+    background-color: #444;
     border-radius: 10px;
+    border: 2px solid #1a1a1a; /* Padding effect */
+}
+#menuPageBar::-webkit-scrollbar-thumb:hover {
+    background-color: #8ab4f8; /* Turns pale blue when hovered! */
 }
 
 #dynamicPageTabsContainer {
@@ -45,83 +42,163 @@
 }
 
 .menuPageTab {
-    white-space: nowrap;    /* Keep tab text on one line */
-    flex-shrink: 0;         /* Prevent tabs from squishing smaller than their text */
-    width: calc(100% / var(--numTabs));
-    height: 100%;
-    float: left;
+    white-space: nowrap;
+    flex-shrink: 0;
+    padding: 15px 25px; /* Better spacing */
     display: flex;
     align-items: center;
     justify-content: center;
-    background: cornflowerblue;
-    transition: background-color 0.3s, color 0.3s;
+    background: #1a1a1a;
+    color: #aaa;
+    border-right: 1px solid #333;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
+.menuPageTab:hover {
+    background: #333;
+    color: white;
+}
+
+.menuPageTabSelected {
+    background: #2a2a2a; /* Matches the menu body */
+    color: #8ab4f8; /* Pale blue text */
+    font-weight: bold;
+    border-bottom: 2px solid #8ab4f8; /* Nice indicator line */
+}
+
+/* --- THE MENU BODY & INPUTS --- */
 .leftMenu {
-    height: 91%;
-    background: pink;
+    padding: 25px;
+    flex-grow: 1;
+    overflow-y: auto; /* Adds a vertical scrollbar if the menu gets too long */
     display: flex;
     align-items: start;
     flex-direction: column;
+    color: #eee;
 }
 
 .hidden {
-    display: none; /* Completely removes the element from the layout */
+    display: none;
 }
 
+/* Modern Form Styling */
+.leftMenu label {
+    margin-top: 15px;
+    margin-bottom: 5px;
+    font-size: 0.95em;
+    color: #8ab4f8; /* Pale blue accents for labels */
+    font-weight: bold;
+}
+
+.leftMenu input[type="text"],
+.leftMenu input[type="number"],
+.leftMenu select {
+    width: 100%;
+    padding: 12px;
+    background: #111; /* Very dark input fields */
+    border: 1px solid #444;
+    color: white;
+    border-radius: 6px;
+    box-sizing: border-box;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.leftMenu input:focus,
+.leftMenu select:focus {
+    outline: none;
+    border-color: #8ab4f8;
+    box-shadow: 0 0 8px rgba(138, 180, 248, 0.4); /* Glow effect on click */
+}
+
+.leftMenu hr {
+    border-color: #444;
+    opacity: 0.5;
+}
+
+/* --- BUTTON ANIMATIONS --- */
+button, .button {
+    background: #8ab4f8;
+    color: #111;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 20px;
+    width: 100%;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+button:hover, .button:hover {
+    background: #a0c4ff; /* Slightly brighter pale blue on hover */
+    transform: translateY(-3px); /* Lift animation */
+    box-shadow: 0 6px 15px rgba(138, 180, 248, 0.4);
+}
+button:active {
+    transform: translateY(0); /* Press down effect */
+}
+
+/* --- TEMPLATE SELECTION GRID --- */
 .template-grid {
     display: grid;
-    /* This creates responsive columns that are at least 250px wide */
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 30px;
     max-width: 1200px;
-    margin: 0 auto;
+    margin: 40px auto;
+    padding: 0 20px;
 }
 
 .template-card {
-    background: #444;
+    background: #2a2a2a; /* Matches the new dark panel */
     border-radius: 10px;
     overflow: hidden;
     cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
     border: 2px solid transparent;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
 
 .template-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-    border-color: cornflowerblue;
+    border-color: #8ab4f8; /* Matches the new pale blue hover */
 }
 
 .template-preview {
     height: 150px;
-    background: #333;
+    background: #1a1a1a; /* Darker inset for the image/emoji */
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white;
-    font-size: 3em; /* In case you use an emoji temporarily */
-    border-bottom: 1px solid #222;
+    color: #eee;
+    font-size: 3em;
+    border-bottom: 1px solid #111;
 }
 
 .template-info {
-    padding: 15px;
-    color: white;
+    padding: 20px;
+    color: #eee;
 }
 
 .template-title {
-    font-size: 1.2em;
+    font-size: 1.25em;
     font-weight: bold;
     margin-bottom: 5px;
+    color: white;
 }
 
 .template-stats {
     font-size: 0.85em;
-    color: #aaa;
+    color: #8ab4f8; /* Pale blue for stats */
     margin-bottom: 10px;
+    font-weight: bold;
 }
 
 .template-desc {
     font-size: 0.9em;
-    color: #ddd;
+    color: #aaa;
+    line-height: 1.4;
 }
