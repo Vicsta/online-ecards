@@ -82,9 +82,10 @@ function applyCustomizationToCardV2(json, cardObj) {
     scene.style.fontSize = json.fontSize;
 
     // Helper
-    function applyBg(element, bgValue) {
+    function applyBg(element, bgValue, defaultColor) {
+        if (!element) return;
         if (!bgValue || bgValue.trim() === "") {
-            element.style.backgroundColor = "";
+            element.style.backgroundColor = defaultColor;
             element.style.backgroundImage = "none";
         } else if (bgValue.includes("http") || bgValue.includes("data:image") || bgValue.includes("/")) {
             element.style.backgroundColor = "transparent";
@@ -105,14 +106,16 @@ function applyCustomizationToCardV2(json, cardObj) {
         let leafDiv = document.createElement("div");
         leafDiv.className = "book-leaf";
 
-        // Face 1: The Front of this leaf
+        // --- FRONT FACE ---
         let frontFaceIndex = s * 2;
         let frontFace = document.createElement("div");
         frontFace.className = "book-face front";
         frontFace.style.padding = json.padding;
 
         let fData = json.faces[frontFaceIndex] || { bg: "", rows: 1, rowData: [{text:"", bg:""}] };
-        applyBg(frontFace, fData.bg);
+
+        // FORCE FACE TO BE WHITE
+        applyBg(frontFace, fData.bg, "white");
 
         for (let r = 0; r < fData.rows; r++) {
             let row = document.createElement("div");
@@ -120,11 +123,13 @@ function applyCustomizationToCardV2(json, cardObj) {
             row.style.height = `${100 / fData.rows}%`;
             let rData = fData.rowData[r] || {text:"", bg:""};
             row.textContent = rData.text;
-            applyBg(row, rData.bg);
+
+            // ROWS REMAIN TRANSPARENT BY DEFAULT
+            applyBg(row, rData.bg, "transparent");
             frontFace.appendChild(row);
         }
 
-        // Add Next Button to Front Face (unless it's the absolute last page of a 1-sheet card)
+        // Add Next Button
         if (frontFaceIndex < totalFaces - 1) {
             let nextBtn = document.createElement("img");
             nextBtn.className = "nav-btn next";
@@ -132,14 +137,16 @@ function applyCustomizationToCardV2(json, cardObj) {
             frontFace.appendChild(nextBtn);
         }
 
-        // Face 2: The Back of this leaf
+        // --- BACK FACE ---
         let backFaceIndex = (s * 2) + 1;
         let backFace = document.createElement("div");
         backFace.className = "book-face back";
         backFace.style.padding = json.padding;
 
         let bData = json.faces[backFaceIndex] || { bg: "", rows: 1, rowData: [{text:"", bg:""}] };
-        applyBg(backFace, bData.bg);
+
+        // FORCE FACE TO BE WHITE
+        applyBg(backFace, bData.bg, "white");
 
         for (let r = 0; r < bData.rows; r++) {
             let row = document.createElement("div");
@@ -147,17 +154,18 @@ function applyCustomizationToCardV2(json, cardObj) {
             row.style.height = `${100 / bData.rows}%`;
             let rData = bData.rowData[r] || {text:"", bg:""};
             row.textContent = rData.text;
-            applyBg(row, rData.bg);
+
+            // ROWS REMAIN TRANSPARENT BY DEFAULT
+            applyBg(row, rData.bg, "transparent");
             backFace.appendChild(row);
         }
 
-        // Add Prev Button to Back Face
+        // Add Prev Button
         let prevBtn = document.createElement("img");
         prevBtn.className = "nav-btn prev";
         prevBtn.src = arrowSrc;
         backFace.appendChild(prevBtn);
 
-        // Assemble the leaf
         leafDiv.appendChild(frontFace);
         leafDiv.appendChild(backFace);
         scene.appendChild(leafDiv);

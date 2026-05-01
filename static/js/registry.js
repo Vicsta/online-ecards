@@ -61,36 +61,32 @@ const CardRegistry = {
                     tabContainer.innerHTML = "";
                     menuContainer.innerHTML = "";
 
-                    // Cap physical sheets between 1 and 20 just to prevent browser crashing
                     let sheets = Math.min(Math.max(parseInt(cardData.sheets) || 1, 1), 20);
                     let totalFaces = sheets * 2;
 
-                    // Sync the JSON array length with the face count
                     while (cardData.faces.length < totalFaces) {
                         cardData.faces.push({ bg: "", rows: 1, rowData: [{text: "", bg: ""}] });
                     }
-                    cardData.faces.splice(totalFaces); // Trim excess if sheets were reduced
+                    cardData.faces.splice(totalFaces);
 
                     for (let f = 0; f < totalFaces; f++) {
                         let faceData = cardData.faces[f];
                         let faceName = getFaceName(f, totalFaces);
 
-                        // 1. Build Tab
                         let tab = document.createElement("div");
                         tab.className = "menuPageTab";
                         tab.textContent = faceName;
-                        tab.onclick = () => switchV2Tab(f + 1); // +1 because Settings is index 0
+                        tab.onclick = () => switchV2Tab(f + 1);
                         tabContainer.appendChild(tab);
 
-                        // 2. Build Menu Panel
                         let menu = document.createElement("div");
                         menu.className = "leftMenu hidden";
                         menu.id = `v2MenuFace${f}`;
 
+                        // NO INLINE ONINPUT STRINGS HERE
                         let menuHTML = `
                             <label><b>${faceName} Background</b></label>
-                            <input type="text" placeholder="URL or Hex (#ffcc00)" value="${faceData.bg || ''}"
-                                   oninput="cardData.faces[${f}].bg = this.value; template.applyStyles(cardData, createCard);">
+                            <input type="text" placeholder="URL or Hex (#ffcc00)" value="${faceData.bg || ''}" id="bgInputFace${f}">
                             <hr style="width: 100%; margin: 10px 0;">
 
                             <label style="color: blue;"><b>Number of Rows (1-10)</b></label>
@@ -102,7 +98,12 @@ const CardRegistry = {
                         menu.innerHTML = menuHTML;
                         menuContainer.appendChild(menu);
 
-                        // Listener to regenerate row inputs when number changes
+                        // ATTACH LISTENERS PURELY IN JS
+                        document.getElementById(`bgInputFace${f}`).addEventListener("input", (e) => {
+                            cardData.faces[f].bg = e.target.value;
+                            template.applyStyles(cardData, createCard);
+                        });
+
                         document.getElementById(`rowCounterFace${f}`).addEventListener("input", (e) => {
                             let newRowCount = parseInt(e.target.value) || 1;
                             if(newRowCount > 10) newRowCount = 10;
@@ -119,7 +120,7 @@ const CardRegistry = {
                         rebuildRowInputs(f);
                     }
 
-                    document.documentElement.style.setProperty('--numTabs', Math.min(totalFaces + 1, 6)); // Cap tab width in CSS
+                    document.documentElement.style.setProperty('--numTabs', Math.min(totalFaces + 1, 6));
                 }
 
                 function rebuildRowInputs(faceIndex) {
@@ -131,15 +132,28 @@ const CardRegistry = {
 
                     for(let r = 0; r < faceData.rows; r++) {
                         let rowData = faceData.rowData[r] || {text:"", bg:""};
+
+                        // NO INLINE ONINPUT STRINGS HERE
                         let html = `
                             <div style="margin-bottom: 15px; padding: 10px; background: rgba(0,0,0,0.05); border-radius: 5px;">
                                 <label><b>Row ${r + 1} Text</b></label>
-                                <input type="text" value="${rowData.text}" oninput="cardData.faces[${faceIndex}].rowData[${r}].text = this.value; template.applyStyles(cardData, createCard);">
+                                <input type="text" value="${rowData.text}" id="textInputF${faceIndex}R${r}">
                                 <label><b>Row ${r + 1} Background</b></label>
-                                <input type="text" value="${rowData.bg}" oninput="cardData.faces[${faceIndex}].rowData[${r}].bg = this.value; template.applyStyles(cardData, createCard);">
+                                <input type="text" value="${rowData.bg}" id="bgInputF${faceIndex}R${r}">
                             </div>
                         `;
                         container.insertAdjacentHTML('beforeend', html);
+
+                        // ATTACH LISTENERS PURELY IN JS
+                        document.getElementById(`textInputF${faceIndex}R${r}`).addEventListener("input", (e) => {
+                            cardData.faces[faceIndex].rowData[r].text = e.target.value;
+                            template.applyStyles(cardData, createCard);
+                        });
+
+                        document.getElementById(`bgInputF${faceIndex}R${r}`).addEventListener("input", (e) => {
+                            cardData.faces[faceIndex].rowData[r].bg = e.target.value;
+                            template.applyStyles(cardData, createCard);
+                        });
                     }
                 }
 
