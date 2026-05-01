@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="icon" type="image/png" href="/favicon.png">
     <meta charset="UTF-8">
     <title>Online E-Cards</title>
-    <link rel="stylesheet" href="static/css/card.css">
-    <link rel="stylesheet" href="static/css/css.css">
-    <link rel="stylesheet" href="static/css/view.css">
-    <link rel="stylesheet" href="static/css/create.css">
-    <link rel="stylesheet" href="static/css/cards/v2_card.css">
+    <!-- Add the leading slash to all of these -->
+    <link rel="stylesheet" href="/static/css/card.css">
+    <link rel="stylesheet" href="/static/css/css.css">
+    <link rel="stylesheet" href="/static/css/view.css">
+    <link rel="stylesheet" href="/static/css/create.css">
+    <link rel="stylesheet" href="/static/css/cards/v2_card.css">
 </head>
 <body>
 
@@ -30,17 +31,13 @@
 <div class="fullPage" id="about"></div>
 <div class="fullPage" id="create"></div>
 
-<script src="static/js/lz-string.min.js"></script>
-<script src="static/js/jquery-3.7.1.min.js"></script>
-
-<!-- Core Logic -->
-<script src="static/js/js.js"></script>
-<script src="static/js/card.js"></script>
-
-<!-- Card Templates & Registry -->
-<script src="static/js/cards/cardV1.js"></script>
-<script src="static/js/cards/cardV2.js"></script>
-<script src="static/js/registry.js"></script>
+<script src="/static/js/lz-string.min.js"></script>
+<script src="/static/js/jquery-3.7.1.min.js"></script>
+<script src="/static/js/js.js"></script>
+<script src="/static/js/card.js"></script>
+<script src="/static/js/cards/cardV1.js"></script>
+<script src="/static/js/cards/cardV2.js"></script>
+<script src="/static/js/registry.js"></script>
 
 <!-- (You can remove ads.js/cardExamples.js if you aren't using them right now) -->
 
@@ -65,10 +62,10 @@
             .catch(error => console.error('Error loading page:', error));
     }
 
-    loadPage("templates/home.html", "home", "static/js/home.js");
-    loadPage("templates/view.html", "view", "static/js/view.js");
-    loadPage("templates/about.html", "about", "static/js/about.js");
-    loadPage("templates/create.html", "create", "static/js/create.js");
+    loadPage("templates/home.html", "home", "/static/js/home.js");
+    loadPage("templates/view.html", "view", "/static/js/view.js");
+    loadPage("templates/about.html", "about", "/static/js/about.js");
+    loadPage("templates/create.html", "create", "/static/js/create.js");
 </script>
 
 </body>

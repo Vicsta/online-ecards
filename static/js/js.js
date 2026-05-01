@@ -1,9 +1,24 @@
 window.addEventListener("load", function () {
 
-    // --- NEW: Helper function to manage the active button ---
-    function updateNav(targetPage) {
-        $(".nav-link").removeClass("active"); // Clear all
-        $(`.nav-link[href='/${targetPage}']`).addClass("active"); // Highlight current
+    // --- BULLETPROOF NAV HIGHLIGHTER ---
+    function updateNav() {
+        // Get the current path, default to /home if at the root
+        let currentPath = window.location.pathname;
+        if (currentPath === "/" || currentPath === "/index.html") {
+            currentPath = "/home";
+        }
+
+        // Remove active class from all links
+        $(".nav-link").removeClass("active");
+
+        // Loop through and find the exact match
+        $(".nav-link").each(function() {
+            // Get the raw attribute (e.g. "/home")
+            let linkPath = $(this).attr("href");
+            if (linkPath === currentPath) {
+                $(this).addClass("active");
+            }
+        });
     }
 
     (function () {
