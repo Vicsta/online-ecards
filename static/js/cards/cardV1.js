@@ -66,6 +66,12 @@ const cardV1_bindings = {
 };
 
 function applyCustomizationToCardV1(json, cardObj) {
+    // --- NEW SAFETY CHECK ---
+    if (!cardObj || !cardObj.scene) {
+        console.warn("Card not ready for styling yet.");
+        return;
+    }
+
     let card = cardObj.scene;
 
     card.style.fontFamily = json.font;
