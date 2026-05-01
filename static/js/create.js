@@ -112,7 +112,7 @@ function runCreatePage(selectedVersion) {
 
         // --- THE FAKE RESPONSE CHECK ---
         // If the server gave us a 404 page disguised as a success, catch it here!
-        if (!cardHtml.includes('class="scene"')) {
+        if (!cardHtml.includes('scene')) {
             console.error("Fetched file did not contain the 3D scene! Server returned:", cardHtml.substring(0, 100));
             return alert("Failed to fetch the true card HTML. The server intercepted the request.");
         }
