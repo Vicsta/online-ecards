@@ -17,20 +17,28 @@
 
 #menuPageBar {
     display: flex;
-    flex-wrap: nowrap;      /* Prevent tabs from wrapping to a second line */
-    overflow-x: auto;       /* Allow horizontal scrolling */
-    background-color: cornflowerblue; /* Assuming this is your header color */
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    background-color: cornflowerblue;
 
-    /* Optional: Hide the ugly scrollbar for a cleaner look */
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+    /* Give it a thin, elegant scrollbar instead of hiding it entirely */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.6) transparent;
+    padding-bottom: 2px; /* tiny buffer so the scrollbar doesn't clip text */
 }
 
+/* Webkit specific styling for a sleek, modern scrollbar on Chrome/Edge/Safari */
 #menuPageBar::-webkit-scrollbar {
-    display: none; /* Hide scrollbar for Chrome/Safari */
+    height: 6px;
+}
+#menuPageBar::-webkit-scrollbar-track {
+    background: transparent;
+}
+#menuPageBar::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.6);
+    border-radius: 10px;
 }
 
-/* Ensure the container holding the dynamic tabs also doesn't wrap */
 #dynamicPageTabsContainer {
     display: flex;
     flex-wrap: nowrap;

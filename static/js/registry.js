@@ -167,19 +167,21 @@ const CardRegistry = {
                     tabs.forEach(t => t.classList.remove("menuPageTabSelected"));
                     if(tabs[index]) tabs[index].classList.add("menuPageTabSelected");
 
-                    // Auto-flip book to show the face the user is editing!
+                    // --- TAB FLIPPING MATH FIX ---
                     if (createCard && index > 0) {
                         let faceBeingEdited = index - 1;
-                        let sheetIndex = Math.floor(faceBeingEdited / 2); // 0,0 -> 0. 1,1 -> 1.
+
+                        // Math.ceil correctly pairs the front/back faces to the required open state
+                        let requiredState = Math.ceil(faceBeingEdited / 2);
 
                         // Close all pages
                         createCard.leaves.forEach(l => l.classList.remove("flipped"));
 
                         // Open up to the sheet we need
-                        for(let i = 0; i < sheetIndex; i++) {
-                            createCard.leaves[i].classList.add("flipped");
+                        for(let i = 0; i < requiredState; i++) {
+                            if (createCard.leaves[i]) createCard.leaves[i].classList.add("flipped");
                         }
-                        createCard.currentState = sheetIndex;
+                        createCard.currentState = requiredState;
                         createCard.updateBook();
                     }
                 }

@@ -171,15 +171,24 @@ function applyCustomizationToCardV2(json, cardObj) {
         scene.appendChild(leafDiv);
     }
 
-    // Re-initialize the engine now that the DOM exists
+    // --- CLEAN ENGINE RE-INITIALIZATION FIX ---
     if (cardObj) {
-        // We preserve the current open state so it doesn't snap shut when they type
         let oldState = cardObj.currentState || 0;
-        Object.assign(cardObj, new CardV2(scene));
 
-        // Restore flip state
-        cardObj.currentState = Math.min(oldState, json.sheets);
-        for(let i=0; i<cardObj.currentState; i++) {
+        // 1. Manually update the core properties without breaking the Javascript instance
+        cardObj.scene = scene;
+        cardObj.leaves = Array.from(scene.querySelectorAll('.book-leaf'));
+        cardObj.maxState = cardObj.leaves.length; // Ensure max limit perfectly matches new sheet count
+
+        // 2. Cap the current state so we don't try to open to a page that no longer exists!
+        cardObj.currentState = Math.min(oldState, cardObj.maxState);
+
+        // 3. Re-bind the physical next/prev buttons to the correct instance methods
+        scene.querySelectorAll('.nav-btn.next').forEach(btn => btn.onclick = (e) => { e.stopPropagation(); cardObj.next(); });
+        scene.querySelectorAll('.nav-btn.prev').forEach(btn => btn.onclick = (e) => { e.stopPropagation(); cardObj.prev(); });
+
+        // 4. Apply the physical flips
+        for(let i = 0; i < cardObj.currentState; i++) {
             cardObj.leaves[i].classList.add("flipped");
         }
         cardObj.updateBook();
