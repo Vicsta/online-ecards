@@ -1,11 +1,9 @@
 let viewCard = null;
 
 function runViewPage() {
-    // 1. Target the correct IDs from your new view.html
     let container = document.getElementById("cardViewContainer");
     let emptyState = document.getElementById("noCardData");
 
-    // If the HTML hasn't injected yet, stop.
     if (!container || !emptyState) return;
 
     let targetUrl = sessionStorage.redirect ? sessionStorage.redirect : window.location.href;
@@ -14,31 +12,47 @@ function runViewPage() {
     let encodedString = params.get("c");
 
     if (encodedString) {
-        // WE FOUND A CARD: Hide empty state, show the card container
+        let cardData = null;
+
+        // 1. SAFELY try to decode the data. If it's garbage, catch the error.
+        try {
+            cardData = decodeCardJSON(encodedString);
+        } catch (e) {
+            console.error("Decryption failed:", e);
+        }
+
+        // 2. If decoding failed, bounce them back to the empty state safely!
+        if (!cardData || !cardData.version) {
+            alert("Oops! The link or code you provided is invalid or corrupted.");
+
+            // Clean the garbage out of the browser's URL bar so they aren't stuck
+            window.history.replaceState(null, "", "/view");
+
+            emptyState.style.display = "block";
+            container.style.display = "none";
+            return; // Stop running
+        }
+
+        // 3. The data is safe and valid! Hide the dashboard and build the card.
         emptyState.style.display = "none";
         container.style.display = "flex";
 
-        let cardData = decodeCardJSON(encodedString);
         let template = CardRegistry[cardData.version];
-        if (!template) return console.error("Unknown card version!");
+        if (!template) {
+            alert("This card uses an unknown or outdated template.");
+            return;
+        }
 
-        // Pass the container so the card builds inside it
         replaceElementWithCard(container, template).then(card => {
             viewCard = card;
             template.applyStyles(cardData, viewCard);
         });
+
     } else {
-        // WE FOUND NOTHING: Ensure the empty state is visible
+        // No ?c= parameter at all, just show the dashboard
         emptyState.style.display = "block";
         container.style.display = "none";
     }
-}
-
-// Make sure it runs when the view page is clicked
-if (document.readyState === "complete" || document.readyState === "interactive") {
-    runViewPage();
-} else {
-    document.addEventListener("DOMContentLoaded", runViewPage);
 }
 
 // --- BUTTON LOGIC FOR THE EMPTY STATE ---
@@ -47,20 +61,22 @@ window.loadPastedLink = function() {
     if (!urlStr) return;
 
     try {
-        // Check if it's a full URL
         let url = new URL(urlStr);
         if (url.searchParams.has("c")) {
-            // If valid, navigate the browser to the pasted link
+            // It's a valid full URL, go to it
             window.location.href = urlStr;
         } else {
             alert("That link doesn't seem to contain any saved card data.");
         }
     } catch (e) {
-        // If they just pasted the raw encrypted string instead of a URL
-        if (urlStr.length > 50) {
-             window.location.href = "/view?c=" + urlStr;
-        } else {
-             alert("Please paste a valid card link.");
-        }
+        // If they pasted raw text/garbage, encode it safely so the URL doesn't break.
+        // runViewPage() will catch it on reload and throw the "Invalid" alert.
+        window.location.href = "/view?c=" + encodeURIComponent(urlStr);
     }
 };
+
+if (document.readyState === "complete" || document.readyState === "interactive") {
+    runViewPage();
+} else {
+    document.addEventListener("DOMContentLoaded", runViewPage);
+}
