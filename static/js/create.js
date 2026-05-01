@@ -122,6 +122,9 @@ function runCreatePage(selectedVersion) {
 
         createCard = template.initCard(container);
 
+        // If the template has its own dynamic UI builder, let it run!
+        if (template.onLoad) template.onLoad(template, cardData, createCard);
+
         template.applyStyles(cardData, createCard);
         setupDynamicBindings(template.bindings(), template);
         setupTabs(template);

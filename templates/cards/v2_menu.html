@@ -1,0 +1,27 @@
+<div id="menuPageBar">
+    <div class="menuPageTab menuPageTabSelected" id="v2TabSettings">Settings</div>
+    <div id="dynamicPageTabsContainer" style="display: contents;">
+        <!-- JavaScript will insert Page 1, Page 2, etc tabs here based on Total Pages -->
+    </div>
+</div>
+
+<div id="settingMenu" class="leftMenu">
+    <label for="totalPagesInput" style="color: blue;"><b>Total Pages (1-4)</b></label>
+    <input id="totalPagesInput" type="number" min="1" max="4" value="4">
+    <hr style="width: 100%; margin: 10px 0;">
+
+    <label for="fontSizeInput">Font Size</label>
+    <input id="fontSizeInput" type="number" min="8" max="72" value="16">
+    <label for="fontStyleInput">Font Style</label>
+    <select id="fontStyleInput">
+        <option value="Arial" selected>Arial</option>
+        <option value="Times New Roman">Times New Roman</option>
+        <option value="fangsong">FangSong</option>
+    </select>
+    <label for="paddingInput">Card Padding</label>
+    <input id="paddingInput" type="number" value="0">
+</div>
+
+<div id="dynamicMenusContainer">
+    <!-- JavaScript will insert the dynamic inputs for each page here -->
+</div>
