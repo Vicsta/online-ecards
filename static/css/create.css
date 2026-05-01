@@ -16,22 +16,29 @@
 }
 
 #menuPageBar {
-    height: 9%;
-    font-weight: bold;
-    cursor: pointer;
+    display: flex;
+    flex-wrap: nowrap;      /* Prevent tabs from wrapping to a second line */
+    overflow-x: auto;       /* Allow horizontal scrolling */
+    background-color: cornflowerblue; /* Assuming this is your header color */
+
+    /* Optional: Hide the ugly scrollbar for a cleaner look */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
 
-.menuPageTab:hover {
-    background-color: #575757;
-    color: #ddd;
-    border-radius: 5px;
+#menuPageBar::-webkit-scrollbar {
+    display: none; /* Hide scrollbar for Chrome/Safari */
 }
 
-.menuPageTabSelected {
-    box-shadow: inset 0 0 0 3px red; /* Inner outline */
+/* Ensure the container holding the dynamic tabs also doesn't wrap */
+#dynamicPageTabsContainer {
+    display: flex;
+    flex-wrap: nowrap;
 }
 
 .menuPageTab {
+    white-space: nowrap;    /* Keep tab text on one line */
+    flex-shrink: 0;         /* Prevent tabs from squishing smaller than their text */
     width: calc(100% / var(--numTabs));
     height: 100%;
     float: left;
