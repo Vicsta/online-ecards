@@ -1,10 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<div class="page-container" style="max-width: 600px;">
+    <div class="hero-section" style="border-bottom: none; padding-bottom: 20px;">
+        <h1 class="hero-title">Contact Us</h1>
+        <p class="hero-subtitle">Have a question, feature request, or found a bug? Let us know!</p>
+    </div>
 
-</body>
-</html>
+    <div class="contact-form-container">
+        <form id="contactForm">
+            <!-- REPLACE VALUE WITH YOUR ACTUAL WEB3FORMS KEY -->
+            <input type="hidden" name="access_key" value="1de42a8d-94be-4b50-9a3e-41b3e24e01bc">
+
+            <div class="input-group">
+                <label>Name</label>
+                <input type="text" name="name" required placeholder="Your Name">
+            </div>
+
+            <div class="input-group">
+                <label>Email</label>
+                <input type="email" name="email" required placeholder="your@email.com">
+            </div>
+
+            <div class="input-group">
+                <label>Message</label>
+                <!-- Using a textarea for multi-line messages -->
+                <textarea name="message" required rows="6" placeholder="How can we help?"></textarea>
+            </div>
+
+            <!-- Using your new sleek green button! -->
+            <button type="submit" id="submitBtn" class="button" style="background: #4ade80; color: #111;">Send Message</button>
+
+            <!-- This is where we will show the Success/Error message via JS -->
+            <div id="formResult" style="display: none; text-align: center; margin-top: 15px; font-weight: bold;"></div>
+        </form>
+    </div>
+</div>

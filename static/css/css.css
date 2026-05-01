@@ -341,3 +341,47 @@ input:checked + .slider:before {
     visibility: visible;
     opacity: 1;
 }
+
+/* --- CONTACT FORM STYLES --- */
+.contact-form-container {
+    background: #2a2a2a;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    border: 1px solid #333;
+}
+
+.input-group {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group label {
+    margin-bottom: 8px;
+    color: #8ab4f8;
+    font-weight: bold;
+    font-size: 0.95em;
+}
+
+/* Make sure the text box matches your inputs */
+.input-group input,
+.input-group textarea {
+    width: 100%;
+    padding: 12px;
+    background: #222;
+    border: 1px solid #555;
+    color: white;
+    border-radius: 6px;
+    font-family: inherit;
+    box-sizing: border-box;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    resize: vertical; /* Lets the user drag it taller if they write a lot */
+}
+
+.input-group input:focus,
+.input-group textarea:focus {
+    outline: none;
+    border-color: #8ab4f8;
+    box-shadow: 0 0 8px rgba(138, 180, 248, 0.4);
+}
