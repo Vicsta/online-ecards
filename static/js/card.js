@@ -119,10 +119,10 @@ function applyCustomizationToCardV1(json, cardObj) {
     let insideRightFace = card.querySelector(".card_face--inside-right");
     let backFace = card.querySelector(".card_face--back");
 
-    if (frontFace) frontFace.style.backgroundImage = json.front1 ? `url(${json.front1})` : "none";
+    if (frontFace) frontFace.style.backgroundImage = json.front ? `url(${json.front})` : "none";
     if (insideLeftFace) insideLeftFace.style.backgroundImage = json.page1 ? `url(${json.page1})` : "none";
     if (insideRightFace) insideRightFace.style.backgroundImage = json.page2 ? `url(${json.page2})` : "none";
-    if (backFace) backFace.style.backgroundImage = json.back1 ? `url(${json.back1})` : "none";
+    if (backFace) backFace.style.backgroundImage = json.back ? `url(${json.back})` : "none";
 
     [frontFace, insideLeftFace, insideRightFace, backFace].forEach(face => {
         if (face) {
