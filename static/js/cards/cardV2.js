@@ -1,75 +1,88 @@
 class CardV2 {
     constructor(sceneElement) {
         this.scene = sceneElement;
-        this.cardFront = sceneElement.querySelector('.cardFront');
-        this.cardBack = sceneElement.querySelector('.cardBack');
-        this.state = 0;
-        this.Xpercent = 50;
+        this.leaves = Array.from(sceneElement.querySelectorAll('.book-leaf'));
+        this.currentState = 0; // 0 = Closed cover, 1 = First open spread, etc.
+        this.maxState = this.leaves.length;
 
-        this.scene.querySelectorAll(".buttonNext").forEach(button => button.addEventListener('click', () => this.next()));
-        this.scene.querySelectorAll(".buttonPrev").forEach(button => button.addEventListener('click', () => this.prev()));
+        // Attach listeners to whatever buttons exist in the DOM right now
+        this.scene.querySelectorAll('.nav-btn.next').forEach(btn => btn.onclick = (e) => { e.stopPropagation(); this.next(); });
+        this.scene.querySelectorAll('.nav-btn.prev').forEach(btn => btn.onclick = (e) => { e.stopPropagation(); this.prev(); });
+
+        this.updateBook();
     }
-    next() { if (this.state < 2) { this.state++; this.updateCardState(); } }
-    prev() { if (this.state > 0) { this.state--; this.updateCardState(); } }
-    updateCardState() {
-        switch (this.state) {
-            case 0:
-                this.cardFront.style.transform = "rotateY(0deg)";
-                this.scene.style.transform = "translateX(0)";
-                setTimeout(() => { this.cardBack.style.zIndex = 0; this.cardFront.style.zIndex = 2; }, 200);
-                break;
-            case 1:
-                this.cardFront.style.transform = "rotateY(-180deg)";
-                this.cardBack.style.transform = "rotateY(0deg)";
-                this.scene.style.transform = `translateX(${this.Xpercent}%)`;
-                break;
-            case 2:
-                this.cardBack.style.transform = "rotateY(-180deg)";
-                this.scene.style.transform = `translateX(${this.Xpercent * 2}%)`;
-                setTimeout(() => { this.cardFront.style.zIndex = 0; this.cardBack.style.zIndex = 2; }, 200);
-                break;
+
+    next() {
+        if (this.currentState < this.maxState) {
+            this.leaves[this.currentState].classList.add('flipped');
+            this.currentState++;
+            this.updateBook();
+        }
+    }
+
+    prev() {
+        if (this.currentState > 0) {
+            this.currentState--;
+            this.leaves[this.currentState].classList.remove('flipped');
+            this.updateBook();
+        }
+    }
+
+    updateBook() {
+        // Fix z-indexing so pages stack correctly based on which side they are on
+        this.leaves.forEach((leaf, i) => {
+            if (i < this.currentState) {
+                leaf.style.zIndex = i + 1; // Flipped to the left
+            } else {
+                leaf.style.zIndex = this.leaves.length - i; // Stacked on the right
+            }
+        });
+
+        // Shift the entire book to stay centered on the screen
+        if (this.leaves.length === 1) {
+            // Postcard logic
+            this.scene.style.transform = this.currentState === 1 ? "translateX(50%)" : "translateX(0%)";
+        } else {
+            // Book logic
+            if (this.currentState === 0) {
+                this.scene.style.transform = "translateX(0%)"; // Closed, resting right
+            } else if (this.currentState === this.maxState) {
+                this.scene.style.transform = "translateX(100%)"; // Fully open, resting left
+            } else {
+                this.scene.style.transform = "translateX(50%)"; // Center hinge
+            }
         }
     }
 }
 
-// Default Data Structure
 const cardV2_defaults = {
     version: "v2",
-    font: "Arial",
-    fontSize: "16px",
-    padding: "0px",
-
-    // Total Pages (1 to 10)
-    totalPages: 4,
-
-    // Page Data Array. Each object represents a page.
-    pages: [
-        { bg: "", rows: 3, rowData: [{text: "Top", bg: ""}, {text: "Middle", bg: ""}, {text: "Bottom", bg: ""}] }, // Page 1
-        { bg: "", rows: 2, rowData: [{text: "Inside Top", bg: ""}, {text: "Inside Bottom", bg: ""}] }, // Page 2
-        { bg: "", rows: 1, rowData: [{text: "Full Page", bg: ""}] }, // Page 3
-        { bg: "", rows: 3, rowData: [{text: "", bg: ""}, {text: "", bg: ""}, {text: "Back", bg: ""}] }  // Page 4
+    font: "Arial", fontSize: "16px", padding: "10px",
+    sheets: 2, // 2 sheets = 4 faces (Standard Folded Card)
+    faces: [
+        { bg: "", rows: 1, rowData: [{text: "Front Cover", bg: ""}] },
+        { bg: "", rows: 2, rowData: [{text: "Inside Left Top", bg: ""}, {text: "Inside Left Bottom", bg: ""}] },
+        { bg: "", rows: 2, rowData: [{text: "Inside Right Top", bg: ""}, {text: "Inside Right Bottom", bg: ""}] },
+        { bg: "", rows: 1, rowData: [{text: "Back Cover", bg: ""}] }
     ]
 };
 
-// We don't use standard bindings for V2 because the inputs are dynamically generated!
-const cardV2_bindings = {
-    "fontSizeInput": "fontSize",
-    "fontStyleInput": "font",
-    "paddingInput": "padding",
-    "totalPagesInput": "totalPages"
-};
+// Empty bindings because V2 builds its UI dynamically via the Registry
+const cardV2_bindings = {};
 
 function applyCustomizationToCardV2(json, cardObj) {
-    if (!cardObj || !cardObj.scene) return;
-    let card = cardObj.scene;
+    let scene = document.getElementById("v2BookEngine");
+    if (!scene) return;
 
-    card.style.fontFamily = json.font;
-    card.style.fontSize = json.fontSize;
-    card.style.padding = json.padding;
+    // Wipe the scene clean to rebuild it
+    scene.innerHTML = "";
 
-    // Helper: Safely apply background colors or images
+    // Global Styles
+    scene.style.fontFamily = json.font;
+    scene.style.fontSize = json.fontSize;
+
+    // Helper
     function applyBg(element, bgValue) {
-        if (!element) return;
         if (!bgValue || bgValue.trim() === "") {
             element.style.backgroundColor = "transparent";
             element.style.backgroundImage = "none";
@@ -84,59 +97,83 @@ function applyCustomizationToCardV2(json, cardObj) {
         }
     }
 
-    // Dynamic Page Builder
-    const faceSelectors = [
-        ".card_face--front",
-        ".card_face--inside-left",
-        ".card_face--inside-right",
-        ".card_face--back"
-    ];
+    let totalFaces = json.sheets * 2;
+    let arrowSrc = "static/images/Arrow%20Right.png"; // Ensure this path is correct!
 
-    for (let p = 0; p < 4; p++) {
-        let face = card.querySelector(faceSelectors[p]);
-        if (!face) continue;
+    // Build the physical leaves
+    for (let s = 0; s < json.sheets; s++) {
+        let leafDiv = document.createElement("div");
+        leafDiv.className = "book-leaf";
 
-        // Save navigation buttons before wiping
-        let buttons = face.querySelectorAll(".buttonNext, .buttonPrev");
+        // Face 1: The Front of this leaf
+        let frontFaceIndex = s * 2;
+        let frontFace = document.createElement("div");
+        frontFace.className = "book-face front";
+        frontFace.style.padding = json.padding;
 
-        // Wipe face and apply background
-        face.innerHTML = "";
+        let fData = json.faces[frontFaceIndex] || { bg: "", rows: 1, rowData: [{text:"", bg:""}] };
+        applyBg(frontFace, fData.bg);
 
-        // If the user set fewer pages, hide the unused faces entirely
-        if (p >= json.totalPages) {
-            face.style.visibility = "hidden";
-            continue;
-        } else {
-            face.style.visibility = "visible";
+        for (let r = 0; r < fData.rows; r++) {
+            let row = document.createElement("div");
+            row.className = "v2-row";
+            row.style.height = `${100 / fData.rows}%`;
+            let rData = fData.rowData[r] || {text:"", bg:""};
+            row.textContent = rData.text;
+            applyBg(row, rData.bg);
+            frontFace.appendChild(row);
         }
 
-        let pageData = json.pages[p] || { bg: "", rows: 1, rowData: [{text: "", bg: ""}] };
-        let hasFullBg = pageData.bg && pageData.bg.trim() !== "";
-
-        applyBg(face, pageData.bg);
-
-        // Calculate height percentage per row
-        let heightPercent = 100 / pageData.rows;
-
-        // Build the Rows
-        for (let r = 0; r < pageData.rows; r++) {
-            let rowDiv = document.createElement("div");
-            rowDiv.className = "v2-row";
-            rowDiv.style.height = `${heightPercent}%`;
-
-            let rowInfo = pageData.rowData[r] || {text: "", bg: ""};
-            rowDiv.textContent = rowInfo.text;
-
-            if (hasFullBg) {
-                rowDiv.style.backgroundColor = "transparent";
-            } else {
-                applyBg(rowDiv, rowInfo.bg);
-            }
-
-            face.appendChild(rowDiv);
+        // Add Next Button to Front Face (unless it's the absolute last page of a 1-sheet card)
+        if (frontFaceIndex < totalFaces - 1) {
+            let nextBtn = document.createElement("img");
+            nextBtn.className = "nav-btn next";
+            nextBtn.src = arrowSrc;
+            frontFace.appendChild(nextBtn);
         }
 
-        // Re-attach buttons
-        buttons.forEach(btn => face.appendChild(btn));
+        // Face 2: The Back of this leaf
+        let backFaceIndex = (s * 2) + 1;
+        let backFace = document.createElement("div");
+        backFace.className = "book-face back";
+        backFace.style.padding = json.padding;
+
+        let bData = json.faces[backFaceIndex] || { bg: "", rows: 1, rowData: [{text:"", bg:""}] };
+        applyBg(backFace, bData.bg);
+
+        for (let r = 0; r < bData.rows; r++) {
+            let row = document.createElement("div");
+            row.className = "v2-row";
+            row.style.height = `${100 / bData.rows}%`;
+            let rData = bData.rowData[r] || {text:"", bg:""};
+            row.textContent = rData.text;
+            applyBg(row, rData.bg);
+            backFace.appendChild(row);
+        }
+
+        // Add Prev Button to Back Face
+        let prevBtn = document.createElement("img");
+        prevBtn.className = "nav-btn prev";
+        prevBtn.src = arrowSrc;
+        backFace.appendChild(prevBtn);
+
+        // Assemble the leaf
+        leafDiv.appendChild(frontFace);
+        leafDiv.appendChild(backFace);
+        scene.appendChild(leafDiv);
+    }
+
+    // Re-initialize the engine now that the DOM exists
+    if (cardObj) {
+        // We preserve the current open state so it doesn't snap shut when they type
+        let oldState = cardObj.currentState || 0;
+        Object.assign(cardObj, new CardV2(scene));
+
+        // Restore flip state
+        cardObj.currentState = Math.min(oldState, json.sheets);
+        for(let i=0; i<cardObj.currentState; i++) {
+            cardObj.leaves[i].classList.add("flipped");
+        }
+        cardObj.updateBook();
     }
 }

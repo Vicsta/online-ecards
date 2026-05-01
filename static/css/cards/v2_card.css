@@ -1,0 +1,83 @@
+/* static/css/v2_card.css */
+
+.book-scene {
+    width: 400px;
+    height: 600px;
+    perspective: 2000px; /* High perspective for realistic book depth */
+    position: relative;
+    transition: transform 0.6s ease-in-out;
+}
+
+.book-leaf {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.8s ease-in-out;
+    transform-origin: left center; /* Hinge is on the left */
+}
+
+.book-leaf.flipped {
+    transform: rotateY(-180deg);
+}
+
+.book-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    display: flex;
+    flex-direction: column; /* Stack rows vertically */
+    background-color: white;
+    box-shadow: inset 0 0 15px rgba(0,0,0,0.1), 2px 5px 15px rgba(0,0,0,0.2);
+}
+
+.book-face.front {
+    transform: rotateY(0deg);
+}
+
+.book-face.back {
+    transform: rotateY(180deg); /* The back of the page is reversed */
+}
+
+/* Dynamic Rows */
+.v2-row {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    box-sizing: border-box;
+    border-bottom: 1px dashed rgba(0,0,0,0.1);
+}
+
+.v2-row:last-child {
+    border-bottom: none;
+}
+
+/* Navigation Buttons Overlay */
+.nav-btn {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    bottom: 10px;
+    cursor: pointer;
+    z-index: 50;
+    opacity: 0.5;
+    transition: opacity 0.2s;
+}
+
+.nav-btn:hover {
+    opacity: 1;
+}
+
+.nav-btn.next {
+    right: 10px;
+}
+
+.nav-btn.prev {
+    left: 10px;
+    transform: rotateY(180deg);
+}

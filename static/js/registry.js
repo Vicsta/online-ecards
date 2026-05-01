@@ -24,157 +24,171 @@ const CardRegistry = {
     },
 
     "v2": {
-        id: "v2",
-        name: "Dynamic Multi-Row Card",
-        description: "Build cards with customizable pages and stacked rows.",
-        stats: "1-4 Pages • 1-10 Rows/Page",
-        previewImg: "",
-        tags: ["3D Fold", "Advanced"],
+            id: "v2",
+            name: "Infinite Book Card",
+            description: "A dynamic card allowing unlimited pages and rows.",
+            stats: "Infinite Sheets • 1-10 Rows/Page",
+            previewImg: "",
+            tags: ["3D Book", "Advanced"],
 
-        cardHtml: "templates/cards/v2_card.html",
-        menuHtml: "templates/cards/v2_menu.html",
+            cardHtml: "templates/cards/v2_card.html",
+            menuHtml: "templates/cards/v2_menu.html",
 
-        initCard: (container) => {
-            const scene = container.querySelector(".scene");
-            return scene ? new CardV2(scene) : null;
-        },
+            initCard: (container) => {
+                const scene = container.querySelector(".scene");
+                return scene ? new CardV2(scene) : null;
+            },
 
-        defaultData: () => JSON.parse(JSON.stringify(cardV2_defaults)),
-        applyStyles: (json, cardObj) => applyCustomizationToCardV2(json, cardObj),
-        bindings: () => cardV2_bindings,
+            defaultData: () => JSON.parse(JSON.stringify(cardV2_defaults)),
+            applyStyles: (json, cardObj) => applyCustomizationToCardV2(json, cardObj),
+            bindings: () => cardV2_bindings,
 
-        // --- NEW: Custom UI Builder for V2 ---
-        // Because the UI is entirely dynamic, V2 builds its own menu inside create.js
-        onLoad: (template, cardData, createCard) => {
+            onLoad: (template, cardData, createCard) => {
 
-            function rebuildUI() {
-                let tabContainer = document.getElementById("dynamicPageTabsContainer");
-                let menuContainer = document.getElementById("dynamicMenusContainer");
-                if (!tabContainer || !menuContainer) return;
-
-                tabContainer.innerHTML = "";
-                menuContainer.innerHTML = "";
-
-                let totalPages = Math.min(Math.max(parseInt(cardData.totalPages) || 1, 1), 4);
-
-                // Keep the JSON array length synced with the page count
-                while (cardData.pages.length < totalPages) {
-                    cardData.pages.push({ bg: "", rows: 1, rowData: [{text: "", bg: ""}] });
+                // Helper to name faces logically
+                function getFaceName(index, totalFaces) {
+                    if (index === 0) return "Front Cover";
+                    if (index === totalFaces - 1) return "Back Cover";
+                    if (index % 2 !== 0) return `Inside L ${Math.ceil(index/2)}`;
+                    return `Inside R ${Math.ceil(index/2)}`;
                 }
 
-                const faceNames = ["Front", "Inside L", "Inside R", "Back"];
+                function rebuildUI() {
+                    let tabContainer = document.getElementById("dynamicPageTabsContainer");
+                    let menuContainer = document.getElementById("dynamicMenusContainer");
+                    if (!tabContainer || !menuContainer) return;
 
-                for (let p = 0; p < totalPages; p++) {
-                    let pageData = cardData.pages[p];
+                    tabContainer.innerHTML = "";
+                    menuContainer.innerHTML = "";
 
-                    // 1. Build the Tab
-                    let tab = document.createElement("div");
-                    tab.className = "menuPageTab";
-                    tab.textContent = faceNames[p];
-                    tab.onclick = () => switchV2Tab(p + 1); // +1 because Settings is index 0
-                    tabContainer.appendChild(tab);
+                    // Cap physical sheets between 1 and 20 just to prevent browser crashing
+                    let sheets = Math.min(Math.max(parseInt(cardData.sheets) || 1, 1), 20);
+                    let totalFaces = sheets * 2;
 
-                    // 2. Build the Menu Panel
-                    let menu = document.createElement("div");
-                    menu.className = "leftMenu hidden";
-                    menu.id = `v2MenuPage${p}`;
+                    // Sync the JSON array length with the face count
+                    while (cardData.faces.length < totalFaces) {
+                        cardData.faces.push({ bg: "", rows: 1, rowData: [{text: "", bg: ""}] });
+                    }
+                    cardData.faces.splice(totalFaces); // Trim excess if sheets were reduced
 
-                    // Build HTML for the menu
-                    let menuHTML = `
-                        <label><b>Full Page Background</b></label>
-                        <input type="text" placeholder="URL or Hex (#ffcc00)" value="${pageData.bg || ''}"
-                               oninput="cardData.pages[${p}].bg = this.value; template.applyStyles(cardData, createCard);">
-                        <hr style="width: 100%; margin: 10px 0;">
+                    for (let f = 0; f < totalFaces; f++) {
+                        let faceData = cardData.faces[f];
+                        let faceName = getFaceName(f, totalFaces);
 
-                        <label style="color: blue;"><b>Number of Rows (1-10)</b></label>
-                        <input type="number" min="1" max="10" value="${pageData.rows}" id="rowCounter${p}">
-                        <hr style="width: 100%; margin: 10px 0;">
+                        // 1. Build Tab
+                        let tab = document.createElement("div");
+                        tab.className = "menuPageTab";
+                        tab.textContent = faceName;
+                        tab.onclick = () => switchV2Tab(f + 1); // +1 because Settings is index 0
+                        tabContainer.appendChild(tab);
 
-                        <div id="v2RowInputs${p}"></div>
-                    `;
-                    menu.innerHTML = menuHTML;
-                    menuContainer.appendChild(menu);
+                        // 2. Build Menu Panel
+                        let menu = document.createElement("div");
+                        menu.className = "leftMenu hidden";
+                        menu.id = `v2MenuFace${f}`;
 
-                    // Add listener to the row counter so changing rows dynamically rebuilds the inputs below it!
-                    document.getElementById(`rowCounter${p}`).addEventListener("input", (e) => {
-                        let newRowCount = parseInt(e.target.value) || 1;
-                        if(newRowCount > 10) newRowCount = 10;
-                        if(newRowCount < 1) newRowCount = 1;
+                        let menuHTML = `
+                            <label><b>${faceName} Background</b></label>
+                            <input type="text" placeholder="URL or Hex (#ffcc00)" value="${faceData.bg || ''}"
+                                   oninput="cardData.faces[${f}].bg = this.value; template.applyStyles(cardData, createCard);">
+                            <hr style="width: 100%; margin: 10px 0;">
 
-                        cardData.pages[p].rows = newRowCount;
+                            <label style="color: blue;"><b>Number of Rows (1-10)</b></label>
+                            <input type="number" min="1" max="10" value="${faceData.rows}" id="rowCounterFace${f}">
+                            <hr style="width: 100%; margin: 10px 0;">
 
-                        // Sync the JSON rowData array
-                        while (cardData.pages[p].rowData.length < newRowCount) {
-                            cardData.pages[p].rowData.push({text: "", bg: ""});
+                            <div id="v2RowInputsFace${f}"></div>
+                        `;
+                        menu.innerHTML = menuHTML;
+                        menuContainer.appendChild(menu);
+
+                        // Listener to regenerate row inputs when number changes
+                        document.getElementById(`rowCounterFace${f}`).addEventListener("input", (e) => {
+                            let newRowCount = parseInt(e.target.value) || 1;
+                            if(newRowCount > 10) newRowCount = 10;
+                            if(newRowCount < 1) newRowCount = 1;
+
+                            cardData.faces[f].rows = newRowCount;
+                            while (cardData.faces[f].rowData.length < newRowCount) {
+                                cardData.faces[f].rowData.push({text: "", bg: ""});
+                            }
+                            rebuildRowInputs(f);
+                            template.applyStyles(cardData, createCard);
+                        });
+
+                        rebuildRowInputs(f);
+                    }
+
+                    document.documentElement.style.setProperty('--numTabs', Math.min(totalFaces + 1, 6)); // Cap tab width in CSS
+                }
+
+                function rebuildRowInputs(faceIndex) {
+                    let container = document.getElementById(`v2RowInputsFace${faceIndex}`);
+                    if(!container) return;
+                    container.innerHTML = "";
+
+                    let faceData = cardData.faces[faceIndex];
+
+                    for(let r = 0; r < faceData.rows; r++) {
+                        let rowData = faceData.rowData[r] || {text:"", bg:""};
+                        let html = `
+                            <div style="margin-bottom: 15px; padding: 10px; background: rgba(0,0,0,0.05); border-radius: 5px;">
+                                <label><b>Row ${r + 1} Text</b></label>
+                                <input type="text" value="${rowData.text}" oninput="cardData.faces[${faceIndex}].rowData[${r}].text = this.value; template.applyStyles(cardData, createCard);">
+                                <label><b>Row ${r + 1} Background</b></label>
+                                <input type="text" value="${rowData.bg}" oninput="cardData.faces[${faceIndex}].rowData[${r}].bg = this.value; template.applyStyles(cardData, createCard);">
+                            </div>
+                        `;
+                        container.insertAdjacentHTML('beforeend', html);
+                    }
+                }
+
+                function switchV2Tab(index) {
+                    let tabs = [document.getElementById("v2TabSettings"), ...document.querySelectorAll("#dynamicPageTabsContainer .menuPageTab")];
+                    let menus = [document.getElementById("settingMenu"), ...document.querySelectorAll("#dynamicMenusContainer .leftMenu")];
+
+                    menus.forEach(menu => menu.classList.add("hidden"));
+                    if(menus[index]) menus[index].classList.remove("hidden");
+
+                    tabs.forEach(t => t.classList.remove("menuPageTabSelected"));
+                    if(tabs[index]) tabs[index].classList.add("menuPageTabSelected");
+
+                    // Auto-flip book to show the face the user is editing!
+                    if (createCard && index > 0) {
+                        let faceBeingEdited = index - 1;
+                        let sheetIndex = Math.floor(faceBeingEdited / 2); // 0,0 -> 0. 1,1 -> 1.
+
+                        // Close all pages
+                        createCard.leaves.forEach(l => l.classList.remove("flipped"));
+
+                        // Open up to the sheet we need
+                        for(let i = 0; i < sheetIndex; i++) {
+                            createCard.leaves[i].classList.add("flipped");
                         }
+                        createCard.currentState = sheetIndex;
+                        createCard.updateBook();
+                    }
+                }
 
-                        rebuildRowInputs(p);
+                // Bind Global Inputs
+                document.getElementById("sheetsInput").addEventListener("input", (e) => {
+                    cardData.sheets = e.target.value;
+                    rebuildUI();
+                    switchV2Tab(0);
+                    template.applyStyles(cardData, createCard);
+                });
+
+                ['fontSizeInput', 'fontStyleInput', 'paddingInput'].forEach(id => {
+                    document.getElementById(id).addEventListener("input", (e) => {
+                        let key = id.replace("Input", "");
+                        cardData[key] = e.target.value + (id.includes("Size") || id.includes("padding") ? "px" : "");
                         template.applyStyles(cardData, createCard);
                     });
+                });
 
-                    // Build the actual text/bg inputs for the current number of rows
-                    rebuildRowInputs(p);
-                }
-
-                // Make sure CSS Variables match dynamic tab count (Settings + Pages)
-                document.documentElement.style.setProperty('--numTabs', totalPages + 1);
-            }
-
-            function rebuildRowInputs(pageIndex) {
-                let container = document.getElementById(`v2RowInputs${pageIndex}`);
-                if(!container) return;
-                container.innerHTML = "";
-
-                let pageData = cardData.pages[pageIndex];
-
-                for(let r = 0; r < pageData.rows; r++) {
-                    let rowData = pageData.rowData[r] || {text:"", bg:""};
-
-                    let html = `
-                        <div style="margin-bottom: 15px; padding: 10px; background: rgba(0,0,0,0.05); border-radius: 5px;">
-                            <label><b>Row ${r + 1} Text</b></label>
-                            <input type="text" value="${rowData.text}" oninput="cardData.pages[${pageIndex}].rowData[${r}].text = this.value; template.applyStyles(cardData, createCard);">
-
-                            <label><b>Row ${r + 1} Background</b></label>
-                            <input type="text" value="${rowData.bg}" oninput="cardData.pages[${pageIndex}].rowData[${r}].bg = this.value; template.applyStyles(cardData, createCard);">
-                        </div>
-                    `;
-                    container.insertAdjacentHTML('beforeend', html);
-                }
-            }
-
-            // Tab Switching Logic specifically for V2
-            function switchV2Tab(index) {
-                let tabs = [document.getElementById("v2TabSettings"), ...document.querySelectorAll("#dynamicPageTabsContainer .menuPageTab")];
-                let menus = [document.getElementById("settingMenu"), ...document.querySelectorAll("#dynamicMenusContainer .leftMenu")];
-
-                menus.forEach(menu => menu.classList.add("hidden"));
-                if(menus[index]) menus[index].classList.remove("hidden");
-
-                tabs.forEach(t => t.classList.remove("menuPageTabSelected"));
-                if(tabs[index]) tabs[index].classList.add("menuPageTabSelected");
-
-                // Flip the 3D card
-                if (createCard) {
-                    if (index === 1) createCard.state = 0;
-                    else if (index === 2 || index === 3) createCard.state = 1;
-                    else if (index === 4) createCard.state = 2;
-                    createCard.updateCardState();
-                }
-            }
-
-            // Initial Build
-            rebuildUI();
-
-            // Wire up the Settings Tab
-            document.getElementById("v2TabSettings").onclick = () => switchV2Tab(0);
-
-            // Listen for changes to Total Pages to trigger a full UI rebuild
-            document.getElementById("totalPagesInput").addEventListener("input", () => {
+                // Init UI
                 rebuildUI();
-                switchV2Tab(0);
-                template.applyStyles(cardData, createCard);
-            });
+                document.getElementById("v2TabSettings").onclick = () => switchV2Tab(0);
+            }
         }
-    }
-};
+    };
