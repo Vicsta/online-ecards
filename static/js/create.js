@@ -32,7 +32,7 @@ function runCreatePage() {
                 createCard.state = 0;
             } else if (index === 2 || index === 3) {
                 // Inside L or Inside R Tabs
-                createCard.state = 1; 
+                createCard.state = 1;
             } else if (index === 4) {
                 // Back Tab
                 createCard.state = 2;
