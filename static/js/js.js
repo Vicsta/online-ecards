@@ -5,7 +5,7 @@ window.addEventListener("load", function () {
     (function () {
         let redirect = sessionStorage.redirect;
         delete sessionStorage.redirect;
-    
+
         // Only attempt redirect if the session variable actually existed
         if (redirect) {
             let urlObj = new URL(redirect);
