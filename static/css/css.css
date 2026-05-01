@@ -82,7 +82,7 @@
 }
 
 /* Ensure centered pages don't slide under the 60px fixed navbar */
-#create, #view {
+#create, #view, #contact {
     padding-top: 70px; /* 60px navbar + 10px breathing room */
     box-sizing: border-box;
 }
@@ -98,7 +98,7 @@
 /* Hero Section */
 .hero-section {
     text-align: center;
-    padding: 40px 0 60px;
+    padding: 20px 0 60px;
     border-bottom: 1px solid #333;
     margin-bottom: 40px;
 }
@@ -223,7 +223,7 @@
 }
 
 /* --- RIGHT NAVBAR CONTROLS (Ad Toggle) --- */
-.nav-ad-controls {
+.nav-toggle-controls {
     position: absolute;
     right: 30px;
     display: flex;
@@ -231,7 +231,7 @@
     gap: 10px;
 }
 
-.ad-label {
+.toggle-label {
     color: #aaa;
     font-size: 0.9rem;
     font-weight: bold;
