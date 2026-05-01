@@ -1,6 +1,32 @@
 const pages = ["about", "view", "home", "not", "create"];
 let curPage = 2; // Default to 'home'
 
+document.addEventListener("DOMContentLoaded", () => {
+    // Get the exact URL the user is currently on
+    const currentUrl = window.location.href.split('?')[0]; // Ignores extra URL parameters
+    const currentPath = window.location.pathname;
+
+    const navLinks = document.querySelectorAll(".nav-link");
+
+    // Loop through all nav links
+    navLinks.forEach(link => {
+        // Strip out the base URL to just compare paths (makes it work on localhost and GitHub Pages perfectly)
+        const linkPath = new URL(link.href).pathname;
+
+        // If the current path matches the link's path, make it active
+        if (currentPath === linkPath) {
+            link.classList.add("active");
+        } else {
+            link.classList.remove("active");
+        }
+    });
+
+    // Fallback: If we are on the exact root domain (Home), make sure the first link is active
+    if (currentPath === "/" || currentPath === "/index.html") {
+        if(navLinks[0]) navLinks[0].classList.add("active");
+    }
+});
+
 window.addEventListener("load", function () {
     (function () {
         let redirect = sessionStorage.redirect;

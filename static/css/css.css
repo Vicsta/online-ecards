@@ -1,33 +1,47 @@
 /* Navigation bar styling */
 .navbar {
     display: flex;
-    justify-content: space-around;
-    align-items: center; /* Centers items vertically in the taller bar */
-    background-color: #222; /* Slightly darker than the background for contrast */
-    padding: 15px 0; /* Taller padding */
+    justify-content: center; /* Centers the whole group */
+    align-items: center;
+    background-color: #222;
+    padding: 15px 20px; /* Added side padding so buttons don't touch the screen edge */
     position: fixed;
     top: 0;
     width: 100%;
+    box-sizing: border-box; /* Ensures padding doesn't push the bar off-screen */
     z-index: 1000;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); /* Clean drop shadow */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
 }
 
 /* Link styling */
 .nav-link {
+    flex: 1; /* This forces the buttons to stretch and fill the space */
+    max-width: 250px; /* Prevents them from becoming absurdly wide on huge monitors */
+    margin: 0 10px; /* The "little margin" between buttons */
+    text-align: center; /* Centers the text inside the stretched button */
+
     color: #eee;
     text-decoration: none;
-    font-size: 1.1rem; /* Larger, more readable font */
+    font-size: 1.1rem;
     font-weight: 500;
-    padding: 10px 20px;
+    padding: 10px 0; /* Vertical padding only, width is handled by flex */
     border-radius: 5px;
-    transition: all 0.3s ease; /* Smooth hover transition */
+    transition: all 0.3s ease;
 }
 
-/* Link hover effect */
+/* Hover state */
 .nav-link:hover {
     background-color: #8ab4f8; /* Pale light blue hover */
-    color: #111; /* Dark text on light background for contrast */
-    transform: translateY(-2px); /* Slight lift effect */
+    color: #111;
+    transform: translateY(-2px);
+}
+
+/* The "Currently Selected Page" state */
+.nav-link.active {
+    background-color: #8ab4f8;
+    color: #111;
+    font-weight: bold;
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.2); /* Slight inset shadow makes it look "pressed" */
 }
 
 .fullPage {
