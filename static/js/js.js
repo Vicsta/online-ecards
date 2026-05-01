@@ -1,31 +1,15 @@
-const pages = ["about", "view", "home", "not", "create"];
-let curPage = 2; // Default to 'home'
-
-document.addEventListener("DOMContentLoaded", () => {
-    // 1. Get the current browser URL, remove query parameters (?v=v2), and remove trailing slashes
-    const currentUrl = window.location.href.split('?')[0].replace(/\/$/, "");
-
-    const navLinks = document.querySelectorAll(".nav-link");
-
-    navLinks.forEach(link => {
-        // 2. Do the exact same cleanup to the button's href attribute
-        const linkUrl = link.href.split('?')[0].replace(/\/$/, "");
-
-        // 3. If they match exactly, it's the active page!
-        if (currentUrl === linkUrl) {
-            link.classList.add("active");
-        } else {
-            link.classList.remove("active");
-        }
-    });
-});
-
 window.addEventListener("load", function () {
+
+    // --- NEW: Helper function to manage the active button ---
+    function updateNav(targetPage) {
+        $(".nav-link").removeClass("active"); // Clear all
+        $(`.nav-link[href='/${targetPage}']`).addClass("active"); // Highlight current
+    }
+
     (function () {
         let redirect = sessionStorage.redirect;
         delete sessionStorage.redirect;
 
-        // Only attempt redirect if the session variable actually existed
         if (redirect) {
             let urlObj = new URL(redirect);
             let check = urlObj.pathname.split("/").pop().split("?")[0];
@@ -40,24 +24,30 @@ window.addEventListener("load", function () {
                 check = "not";
             }
 
-            // Use the absolute redirect path
             history.replaceState(null, "", redirect);
             curPage = pages.indexOf(check);
 
-            // Force hide all and only show the target
             $(".fullPage").hide();
             $("#" + check).css("display", "flex").show();
+
+            updateNav(check); // Update Nav on redirect load
         } else {
-            // Normal entry (home)
             let urlObj = new URL(location.href);
+            let checkPage = "home"; // Default
+
             if (urlObj.searchParams.has("c")) {
-                curPage = pages.indexOf("view");
-                $(".fullPage").hide();
-                $("#view").css("display", "flex").show();
+                checkPage = "view";
             } else {
-                $(".fullPage").hide();
-                $("#home").css("display", "flex").show();
+                // If we are explicitly on /create or /about, catch it here
+                let ext = urlObj.pathname.split("/").pop().split("?")[0];
+                if (pages.includes(ext) && ext !== "") checkPage = ext;
             }
+
+            curPage = pages.indexOf(checkPage);
+            $(".fullPage").hide();
+            $("#" + checkPage).css("display", "flex").show();
+
+            updateNav(checkPage); // Update Nav on normal load
         }
     })();
 
@@ -74,6 +64,7 @@ window.addEventListener("load", function () {
         }
 
         loadPage(pages.indexOf(ext));
+        updateNav(ext); // Update Nav on Back/Forward button press
     };
 
     $(".nav-link").on("click", function(e) {
@@ -83,6 +74,7 @@ window.addEventListener("load", function () {
         if (pages.includes(target)) {
             history.pushState(null, "", "/" + target);
             loadPage(pages.indexOf(target));
+            updateNav(target); // Update Nav when user clicks a button!
         } else {
             history.pushState(null, "", "/404");
             loadPage(pages.indexOf("not"));
