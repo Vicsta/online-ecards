@@ -40,3 +40,27 @@ if (document.readyState === "complete" || document.readyState === "interactive")
 } else {
     document.addEventListener("DOMContentLoaded", runViewPage);
 }
+
+// --- BUTTON LOGIC FOR THE EMPTY STATE ---
+window.loadPastedLink = function() {
+    let urlStr = document.getElementById("pasteCardUrl").value.trim();
+    if (!urlStr) return;
+
+    try {
+        // Check if it's a full URL
+        let url = new URL(urlStr);
+        if (url.searchParams.has("c")) {
+            // If valid, navigate the browser to the pasted link
+            window.location.href = urlStr;
+        } else {
+            alert("That link doesn't seem to contain any saved card data.");
+        }
+    } catch (e) {
+        // If they just pasted the raw encrypted string instead of a URL
+        if (urlStr.length > 50) {
+             window.location.href = "/view?c=" + urlStr;
+        } else {
+             alert("Please paste a valid card link.");
+        }
+    }
+};
