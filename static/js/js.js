@@ -12,10 +12,13 @@ window.addEventListener("load", function () {
         document.body.setAttribute('data-current-page', pageName);
         document.body.setAttribute('data-editor-active', 'false');
 
+        // If we land on create, check if the editor should be active
         if (pageName === 'create') {
+            let editorDiv = document.getElementById("cardEditor");
             let params = new URLSearchParams(window.location.search);
-            if (params.has("v")) {
-                console.log("Editor Detected: True");
+
+            // The ultimate truth: Is the editor div actually visible, OR does the URL ask for it?
+            if ((editorDiv && editorDiv.style.display === "flex") || params.has("v")) {
                 document.body.setAttribute('data-editor-active', 'true');
             }
         }

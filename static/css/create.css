@@ -292,3 +292,15 @@ button:active {
     font-size: 1.2rem;
     border: 1px solid rgba(0,0,0,0.2);
 }
+
+/* --- CREATE PAGE SCROLLING (Fixes overlap squishing) --- */
+body[data-editor-active="true"] #create {
+    justify-content: flex-start; /* Prevents the left side from getting cut off when scrolling */
+    overflow-x: auto; /* Enables the horizontal scrollbar */
+    width: 100vw;
+}
+
+body[data-editor-active="true"] #cardEditor {
+    min-width: 1200px; /* Forces the container to stay wide instead of squishing */
+    padding-right: 200px; /* Creates a blank "safe zone" for the right banner to float over! */
+}
