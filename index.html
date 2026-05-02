@@ -100,7 +100,10 @@
 <script src="/static/js/cards/cardV1.js"></script>
 <script src="/static/js/cards/cardV2.js"></script>
 <script src="/static/js/registry.js?v=12"></script>
-<script src="/static/js/background.js?v=1"></script>
+
+<script src="/static/js/animations/BouncingShapes.js?v=1"></script>
+<script src="/static/js/animations/FloatingSprites.js?v=1"></script>
+<script src="/static/js/animations/AnimController.js?v=1"></script>
 
 <script>
     function loadScript(src) {
@@ -144,17 +147,9 @@
         }
 
         // 2. Update the Animated Background Layer
-        if (typeof AnimatedBackground !== "undefined") {
-            if (themeValue === "dark") {
-                AnimatedBackground.setTheme("dark");
-                AnimatedBackground.setShape("square");
-            } else if (themeValue === "birthday") {
-                AnimatedBackground.setTheme("light");
-                AnimatedBackground.setShape("square");
-            } else if (themeValue === "valentine") {
-                AnimatedBackground.setTheme("light");
-                AnimatedBackground.setShape("circle"); // Valentines gets floating circles!
-            }
+        if (typeof AnimController !== "undefined") {
+            AnimController.init();
+            AnimController.setTheme(themeValue);
         }
     }
 
