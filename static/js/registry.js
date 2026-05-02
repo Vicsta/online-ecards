@@ -4,7 +4,7 @@ const CardRegistry = {
         name: "Classic Greeting Card",
         description: "A traditional card that opens to reveal left and right inner pages.",
         stats: "4 Pages • 3 Rows per page",
-        previewImg: "",
+        previewImg: "static/images/previews/v1.jpeg",
         tags: ["3D Fold", "Classic"],
         cardHtml: "templates/cards/v1_card.html",
         menuHtml: "templates/cards/v1_menu.html",
@@ -28,7 +28,7 @@ const CardRegistry = {
             name: "Infinite Book Card",
             description: "A dynamic card allowing unlimited pages and rows.",
             stats: "Unlimited Pages • 1-10 Rows per page",
-            previewImg: "",
+            previewImg: "static/images/previews/v2.jpeg",
             tags: ["3D Book", "Advanced"],
 
             cardHtml: "templates/cards/v2_card.html",
