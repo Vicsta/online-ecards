@@ -4,30 +4,30 @@
 }
 
 .empty-state-container {
-    background: #2a2a2a;
+    background: var(--bg-panel); /* Variable */
     border-radius: 15px;
     padding: 40px;
     text-align: center;
     max-width: 500px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-    color: #eee;
-    border: 1px solid #333;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4); /* Kept dark for depth */
+    color: var(--text-main); /* Variable */
+    border: 1px solid var(--border-color); /* Variable */
 }
 
 .empty-state-icon {
     font-size: 5rem;
     margin-bottom: 10px;
-    text-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    text-shadow: 0 5px 15px rgba(0,0,0,0.5); /* Kept dark for depth */
 }
 
 .empty-state-container h2 {
-    color: #fff;
+    color: var(--text-main); /* Variable */
     margin-bottom: 15px;
     font-size: 2rem;
 }
 
 .empty-state-container p {
-    color: #bbb;
+    color: var(--text-muted); /* Variable */
     line-height: 1.5;
     margin-bottom: 25px;
 }
@@ -42,9 +42,9 @@
 .paste-link-box input {
     flex: 1;
     padding: 12px 15px;
-    background: #111;
-    border: 1px solid #444;
-    color: white;
+    background: var(--bg-input); /* Variable */
+    border: 1px solid var(--border-color); /* Variable */
+    color: var(--text-main); /* Variable */
     border-radius: 6px;
     font-size: 1rem;
     transition: all 0.3s ease;
@@ -52,12 +52,12 @@
 
 .paste-link-box input:focus {
     outline: none;
-    border-color: #8ab4f8;
-    box-shadow: 0 0 8px rgba(138, 180, 248, 0.3);
+    border-color: var(--accent-color); /* Variable */
+    box-shadow: 0 0 8px var(--accent-color); /* Variable */
 }
 
 .paste-link-box button {
-    margin-top: 0; /* overrides default button margin */
+    margin-top: 0;
     width: auto;
 }
 
@@ -75,14 +75,14 @@
     top: 50%;
     width: 100%;
     height: 1px;
-    background: #444;
+    background: var(--border-color); /* Variable */
     z-index: 1;
 }
 
 .divider span {
-    background: #2a2a2a; /* matches the container background */
+    background: var(--bg-panel); /* Variable (Matches container so the line hides behind it) */
     padding: 0 15px;
-    color: #888;
+    color: var(--text-muted); /* Variable */
     position: relative;
     z-index: 2;
     font-size: 0.9rem;

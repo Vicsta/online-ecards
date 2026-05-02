@@ -2,8 +2,8 @@
 .navbar {
     display: flex;
     align-items: center;
-    background-color: #222;
-    height: 60px; /* Fixed height makes stretching links easier */
+    background-color: var(--nav-bg); /* Variable */
+    height: 60px;
     position: fixed;
     top: 0;
     width: 100%;
@@ -14,56 +14,56 @@
 
 /* The Brand Name (Logo) Styling */
 .nav-brand {
-    color: #8ab4f8;
+    color: var(--accent-color); /* Variable */
     font-size: 1.5rem;
     font-weight: bold;
     text-decoration: none;
     white-space: nowrap;
-    position: absolute; /* Pins it to the left so it doesn't squish the buttons */
-    left: 30px;
+    position: static !important; /* From your previous update */
+    margin: 0;
     transition: color 0.3s ease;
 }
 
 .nav-brand:hover {
-    color: #fff;
+    color: var(--text-main); /* Variable */
 }
 
 /* Container holding the buttons */
 .nav-links-container {
     display: flex;
     width: 100%;
-    max-width: 600px; /* How wide the button group is allowed to stretch */
-    margin: 0 auto; /* Perfectly centers the buttons in the screen */
-    height: 100%; /* Fills the navbar height */
+    max-width: 600px;
+    margin: 0 auto;
+    height: 100%;
 }
 
 /* Link styling */
 .nav-link {
-    flex: 1; /* Makes them all equal width */
+    flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #eee;
+    color: var(--text-main); /* Variable */
     text-decoration: none;
     font-size: 1.1rem;
     font-weight: 500;
     transition: all 0.2s ease;
     height: 100%;
     box-sizing: border-box;
-    border-bottom: 4px solid transparent; /* Prevents jumping on hover */
+    border-bottom: 4px solid transparent;
 }
 
 /* Hover & Active states - sleek bottom-border style */
 .nav-link:hover {
-    background-color: #333;
-    color: #8ab4f8;
+    background-color: var(--bg-input); /* Variable */
+    color: var(--accent-color); /* Variable */
 }
 
 .nav-link.active {
-    background-color: #2a2a2a;
-    color: #8ab4f8;
+    background-color: var(--bg-panel); /* Variable */
+    color: var(--accent-color); /* Variable */
     font-weight: bold;
-    border-bottom: 4px solid #8ab4f8; /* Clean underline instead of a box */
+    border-bottom: 4px solid var(--accent-color); /* Variable */
 }
 
 .fullPage {
@@ -75,15 +75,15 @@
 
 /* Override for scrolling pages to prevent them from centering off-screen */
 #home, #about {
-    align-items: flex-start; /* Forces content to start at the top */
-    height: auto;            /* Lets the page grow dynamically */
-    min-height: 100vh;       /* Ensures the dark background fills the screen */
-    padding-top: 80px;       /* Adds a bumper so it clears the fixed navbar! */
+    align-items: flex-start;
+    height: auto;
+    min-height: 100vh;
+    padding-top: 80px;
 }
 
 /* Ensure centered pages don't slide under the 60px fixed navbar */
 #create, #view, #contact {
-    padding-top: 70px; /* 60px navbar + 10px breathing room */
+    padding-top: 70px;
     box-sizing: border-box;
 }
 
@@ -91,28 +91,28 @@
 .page-container {
     max-width: 1000px;
     margin: 0 auto;
-    padding: 0px 20px 60px; /* Top padding ensures it sits below your fixed navbar */
-    color: #eee;
+    padding: 0px 20px 60px;
+    color: var(--text-main); /* Variable */
 }
 
 /* Hero Section */
 .hero-section {
     text-align: center;
     padding: 30px 0 60px;
-    border-bottom: 1px solid #333;
+    border-bottom: 1px solid var(--border-color); /* Variable */
     margin-bottom: 40px;
 }
 
 .hero-title {
     font-size: 3.5rem;
-    color: #8ab4f8; /* Pale blue accent */
+    color: var(--accent-color); /* Variable */
     margin-bottom: 20px;
     font-weight: 800;
 }
 
 .hero-subtitle {
     font-size: 1.2rem;
-    color: #aaa;
+    color: var(--text-muted); /* Variable */
     max-width: 700px;
     margin: 0 auto 40px;
     line-height: 1.6;
@@ -121,21 +121,21 @@
 /* Call to Action Button */
 .hero-btn {
     display: inline-block;
-    background-color: #8ab4f8;
-    color: #111;
+    background-color: var(--accent-color); /* Variable */
+    color: #111; /* Kept dark so it pops on bright accent colors! */
     padding: 15px 40px;
     font-size: 1.2rem;
     font-weight: bold;
     border-radius: 8px;
     text-decoration: none;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(138, 180, 248, 0.3);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
 }
 
 .hero-btn:hover {
-    background-color: #a0c4ff;
+    background-color: var(--accent-hover); /* Variable */
     transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(138, 180, 248, 0.5);
+    box-shadow: 0 6px 20px var(--accent-color); /* Variable for glowing shadow */
     color: #111;
 }
 
@@ -147,23 +147,22 @@
     margin: 80px 0;
 }
 
-/* This single class magically flips the layout! */
 .feature-row.reverse {
     flex-direction: row-reverse;
 }
 
 .feature-text {
-    flex: 1; /* Takes up 50% of the space */
+    flex: 1;
 }
 
 .feature-text h2 {
-    color: #fff;
+    color: var(--text-main); /* Variable */
     font-size: 2.2rem;
     margin-bottom: 20px;
     position: relative;
 }
 
-/* Adds a small pale blue underline accent to the headers */
+/* Adds a small underline accent to the headers */
 .feature-text h2::after {
     content: '';
     position: absolute;
@@ -171,29 +170,29 @@
     bottom: -10px;
     width: 60px;
     height: 4px;
-    background-color: #8ab4f8;
+    background-color: var(--accent-color); /* Variable */
     border-radius: 2px;
 }
 
 .feature-text p {
     font-size: 1.1rem;
-    color: #bbb;
+    color: var(--text-muted); /* Variable */
     line-height: 1.8;
     margin-top: 20px;
 }
 
-/* The visual placeholder (you can swap the emojis for actual <img> tags later) */
+/* The visual placeholder */
 .feature-visual {
-    flex: 1; /* Takes up the other 50% */
-    background: #2a2a2a; /* Sleek dark panel */
+    flex: 1;
+    background: var(--bg-panel); /* Variable */
     border-radius: 15px;
     height: 350px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid #333;
+    border: 1px solid var(--border-color); /* Variable */
     box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-    font-size: 6rem; /* Huge emojis for now */
+    font-size: 6rem;
     transition: transform 0.3s ease;
 }
 
@@ -203,7 +202,6 @@
 
 /* --- MOBILE RESPONSIVENESS --- */
 @media (max-width: 768px) {
-    /* Stack them vertically on small screens */
     .feature-row, .feature-row.reverse {
         flex-direction: column;
         text-align: center;
@@ -215,7 +213,6 @@
         height: 250px;
     }
 
-    /* Center the underline accent on mobile */
     .feature-text h2::after {
         left: 50%;
         transform: translateX(-50%);
@@ -232,7 +229,7 @@
 }
 
 .toggle-label {
-    color: #aaa;
+    color: var(--text-muted); /* Variable */
     font-size: 0.9rem;
     font-weight: bold;
 }
@@ -253,7 +250,7 @@
     position: absolute;
     cursor: pointer;
     top: 0; left: 0; right: 0; bottom: 0;
-    background-color: #444; /* Dark off state */
+    background-color: var(--border-color); /* Variable */
     transition: .3s;
 }
 .slider:before {
@@ -263,20 +260,19 @@
     width: 18px;
     left: 3px;
     bottom: 3px;
-    background-color: white;
+    background-color: var(--text-main); /* Variable */
     transition: .3s;
 }
-/* Rounded Sliders */
 .slider.round { border-radius: 24px; }
 .slider.round:before { border-radius: 50%; }
 
 /* When checked (Ads ON) */
 input:checked + .slider {
-    background-color: #8ab4f8; /* Pale blue on state */
+    background-color: var(--accent-color); /* Variable */
 }
 input:checked + .slider:before {
     transform: translateX(20px);
-    background-color: #111; /* Dark dot when on */
+    background-color: var(--bg-main); /* Variable */
 }
 
 /* --- THE TOOLTIP --- */
@@ -292,8 +288,8 @@ input:checked + .slider:before {
     justify-content: center;
     width: 20px;
     height: 20px;
-    background: #333;
-    color: #8ab4f8;
+    background: var(--bg-input); /* Variable */
+    color: var(--accent-color); /* Variable */
     border-radius: 50%;
     font-size: 0.8rem;
     font-weight: bold;
@@ -302,15 +298,15 @@ input:checked + .slider:before {
 }
 
 .tooltip-container:hover .tooltip-icon {
-    background: #8ab4f8;
-    color: #111;
+    background: var(--accent-color); /* Variable */
+    color: var(--bg-main); /* Variable */
 }
 
 .tooltip-text {
     visibility: hidden;
     width: 220px;
-    background-color: #222;
-    color: #ddd;
+    background-color: var(--bg-panel); /* Variable */
+    color: var(--text-main); /* Variable */
     text-align: left;
     border-radius: 8px;
     padding: 12px;
@@ -320,7 +316,7 @@ input:checked + .slider:before {
     right: 0;
     font-size: 0.85rem;
     line-height: 1.4;
-    border: 1px solid #444;
+    border: 1px solid var(--border-color); /* Variable */
     box-shadow: 0 10px 25px rgba(0,0,0,0.5);
     opacity: 0;
     transition: opacity 0.3s;
@@ -334,7 +330,7 @@ input:checked + .slider:before {
     right: 5px;
     border-width: 6px;
     border-style: solid;
-    border-color: transparent transparent #444 transparent;
+    border-color: transparent transparent var(--border-color) transparent; /* Variable */
 }
 
 .tooltip-container:hover .tooltip-text {
@@ -344,11 +340,11 @@ input:checked + .slider:before {
 
 /* --- CONTACT FORM STYLES --- */
 .contact-form-container {
-    background: #2a2a2a;
+    background: var(--bg-panel); /* Variable */
     padding: 40px;
     border-radius: 15px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-    border: 1px solid #333;
+    border: 1px solid var(--border-color); /* Variable */
 }
 
 .input-group {
@@ -359,7 +355,7 @@ input:checked + .slider:before {
 
 .input-group label {
     margin-bottom: 8px;
-    color: #8ab4f8;
+    color: var(--accent-color); /* Variable */
     font-weight: bold;
     font-size: 0.95em;
 }
@@ -369,21 +365,21 @@ input:checked + .slider:before {
 .input-group textarea {
     width: 100%;
     padding: 12px;
-    background: #222;
-    border: 1px solid #555;
-    color: white;
+    background: var(--bg-input); /* Variable */
+    border: 1px solid var(--border-color); /* Variable */
+    color: var(--text-main); /* Variable */
     border-radius: 6px;
     font-family: inherit;
     box-sizing: border-box;
     transition: border-color 0.3s, box-shadow 0.3s;
-    resize: vertical; /* Lets the user drag it taller if they write a lot */
+    resize: vertical;
 }
 
 .input-group input:focus,
 .input-group textarea:focus {
     outline: none;
-    border-color: #8ab4f8;
-    box-shadow: 0 0 8px rgba(138, 180, 248, 0.4);
+    border-color: var(--accent-color); /* Variable */
+    box-shadow: 0 0 8px var(--accent-color); /* Variable */
 }
 
 /* --- DONATE BUTTON (POLISHED) --- */
@@ -391,7 +387,7 @@ input:checked + .slider:before {
     display: flex;
     align-items: center;
     gap: 8px;
-    text-decoration: none !important; /* Forces the underline to disappear */
+    text-decoration: none !important;
     margin-right: 20px;
     transition: transform 0.2s ease;
     cursor: pointer;
@@ -399,11 +395,11 @@ input:checked + .slider:before {
 
 .donate-icon {
     font-size: 1.2rem;
-    filter: drop-shadow(0 0 5px rgba(0,0,0,0.5)); /* Makes the emoji pop */
+    filter: drop-shadow(0 0 5px rgba(0,0,0,0.5));
 }
 
 .donate-text {
-    color: #8ab4f8 !important; /* Forces your brand blue */
+    color: var(--accent-color) !important; /* Variable */
     font-weight: bold;
     font-size: 0.95rem;
     text-decoration: none !important;
@@ -411,7 +407,7 @@ input:checked + .slider:before {
 
 /* Hover State */
 .nav-donate-btn:hover .donate-text {
-    color: #a0c4ff !important; /* Brighter blue on hover */
+    color: var(--accent-hover) !important; /* Variable */
     text-decoration: none !important;
 }
 
@@ -422,18 +418,18 @@ input:checked + .slider:before {
 /* --- SIDE BANNERS --- */
 .support-banner {
     position: fixed;
-    top: 90px; /* Sits cleanly below your fixed navbar */
-    width: 160px; /* Standard wide skyscraper format */
+    top: 90px;
+    width: 160px;
     height: 600px;
-    background: #2a2a2a; /* Matches your dark theme */
-    border: 1px dashed #555;
+    background: var(--bg-panel); /* Variable */
+    border: 1px dashed var(--border-color); /* Variable */
     border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #666;
+    color: var(--text-muted); /* Variable */
     font-size: 0.9rem;
-    z-index: 500; /* Stays above background but below modals/nav */
+    z-index: 500;
     transition: opacity 0.3s ease;
 }
 
@@ -457,11 +453,11 @@ input:checked + .slider:before {
     left: 0;
     width: 100%;
     height: 70px;
-    background: #222;
-    border-top: 1px dashed #555;
+    background: var(--nav-bg); /* Variable */
+    border-top: 1px dashed var(--border-color); /* Variable */
     align-items: center;
     justify-content: center;
-    color: #666;
+    color: var(--text-muted); /* Variable */
     font-size: 0.9rem;
     z-index: 1000;
     transition: opacity 0.3s ease;
@@ -478,7 +474,6 @@ input:checked + .slider:before {
 }
 
 /* 3. Workspace Exception: The Create Page Editor */
-/* When the left menu is open, hide the left ad */
 body[data-editor-active="true"] #supportBannerLeft {
     display: none !important;
 }
@@ -486,17 +481,15 @@ body[data-editor-active="true"] #supportBannerLeft {
 /* Add breathing room so the bottom banner doesn't cover the editor menu */
 body[data-current-page="create"] .page-container,
 body[data-current-page="create"] #create {
-    padding-bottom: 90px !important; /* 70px for the ad + 20px breathing room */
+    padding-bottom: 90px !important;
 }
 
 /* 4. Workspace Exception: The View Page */
-/* Hide BOTH desktop ads to keep the card clean */
 body[data-current-page="view"] .support-banner {
     display: none !important;
 }
 
 /* 5. The User Toggle Switch (Master Kill Switch) */
-/* If the user flips the toggle, hide everything everywhere */
 body.support-hidden .support-banner,
 body.support-hidden .support-banner-mobile {
     display: none !important;
@@ -508,21 +501,15 @@ body.support-hidden .support-banner-mobile {
     left: 30px;
     display: flex;
     align-items: center;
-    gap: 20px; /* Space between logo and dropdown */
+    gap: 20px;
     z-index: 100;
-}
-
-/* Overrides the old absolute positioning on the brand link */
-.nav-brand {
-    position: static !important;
-    margin: 0;
 }
 
 /* The Dropdown Styling */
 .theme-dropdown {
-    background-color: var(--bg-input);
-    color: var(--text-main);
-    border: 1px solid var(--border-color);
+    background-color: var(--bg-input); /* Variable */
+    color: var(--text-main); /* Variable */
+    border: 1px solid var(--border-color); /* Variable */
     padding: 6px 12px;
     border-radius: 6px;
     font-size: 0.85rem;
@@ -534,6 +521,6 @@ body.support-hidden .support-banner-mobile {
 
 .theme-dropdown:hover,
 .theme-dropdown:focus {
-    border-color: var(--accent-color);
-    box-shadow: 0 0 8px rgba(138, 180, 248, 0.2);
+    border-color: var(--accent-color); /* Variable */
+    box-shadow: 0 0 8px var(--accent-color); /* Variable */
 }
