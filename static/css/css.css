@@ -501,3 +501,39 @@ body.support-hidden .support-banner,
 body.support-hidden .support-banner-mobile {
     display: none !important;
 }
+
+/* --- LEFT NAV CONTROLS (Brand & Theme Selector) --- */
+.nav-left-controls {
+    position: absolute;
+    left: 30px;
+    display: flex;
+    align-items: center;
+    gap: 20px; /* Space between logo and dropdown */
+    z-index: 100;
+}
+
+/* Overrides the old absolute positioning on the brand link */
+.nav-brand {
+    position: static !important;
+    margin: 0;
+}
+
+/* The Dropdown Styling */
+.theme-dropdown {
+    background-color: var(--bg-input);
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.theme-dropdown:hover,
+.theme-dropdown:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 8px rgba(138, 180, 248, 0.2);
+}

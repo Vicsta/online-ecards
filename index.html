@@ -4,18 +4,27 @@
     <link rel="icon" type="image/png" href="/favicon.png">
     <meta charset="UTF-8">
     <title>Online E-Cards</title>
-    <!-- Add the leading slash to all of these -->
+    <link rel="stylesheet" href="/static/css/theme.css?v=1">
+
     <link rel="stylesheet" href="/static/css/card.css?v=12">
     <link rel="stylesheet" href="/static/css/css.css?v=12">
     <link rel="stylesheet" href="/static/css/view.css?v=12">
     <link rel="stylesheet" href="/static/css/create.css?v=12">
     <link rel="stylesheet" href="/static/css/cards/v2_card.css?v=12">
+    <link rel="stylesheet" href="/static/css/background.css?v=1">
 </head>
 <body>
 
 <nav class="navbar">
     <!-- Brand Name locked to the left -->
-    <a href="/home" class="nav-brand">Online E-Cards</a>
+    <div class="nav-left-controls">
+        <a href="/home" class="nav-brand">Online E-Cards</a>
+        <select id="globalThemeSelector" class="theme-dropdown" title="Change Website Theme">
+            <option value="dark">🌙 Dark</option>
+            <option value="birthday">🎉 Birthday</option>
+            <option value="valentine">💖 Valentine</option>
+        </select>
+    </div>
 
     <!-- The container that stretches the buttons (Centered) -->
     <div class="nav-links-container">
@@ -88,6 +97,7 @@
 <script src="/static/js/cards/cardV1.js"></script>
 <script src="/static/js/cards/cardV2.js"></script>
 <script src="/static/js/registry.js?v=12"></script>
+<script src="/static/js/background.js?v=1"></script>
 
 <script>
     function loadScript(src) {
@@ -115,6 +125,53 @@
     loadPage("templates/about.html", "about", "/static/js/about.js");
     loadPage("templates/contact.html", "contact", "/static/js/contact.js");
     loadPage("templates/create.html", "create", "/static/js/create.js?v=12");
+
+    // =========================================
+    // GLOBAL THEME MANAGER
+    // =========================================
+    const themeSelector = document.getElementById("globalThemeSelector");
+    const savedTheme = localStorage.getItem("siteTheme") || "dark";
+
+    function applySiteTheme(themeValue) {
+        // 1. Update the CSS Variables (UI Colors)
+        if (themeValue === "dark") {
+            document.body.removeAttribute("data-theme"); // Defaults back to :root
+        } else {
+            document.body.setAttribute("data-theme", themeValue);
+        }
+
+        // 2. Update the Animated Background Layer
+        if (typeof AnimatedBackground !== "undefined") {
+            if (themeValue === "dark") {
+                AnimatedBackground.setTheme("dark");
+                AnimatedBackground.setShape("square");
+            } else if (themeValue === "birthday") {
+                AnimatedBackground.setTheme("light");
+                AnimatedBackground.setShape("square");
+            } else if (themeValue === "valentine") {
+                AnimatedBackground.setTheme("light");
+                AnimatedBackground.setShape("circle"); // Valentines gets floating circles!
+            }
+        }
+    }
+
+    // Set the dropdown to whatever the user picked last time
+    themeSelector.value = savedTheme;
+
+    // Instantly apply the CSS so there is no "flash" of the wrong colors
+    if (savedTheme !== "dark") document.body.setAttribute("data-theme", savedTheme);
+
+    // Wait for background.js to build the canvas, THEN apply the animation theme
+    window.addEventListener("load", () => {
+        applySiteTheme(themeSelector.value);
+    });
+
+    // Listen for the user clicking the dropdown
+    themeSelector.addEventListener("change", (e) => {
+        const newTheme = e.target.value;
+        localStorage.setItem("siteTheme", newTheme); // Save it!
+        applySiteTheme(newTheme);
+    });
 </script>
 
 </body>

@@ -1,0 +1,60 @@
+/* =========================================
+   MASTER THEME VARIABLES
+   ========================================= */
+
+/* --- DEFAULT THEME: Midnight Modern (Dark) --- */
+:root {
+    /* Backgrounds */
+    --bg-main: #222222;         /* Page background */
+    --bg-panel: #2a2a2a;        /* Cards, Menus, Modals */
+    --bg-input: #191919;        /* Text boxes */
+    --nav-bg: #222222;          /* Navbar */
+
+    /* Text Colors */
+    --text-main: #eeeeee;       /* Standard text */
+    --text-muted: #aaaaaa;      /* Subtitles, hints */
+    
+    /* Accents & Borders */
+    --accent-color: #8ab4f8;    /* Your signature pale blue */
+    --accent-hover: #a0c4ff;
+    --border-color: #444444;
+
+    /* Global Typography */
+    --font-main: 'Arial', sans-serif;
+    --font-size-base: 16px;
+    --font-size-h1: 3.5rem;
+}
+
+/* --- THEME: Classic Birthday (Light) --- */
+[data-theme="birthday"] {
+    --bg-main: #e6f2ff;
+    --bg-panel: #ffffff;
+    --bg-input: #f0f8ff;
+    --nav-bg: #cce4ff;
+
+    --text-main: #004080;
+    --text-muted: #444444;
+
+    --accent-color: #ff9933;    /* Orange accent for contrast */
+    --accent-hover: #ffb366;
+    --border-color: #b3d9ff;
+
+    --font-main: 'Georgia', serif;
+}
+
+/* --- THEME: Valentine (Pink/Red) --- */
+[data-theme="valentine"] {
+    --bg-main: #fff0f5;
+    --bg-panel: #ffffff;
+    --bg-input: #ffe6ee;
+    --nav-bg: #ffccd9;
+
+    --text-main: #660022;
+    --text-muted: #993355;
+
+    --accent-color: #cc0044;
+    --accent-hover: #ff3377;
+    --border-color: #ff99b3;
+
+    --font-main: 'Times New Roman', serif;
+}

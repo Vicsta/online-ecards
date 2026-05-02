@@ -1,0 +1,25 @@
+/* --- ANIMATED BACKGROUND LAYER --- */
+#animated-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -100; /* Stays behind absolutely everything */
+    overflow: hidden;
+    pointer-events: none; /* Clicks pass right through it */
+    transition: background-color 0.8s ease; /* Smooth theme transitions */
+}
+
+/* Base style for the nested shapes */
+.anim-wrapper {
+    position: absolute;
+    bottom: 0;
+}
+
+.anim-shape {
+    position: absolute;
+    border-style: solid;
+    box-sizing: border-box;
+    /* We handle width, height, left, bottom, zIndex, opacity, border, and radius in JS */
+}
