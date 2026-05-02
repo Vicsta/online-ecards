@@ -4,21 +4,15 @@ let curPage = 0; // Default index
 window.addEventListener("load", function () {
 
     // --- BULLETPROOF NAV HIGHLIGHTER ---
-    function updateNav() {
-        // Get the current path, default to /home if at the root
+    function updateNav(currentPathCheck) {
         let currentPath = window.location.pathname;
-        if (currentPath === "/" || currentPath === "/index.html") {
-            currentPath = "/home";
-        }
+        if (currentPath === "/" || currentPath === "/index.html") currentPath = "/home";
 
-        // Remove active class from all links
         $(".nav-link").removeClass("active");
 
-        // Loop through and find the exact match
         $(".nav-link").each(function() {
-            // Get the raw attribute (e.g. "/home")
             let linkPath = $(this).attr("href");
-            if (linkPath === currentPath) {
+            if (linkPath === currentPath || linkPath === "/" + currentPathCheck) {
                 $(this).addClass("active");
             }
         });
@@ -31,58 +25,52 @@ window.addEventListener("load", function () {
         if (redirect) {
             let urlObj = new URL(redirect);
             let check = urlObj.pathname.split("/").pop().split("?")[0];
-
-            if (urlObj.searchParams.has("c")) {
-                check = "view";
-            } else if (check === "" || check === "index.html") {
-                check = "home";
-            }
-
-            if (!pages.includes(check)) {
-                check = "not";
-            }
+            if (urlObj.searchParams.has("c")) check = "view";
+            else if (check === "" || check === "index.html") check = "home";
+            if (!pages.includes(check)) check = "not";
 
             history.replaceState(null, "", redirect);
             curPage = pages.indexOf(check);
 
+            // NEW: Set initial page state for Ad logic
+            document.body.setAttribute('data-current-page', check);
+            document.body.setAttribute('data-editor-active', "false");
+
             $(".fullPage").hide();
             $("#" + check).css("display", "flex").show();
-
-            updateNav(check); // Update Nav on redirect load
+            updateNav(check);
         } else {
             let urlObj = new URL(location.href);
-            let checkPage = "home"; // Default
+            let checkPage = "home";
 
             if (urlObj.searchParams.has("c")) {
                 checkPage = "view";
             } else {
-                // If we are explicitly on /create or /about, catch it here
                 let ext = urlObj.pathname.split("/").pop().split("?")[0];
                 if (pages.includes(ext) && ext !== "") checkPage = ext;
             }
 
             curPage = pages.indexOf(checkPage);
+
+            // NEW: Set initial page state for Ad logic
+            document.body.setAttribute('data-current-page', checkPage);
+            document.body.setAttribute('data-editor-active', "false");
+
             $(".fullPage").hide();
             $("#" + checkPage).css("display", "flex").show();
-
-            updateNav(checkPage); // Update Nav on normal load
+            updateNav(checkPage);
         }
     })();
 
     window.onpopstate = function () {
         let urlObj = new URL(location.href);
         let ext = urlObj.pathname.split("/").pop().split("?")[0];
-
-        if (urlObj.searchParams.has("c")) {
-            ext = "view";
-        } else if (ext === "" || ext === "index.html") {
-            ext = "home";
-        } else if (!pages.includes(ext)) {
-            ext = "not";
-        }
+        if (urlObj.searchParams.has("c")) ext = "view";
+        else if (ext === "" || ext === "index.html") ext = "home";
+        else if (!pages.includes(ext)) ext = "not";
 
         loadPage(pages.indexOf(ext));
-        updateNav(ext); // Update Nav on Back/Forward button press
+        updateNav(ext);
     };
 
     $(".nav-link").on("click", function(e) {
@@ -92,7 +80,7 @@ window.addEventListener("load", function () {
         if (pages.includes(target)) {
             history.pushState(null, "", "/" + target);
             loadPage(pages.indexOf(target));
-            updateNav(target); // Update Nav when user clicks a button!
+            updateNav(target);
         } else {
             history.pushState(null, "", "/404");
             loadPage(pages.indexOf("not"));
@@ -104,6 +92,10 @@ window.addEventListener("load", function () {
 
         let previousPage = curPage;
         curPage = x;
+
+        // NEW: Update body attributes for Ad routing
+        document.body.setAttribute('data-current-page', pages[curPage]);
+        document.body.setAttribute("data-editor-active", "false"); // Reset editor state
 
         $("#" + pages[previousPage]).stop(true, true).fadeOut("fast", function () {
             pages.forEach(p => {
@@ -117,22 +109,31 @@ window.addEventListener("load", function () {
 
     // --- SAFE TOGGLE LOGIC ---
     const toggleSwitch = document.getElementById("supportToggleSwitch");
+    const leftBanner = document.getElementById("supportBannerLeft");
+    const rightBanner = document.getElementById("supportBannerRight");
+    const mobileBanner = document.getElementById("supportBannerMobile");
+
+    function updateBannerVisibility(isEnabled) {
+        if (isEnabled) {
+            if (leftBanner) { leftBanner.style.opacity = "1"; leftBanner.style.visibility = "visible"; }
+            if (rightBanner) { rightBanner.style.opacity = "1"; rightBanner.style.visibility = "visible"; }
+            if (mobileBanner) { mobileBanner.style.opacity = "1"; mobileBanner.style.visibility = "visible"; }
+        } else {
+            if (leftBanner) leftBanner.style.visibility = "hidden";
+            if (rightBanner) rightBanner.style.visibility = "hidden";
+            if (mobileBanner) mobileBanner.style.visibility = "hidden";
+        }
+    }
 
     if (toggleSwitch) {
-        // Check saved preference using a safe keyword
-        let supportMode = localStorage.getItem("supportMode") !== "false";
-        toggleSwitch.checked = supportMode;
+        let bannersEnabled = localStorage.getItem("bannersEnabled") !== "false";
+        toggleSwitch.checked = bannersEnabled;
+        updateBannerVisibility(bannersEnabled);
 
         toggleSwitch.addEventListener("change", function() {
-            if (this.checked) {
-                localStorage.setItem("supportMode", "true");
-                console.log("Support features ON");
-                // Logic to show banners goes here
-            } else {
-                localStorage.setItem("supportMode", "false");
-                console.log("Support features OFF");
-                // Logic to hide banners goes here
-            }
+            let isEnabled = this.checked;
+            localStorage.setItem("bannersEnabled", isEnabled ? "true" : "false");
+            updateBannerVisibility(isEnabled);
         });
     }
 });

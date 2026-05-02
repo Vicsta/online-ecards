@@ -1,28 +1,43 @@
 let createCard = null;
 let cardData = null;
 
-// 1. The New Entry Point
+// 1. The New Entry Point (Updated backBtn logic)
 function initCreateFlow() {
     let params = new URLSearchParams(window.location.search);
     let selectedVersion = params.get("v");
 
-    // Wire up the Back button right away
     let backBtn = document.getElementById("backToGridBtn");
     if (backBtn) {
         backBtn.onclick = () => {
-            // Remove the ?v= from URL so it defaults to the grid
             history.replaceState(null, "", window.location.pathname);
+
+            // NEW: Tell CSS the editor is closed (Left Ad comes back)
+            document.body.setAttribute("data-editor-active", "false");
+
             renderTemplateGrid();
         };
     }
 
     if (selectedVersion && CardRegistry[selectedVersion]) {
-        // If the URL already specifies a version, skip the grid and load it
         showEditor(selectedVersion);
     } else {
-        // Otherwise, build and show the Template Grid
         renderTemplateGrid();
     }
+}
+
+// 3. Switch to Editor State (Updated)
+function showEditor(versionId) {
+    let chooserDiv = document.getElementById("templateChooser");
+    let editorDiv = document.getElementById("cardEditor");
+
+    if(chooserDiv) chooserDiv.style.display = "none";
+    if(editorDiv) editorDiv.style.display = "flex";
+
+    // NEW: Tell CSS the editor is open (Left Ad vanishes)
+    document.body.setAttribute("data-editor-active", "true");
+
+    history.replaceState(null, "", "?v=" + versionId);
+    runCreatePage(versionId);
 }
 
 // 2. Build the Grid
@@ -64,19 +79,6 @@ function renderTemplateGrid() {
             showEditor(versionId);
         });
     });
-}
-
-// 3. Switch to Editor State
-function showEditor(versionId) {
-    let chooserDiv = document.getElementById("templateChooser");
-    let editorDiv = document.getElementById("cardEditor");
-
-    // Explicitly hide the grid and show the editor flexbox
-    if(chooserDiv) chooserDiv.style.display = "none";
-    if(editorDiv) editorDiv.style.display = "flex";
-
-    history.replaceState(null, "", "?v=" + versionId);
-    runCreatePage(versionId);
 }
 
 // 4. Your Existing Editor Logic (Now with Bulletproof Fetching!)

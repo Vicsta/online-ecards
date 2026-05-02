@@ -418,3 +418,81 @@ input:checked + .slider:before {
 .nav-donate-btn:hover .donate-icon {
     transform: rotate(-12deg) scale(1.1);
 }
+
+/* --- SIDE BANNERS --- */
+.support-banner {
+    position: fixed;
+    top: 90px; /* Sits cleanly below your fixed navbar */
+    width: 160px; /* Standard wide skyscraper format */
+    height: 600px;
+    background: #2a2a2a; /* Matches your dark theme */
+    border: 1px dashed #555;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    font-size: 0.9rem;
+    z-index: 500; /* Stays above background but below modals/nav */
+    transition: opacity 0.3s ease;
+}
+
+#supportBannerLeft {
+    left: 15px;
+}
+
+#supportBannerRight {
+    right: 15px;
+}
+
+/* Hide banners if the screen is too narrow (protects your centered app) */
+@media (max-width: 1400px) {
+    .support-banner {
+        display: none !important; /* Forces them away on smaller screens */
+    }
+
+
+/* --- MOBILE/LAPTOP BOTTOM BANNER --- */
+.support-banner-mobile {
+    display: none; /* Hidden by default on large screens */
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 70px; /* Standard mobile ad height */
+    background: #222;
+    border-top: 1px dashed #555;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    font-size: 0.9rem;
+    z-index: 1000; /* Stays on top of content at the bottom */
+    transition: opacity 0.3s ease;
+}
+
+/* THE MAGIC SWAP AT 1400px */
+@media (max-width: 1400px) {
+    /* Hide the side banners */
+    .support-banner {
+        display: none !important;
+    }
+
+    /* Show the bottom banner */
+    .support-banner-mobile {
+        display: flex; /* Makes it visible */
+    }
+}
+
+/* --- WORKSPACE AD EXCEPTIONS --- */
+
+/* 1. Only hide the left banner when the user is ACTIVELY editing a card
+      (the left menu is open). Otherwise, let it show on the template grid! */
+body[data-editor-active="true"] #supportBannerLeft {
+    display: none !important;
+}
+
+/* 2. On the VIEW page: Hide BOTH desktop banners so the recipient
+      gets a clean, distraction-free greeting card. */
+body[data-current-page="view"] .support-banner {
+    display: none !important;
+}
