@@ -1,18 +1,16 @@
 const AnimatedBackground = (function() {
     let container;
     let shapes = [];
-    let currentTheme = 'light';
+    let currentTheme = 'dark'; // Changed default to dark to match your site
 
-    // --- THEMES & SHAPES CONFIG ---
+    // --- THEMES & SHAPES CONFIG (Stripped of background colors!) ---
     const config = {
         themes: {
             light: {
-                bg: '#fdfdfd',
                 colors: ['#5C6BC0', '#8BC34A', '#F44336', '#FFB74D'] // Blue, Green, Red, Yellow
             },
             dark: {
-                bg: '#222222',
-                colors: ['#8ab4f8', '#a0c4ff', '#b5d4ff', '#cce4ff'] // Soft blues for dark mode
+                colors: ['#8ab4f8', '#a0c4ff', '#b5d4ff', '#cce4ff'] // Soft blues
             }
         },
         shapeProps: {
@@ -21,7 +19,7 @@ const AnimatedBackground = (function() {
             tallRect: { borderRadius: '4px', widthMult: 0.6, heightMult: 1.5 },
             wideRect: { borderRadius: '4px', widthMult: 1.5, heightMult: 0.6 }
         },
-        activeShape: 'square' // Default shape
+        activeShape: 'square'
     };
 
     class BouncingShape {
@@ -148,37 +146,36 @@ const AnimatedBackground = (function() {
     }
 
     return {
-        init: function() {
-            container = document.createElement("div");
-            container.id = "animated-bg";
-            document.body.prepend(container);
+            init: function() {
+                container = document.createElement("div");
+                container.id = "animated-bg";
+                document.body.prepend(container);
 
-            // Set initial background color
-            container.style.backgroundColor = config.themes[currentTheme].bg;
+                // REMOVED the container.style.backgroundColor line from here!
 
-            let colorCounter = 0;
-            // Space them out across the screen (similar to your old loop)
-            for(let startX = Math.random() * -4; startX < 100; startX += Math.random() * 4 + 5) {
-                shapes.push(new BouncingShape(startX, colorCounter));
-                colorCounter++;
+                let colorCounter = 0;
+                for(let startX = Math.random() * -4; startX < 100; startX += Math.random() * 4 + 5) {
+                    shapes.push(new BouncingShape(startX, colorCounter));
+                    colorCounter++;
+                }
+            },
+
+            setTheme: function(themeName) {
+                if (config.themes[themeName]) {
+                    currentTheme = themeName;
+                    // REMOVED the container.style.backgroundColor line from here!
+                    shapes.forEach(shape => shape.updateColors());
+                }
+            },
+
+            setShape: function(shapeName) {
+                if (config.shapeProps[shapeName]) {
+                    config.activeShape = shapeName;
+                    shapes.forEach(shape => shape.updateShape());
+                }
             }
-        },
-
-        setTheme: function(themeName) {
-            if (config.themes[themeName]) {
-                currentTheme = themeName;
-                container.style.backgroundColor = config.themes[currentTheme].bg;
-                shapes.forEach(shape => shape.updateColors());
-            }
-        },
-
-        setShape: function(shapeName) {
-            if (config.shapeProps[shapeName]) {
-                config.activeShape = shapeName;
-                shapes.forEach(shape => shape.updateShape());
-            }
-        }
-    };
+        };
+    })();
 })();
 
 // Auto-start on load

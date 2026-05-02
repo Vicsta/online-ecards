@@ -1,3 +1,19 @@
+/* =========================================
+   GLOBAL BASE STYLES
+   ========================================= */
+body {
+    font-family: var(--font-main);
+    background-color: var(--bg-main); /* FIX: This now controls the wallpaper! */
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+/* Force form elements to use your theme font instead of the browser default */
+button, input, select, textarea {
+    font-family: inherit;
+}
+
 /* Navigation bar styling */
 .navbar {
     display: flex;

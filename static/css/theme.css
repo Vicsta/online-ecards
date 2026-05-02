@@ -44,17 +44,21 @@
 
 /* --- THEME: Valentine (Pink/Red) --- */
 [data-theme="valentine"] {
-    --bg-main: #ffe6f2;
-    --bg-panel: #ffffff;
-    --bg-input: #ffe6ee;
-    --nav-bg: #ffccd9;
+    /* Backgrounds */
+    --bg-main: #ffe6ee;         /* A soft blush for the main wallpaper */
+    --bg-panel: #ffccd9;        /* A deeper, visible pink for your menus/cards! */
+    --bg-input: #ffffff;        /* Pure white for text boxes so text is easy to read */
+    --nav-bg: #ffb3c6;          /* Slightly darker pink for the top navbar */
 
+    /* Text Colors */
     --text-main: #660022;
     --text-muted: #993355;
 
+    /* Accents & Borders */
     --accent-color: #cc0044;
     --accent-hover: #ff3377;
     --border-color: #ff99b3;
 
-    --font-main: 'Times New Roman', serif;
+    /* The new Bubbly/Rounded Font! */
+    --font-main: 'Varela Round', sans-serif;
 }
