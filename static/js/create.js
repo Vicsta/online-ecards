@@ -1,7 +1,7 @@
 let createCard = null;
 let cardData = null;
 
-// 1. The New Entry Point (Updated backBtn logic)
+// 1. The New Entry Point
 function initCreateFlow() {
     let params = new URLSearchParams(window.location.search);
     let selectedVersion = params.get("v");
@@ -9,11 +9,9 @@ function initCreateFlow() {
     let backBtn = document.getElementById("backToGridBtn");
     if (backBtn) {
         backBtn.onclick = () => {
+            console.log("Action: Back to Grid (Activating Left Banner)");
             history.replaceState(null, "", window.location.pathname);
-
-            // NEW: Tell CSS the editor is closed (Left Ad comes back)
             document.body.setAttribute("data-editor-active", "false");
-
             renderTemplateGrid();
         };
     }
@@ -21,19 +19,22 @@ function initCreateFlow() {
     if (selectedVersion && CardRegistry[selectedVersion]) {
         showEditor(selectedVersion);
     } else {
+        // Ensure Left Ad is ON if we start at the grid
+        document.body.setAttribute("data-editor-active", "false");
         renderTemplateGrid();
     }
 }
 
-// 3. Switch to Editor State (Updated)
+// 3. Switch to Editor State
 function showEditor(versionId) {
+    console.log("Action: Opening Editor for:", versionId, "(Hiding Left Banner)");
     let chooserDiv = document.getElementById("templateChooser");
     let editorDiv = document.getElementById("cardEditor");
 
     if(chooserDiv) chooserDiv.style.display = "none";
     if(editorDiv) editorDiv.style.display = "flex";
 
-    // NEW: Tell CSS the editor is open (Left Ad vanishes)
+    // Turn Left Ad OFF
     document.body.setAttribute("data-editor-active", "true");
 
     history.replaceState(null, "", "?v=" + versionId);

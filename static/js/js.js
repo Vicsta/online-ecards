@@ -3,7 +3,29 @@ let curPage = 0; // Default index
 
 window.addEventListener("load", function () {
 
-    // --- BULLETPROOF NAV HIGHLIGHTER ---
+    // --- 1. THE STATE MANAGER (NEW) ---
+    // This single function guarantees the body attributes are always correct
+    function updateAppState(pageName) {
+        console.log("--- STATE CHANGE ---");
+        console.log("Current Page:", pageName);
+
+        document.body.setAttribute('data-current-page', pageName);
+        document.body.setAttribute('data-editor-active', 'false');
+
+        if (pageName === 'create') {
+            let params = new URLSearchParams(window.location.search);
+            if (params.has("v")) {
+                console.log("Editor Detected: True");
+                document.body.setAttribute('data-editor-active', 'true');
+            }
+        }
+
+        let bannersEnabled = localStorage.getItem("bannersEnabled") !== "false";
+        console.log("Support Banners Enabled:", bannersEnabled);
+        updateBannerVisibility(bannersEnabled);
+    }
+
+    // --- 2. BULLETPROOF NAV HIGHLIGHTER ---
     function updateNav(currentPathCheck) {
         let currentPath = window.location.pathname;
         if (currentPath === "/" || currentPath === "/index.html") currentPath = "/home";
@@ -18,50 +40,42 @@ window.addEventListener("load", function () {
         });
     }
 
+    // --- 3. INITIAL LOAD LOGIC ---
     (function () {
         let redirect = sessionStorage.redirect;
         delete sessionStorage.redirect;
 
+        let checkPage = "home";
+
         if (redirect) {
             let urlObj = new URL(redirect);
-            let check = urlObj.pathname.split("/").pop().split("?")[0];
-            if (urlObj.searchParams.has("c")) check = "view";
-            else if (check === "" || check === "index.html") check = "home";
-            if (!pages.includes(check)) check = "not";
+            checkPage = urlObj.pathname.split("/").pop().split("?")[0];
+            if (urlObj.searchParams.has("c")) checkPage = "view";
+            else if (checkPage === "" || checkPage === "index.html") checkPage = "home";
+            if (!pages.includes(checkPage)) checkPage = "not";
 
             history.replaceState(null, "", redirect);
-            curPage = pages.indexOf(check);
-
-            // NEW: Set initial page state for Ad logic
-            document.body.setAttribute('data-current-page', check);
-            document.body.setAttribute('data-editor-active', "false");
-
-            $(".fullPage").hide();
-            $("#" + check).css("display", "flex").show();
-            updateNav(check);
         } else {
             let urlObj = new URL(location.href);
-            let checkPage = "home";
-
             if (urlObj.searchParams.has("c")) {
                 checkPage = "view";
             } else {
                 let ext = urlObj.pathname.split("/").pop().split("?")[0];
                 if (pages.includes(ext) && ext !== "") checkPage = ext;
             }
-
-            curPage = pages.indexOf(checkPage);
-
-            // NEW: Set initial page state for Ad logic
-            document.body.setAttribute('data-current-page', checkPage);
-            document.body.setAttribute('data-editor-active', "false");
-
-            $(".fullPage").hide();
-            $("#" + checkPage).css("display", "flex").show();
-            updateNav(checkPage);
         }
+
+        curPage = pages.indexOf(checkPage);
+
+        // Trigger State Manager
+        updateAppState(checkPage);
+
+        $(".fullPage").hide();
+        $("#" + checkPage).css("display", "flex").show();
+        updateNav(checkPage);
     })();
 
+    // --- 4. NAVIGATION LISTENERS ---
     window.onpopstate = function () {
         let urlObj = new URL(location.href);
         let ext = urlObj.pathname.split("/").pop().split("?")[0];
@@ -87,15 +101,15 @@ window.addEventListener("load", function () {
         }
     });
 
+    // --- 5. PAGE TRANSITION LOGIC ---
     function loadPage(x) {
         if (x === curPage) return;
 
         let previousPage = curPage;
         curPage = x;
 
-        // NEW: Update body attributes for Ad routing
-        document.body.setAttribute('data-current-page', pages[curPage]);
-        document.body.setAttribute("data-editor-active", "false"); // Reset editor state
+        // Trigger State Manager
+        updateAppState(pages[curPage]);
 
         $("#" + pages[previousPage]).stop(true, true).fadeOut("fast", function () {
             pages.forEach(p => {
@@ -107,7 +121,7 @@ window.addEventListener("load", function () {
         });
     }
 
-    // --- SAFE TOGGLE LOGIC ---
+    // --- 6. SAFE TOGGLE LOGIC ---
     const toggleSwitch = document.getElementById("supportToggleSwitch");
     const leftBanner = document.getElementById("supportBannerLeft");
     const rightBanner = document.getElementById("supportBannerRight");
@@ -115,13 +129,9 @@ window.addEventListener("load", function () {
 
     function updateBannerVisibility(isEnabled) {
         if (isEnabled) {
-            if (leftBanner) { leftBanner.style.opacity = "1"; leftBanner.style.visibility = "visible"; }
-            if (rightBanner) { rightBanner.style.opacity = "1"; rightBanner.style.visibility = "visible"; }
-            if (mobileBanner) { mobileBanner.style.opacity = "1"; mobileBanner.style.visibility = "visible"; }
+            document.body.classList.remove('support-hidden'); // Changed from ads-disabled
         } else {
-            if (leftBanner) leftBanner.style.visibility = "hidden";
-            if (rightBanner) rightBanner.style.visibility = "hidden";
-            if (mobileBanner) mobileBanner.style.visibility = "hidden";
+            document.body.classList.add('support-hidden');    // Changed from ads-disabled
         }
     }
 

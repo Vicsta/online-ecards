@@ -445,54 +445,53 @@ input:checked + .slider:before {
     right: 15px;
 }
 
-/* Hide banners if the screen is too narrow (protects your centered app) */
-@media (max-width: 1400px) {
-    .support-banner {
-        display: none !important; /* Forces them away on smaller screens */
-    }
+/* =========================================
+   AD BANNER LOGIC (GLOBAL STATE)
+   ========================================= */
 
-
-/* --- MOBILE/LAPTOP BOTTOM BANNER --- */
+/* 1. Default Mobile Banner State (Hidden on Desktop) */
 .support-banner-mobile {
-    display: none; /* Hidden by default on large screens */
+    display: none;
     position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 70px; /* Standard mobile ad height */
+    height: 70px;
     background: #222;
     border-top: 1px dashed #555;
     align-items: center;
     justify-content: center;
     color: #666;
     font-size: 0.9rem;
-    z-index: 1000; /* Stays on top of content at the bottom */
+    z-index: 1000;
     transition: opacity 0.3s ease;
 }
 
-/* THE MAGIC SWAP AT 1400px */
+/* 2. Responsive Swap (< 1400px) */
 @media (max-width: 1400px) {
-    /* Hide the side banners */
     .support-banner {
         display: none !important;
     }
-
-    /* Show the bottom banner */
     .support-banner-mobile {
-        display: flex; /* Makes it visible */
+        display: flex !important;
     }
 }
 
-/* --- WORKSPACE AD EXCEPTIONS --- */
-
-/* 1. Only hide the left banner when the user is ACTIVELY editing a card
-      (the left menu is open). Otherwise, let it show on the template grid! */
+/* 3. Workspace Exception: The Create Page Editor */
+/* When the left menu is open, hide the left ad */
 body[data-editor-active="true"] #supportBannerLeft {
     display: none !important;
 }
 
-/* 2. On the VIEW page: Hide BOTH desktop banners so the recipient
-      gets a clean, distraction-free greeting card. */
+/* 4. Workspace Exception: The View Page */
+/* Hide BOTH desktop ads to keep the card clean */
 body[data-current-page="view"] .support-banner {
+    display: none !important;
+}
+
+/* 5. The User Toggle Switch (Master Kill Switch) */
+/* If the user flips the toggle, hide everything everywhere */
+body.support-hidden .support-banner,
+body.support-hidden .support-banner-mobile {
     display: none !important;
 }
