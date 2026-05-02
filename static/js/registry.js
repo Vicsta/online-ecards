@@ -272,11 +272,11 @@ const CardRegistry = {
                         });
                     });
 
-                    // 4. Close Modal Listeners
-                    closeBtn.addEventListener("click", () => modalOverlay.style.display = "none");
-                    modalOverlay.addEventListener("click", (e) => {
+                    // 4. Close Modal Listeners (Bulletproofed)
+                    closeBtn.onclick = () => modalOverlay.style.display = "none";
+                    modalOverlay.onclick = (e) => {
                         if (e.target === modalOverlay) modalOverlay.style.display = "none";
-                    });
+                    };
                 }
 
                 // Init UI
