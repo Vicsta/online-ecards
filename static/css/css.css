@@ -483,6 +483,12 @@ body[data-editor-active="true"] #supportBannerLeft {
     display: none !important;
 }
 
+/* Add breathing room so the bottom banner doesn't cover the editor menu */
+body[data-current-page="create"] .page-container,
+body[data-current-page="create"] #create {
+    padding-bottom: 90px !important; /* 70px for the ad + 20px breathing room */
+}
+
 /* 4. Workspace Exception: The View Page */
 /* Hide BOTH desktop ads to keep the card clean */
 body[data-current-page="view"] .support-banner {

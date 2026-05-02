@@ -202,6 +202,83 @@ const CardRegistry = {
                     });
                 });
 
+                // --- PRESET MODAL LOGIC ---
+                let openBtn = document.getElementById("openPresetModalBtn");
+                let modalOverlay = document.getElementById("presetModalOverlay");
+                let closeBtn = document.getElementById("closePresetModal");
+                let presetGrid = document.getElementById("presetGrid");
+
+                if (openBtn && modalOverlay) {
+
+                    // 1. Define the themes
+                    const themes = [
+                        { id: "custom", name: "Blank Canvas", bg: "#ffffff", color: "#333333", font: "Arial", title: "" },
+                        { id: "birthday", name: "Classic Birthday", bg: "#e6f2ff", color: "#004080", font: "Georgia", title: "Happy Birthday!" },
+                        { id: "valentine", name: "Valentine's", bg: "#fff0f5", color: "#cc0000", font: "Times New Roman", title: "Be Mine" },
+                        { id: "dark", name: "Midnight Modern", bg: "#222222", color: "#eeeeee", font: "Verdana", title: "Thinking of You" },
+                        { id: "cats", name: "Four Cats Club", bg: "#ffeb3b", color: "#d84315", font: "Comic Sans MS", title: "Have a purr-fect day!" }
+                    ];
+
+                    // 2. Open Modal & Build Grid
+                    openBtn.addEventListener("click", () => {
+                        modalOverlay.style.display = "flex";
+                        presetGrid.innerHTML = "";
+
+                        themes.forEach(theme => {
+                            let cardHTML = `
+                                <div class="preset-card" data-id="${theme.id}">
+                                    <div class="preset-color-preview" style="background-color: ${theme.bg}; color: ${theme.color}; font-family: ${theme.font};">
+                                        Aa
+                                    </div>
+                                    <div style="color: #eee; font-weight: bold; margin-bottom: 5px;">${theme.name}</div>
+                                    <div style="color: #aaa; font-size: 0.8rem;">Font: ${theme.font}</div>
+                                </div>
+                            `;
+                            presetGrid.insertAdjacentHTML('beforeend', cardHTML);
+                        });
+
+                        // 3. Attach click events to apply the theme
+                        document.querySelectorAll(".preset-card").forEach(card => {
+                            card.addEventListener("click", (e) => {
+                                let selectedId = e.currentTarget.getAttribute("data-id");
+                                let theme = themes.find(t => t.id === selectedId);
+
+                                // Update Globals
+                                cardData.fontColor = theme.color;
+                                cardData.fontStyle = theme.font;
+
+                                // Update UI Inputs
+                                let fontStyleInput = document.getElementById("fontStyleInput");
+                                if(fontStyleInput) fontStyleInput.value = theme.font;
+
+                                // Loop through pages and apply
+                                cardData.faces.forEach((face, fIndex) => {
+                                    face.bg = theme.bg;
+                                    face.rowData.forEach((row, rIndex) => {
+                                        row.bg = "transparent";
+                                        if (fIndex === 0 && rIndex === 0 && theme.id !== "custom") {
+                                            row.text = theme.title;
+                                        } else if (theme.id !== "custom") {
+                                            row.text = "";
+                                        }
+                                    });
+                                });
+
+                                // Force UI Redraw
+                                rebuildUI();
+                                template.applyStyles(cardData, createCard);
+                                modalOverlay.style.display = "none";
+                            });
+                        });
+                    });
+
+                    // 4. Close Modal Listeners
+                    closeBtn.addEventListener("click", () => modalOverlay.style.display = "none");
+                    modalOverlay.addEventListener("click", (e) => {
+                        if (e.target === modalOverlay) modalOverlay.style.display = "none";
+                    });
+                }
+
                 // Init UI
                 rebuildUI();
                 document.getElementById("v2TabSettings").onclick = () => switchV2Tab(0);
