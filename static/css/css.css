@@ -111,6 +111,27 @@ button, input, select, textarea {
     color: var(--text-main); /* Variable */
 }
 
+/* --- FROSTED GLASS FOR TEXT BLOCKS ONLY --- */
+.hero-section,
+.feature-text {
+    /* Glass effect */
+    background-color: color-mix(in srgb, var(--bg-panel) 80%, transparent);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px); /* Safari support */
+
+    /* Box styling so it hugs the text nicely */
+    padding: 40px;
+    border-radius: 15px;
+    border: 1px solid color-mix(in srgb, var(--border-color) 50%, transparent);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Override the old hero-section styles so it looks good as a box */
+.hero-section {
+    border-bottom: none; /* Removes the old dividing line */
+    margin-top: 20px;
+}
+
 /* Hero Section */
 .hero-section {
     text-align: center;
