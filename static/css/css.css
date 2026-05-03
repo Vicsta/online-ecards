@@ -383,11 +383,20 @@ input:checked + .slider:before {
 
 /* --- CONTACT FORM STYLES --- */
 .contact-form-container {
-    background: var(--bg-panel); /* Variable */
-    padding: 40px;
+    /* Frosted Glass Effect to match the rest of the site */
+    background-color: color-mix(in srgb, var(--bg-panel) 80%, transparent);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+
+    padding: 40px 50px;
     border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-    border: 1px solid var(--border-color); /* Variable */
+    border: 1px solid color-mix(in srgb, var(--border-color) 50%, transparent);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+
+    /* Locks the form to a readable, clean width */
+    width: 100%;
+    max-width: 550px;
+    box-sizing: border-box;
 }
 
 .input-group {
@@ -403,7 +412,6 @@ input:checked + .slider:before {
     font-size: 0.95em;
 }
 
-/* Make sure the text box matches your inputs */
 .input-group input,
 .input-group textarea {
     width: 100%;
@@ -423,6 +431,30 @@ input:checked + .slider:before {
     outline: none;
     border-color: var(--accent-color); /* Variable */
     box-shadow: 0 0 8px var(--accent-color); /* Variable */
+}
+
+/* Checkbox specific styling */
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 25px;
+    cursor: pointer;
+}
+
+.checkbox-group input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: var(--accent-color); /* Matches the checkmark to your theme! */
+}
+
+.checkbox-group label {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    font-weight: normal;
+    margin-bottom: 0;
+    cursor: pointer;
 }
 
 /* --- DONATE BUTTON (POLISHED) --- */
