@@ -561,3 +561,184 @@ body.support-hidden .support-banner-mobile {
     border-color: var(--accent-color); /* Variable */
     box-shadow: 0 0 8px var(--accent-color); /* Variable */
 }
+
+/* =========================================
+   MOBILE DRAWER NAVIGATION LOGIC
+   ========================================= */
+
+/* --- DESKTOP: HIDE MOBILE ELEMENTS --- */
+.hamburger-btn,
+.mobile-drawer,
+.drawer-overlay {
+    display: none;
+}
+
+/* --- MOBILE STYLES (Triggers on screens smaller than 900px) --- */
+@media (max-width: 900px) {
+
+    /* 1. Hide Desktop Navigation Components */
+    .desktop-only {
+        display: none !important;
+    }
+
+    /* 2. Show the Hamburger Button in the Navbar (BULLETPROOF) */
+    .hamburger-btn {
+        display: block !important;
+        font-size: 1.8rem !important;
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 10px !important;
+        margin: 0 !important;
+        width: auto !important;
+        border-radius: 0 !important;
+        color: var(--text-main) !important;
+        cursor: pointer;
+        position: absolute !important;
+        right: 20px !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+        line-height: 1 !important;
+        z-index: 2000 !important; /* Stays on top of everything! */
+    }
+
+    .hamburger-btn:hover {
+        background: transparent !important;
+        box-shadow: none !important;
+        transform: translateY(-50%) !important;
+    }
+
+    /* 3. The Dark Background Overlay */
+    .drawer-overlay {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0,0,0,0.6);
+        backdrop-filter: blur(3px);
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease;
+        z-index: 1001;
+    }
+    .drawer-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    /* 4. The Sliding Menu Drawer */
+    .mobile-drawer {
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        top: 0;
+        right: -320px; /* Hidden off-screen to the right */
+        width: 280px;
+        height: 100vh;
+        background-color: var(--bg-main);
+        box-shadow: -5px 0 25px rgba(0,0,0,0.3);
+        transition: right 0.3s ease;
+        z-index: 1002;
+        padding: 30px 25px;
+        box-sizing: border-box;
+        border-left: 1px solid var(--border-color);
+    }
+    .mobile-drawer.active {
+        right: 0; /* Slides in! */
+    }
+
+    /* 5. Inside the Drawer Styling (BULLETPROOF HEADER) */
+    .drawer-header {
+        margin-bottom: 30px;
+        padding-top: 10px;
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 15px;
+        position: relative;
+    }
+
+    .drawer-title {
+        font-size: 1rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-weight: bold;
+    }
+
+    .close-drawer-btn {
+        position: absolute !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+        right: 0 !important;
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 10px !important;
+        margin: 0 !important;
+        width: auto !important;
+        border-radius: 0 !important;
+        color: var(--text-muted) !important;
+        font-size: 2.2rem !important;
+        cursor: pointer;
+        transition: color 0.2s;
+        line-height: 1 !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .close-drawer-btn:hover {
+        color: var(--accent-color) !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        transform: translateY(-50%) !important;
+    }
+
+    /* 6. Drawer Links & Utilities */
+    .drawer-links {
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+        margin-bottom: 40px;
+    }
+
+    .mobile-nav-link {
+        font-size: 1.3rem;
+        text-decoration: none;
+        color: var(--text-main);
+        font-weight: bold;
+        transition: color 0.2s;
+    }
+
+    .mobile-nav-link:hover, .mobile-nav-link.active {
+        color: var(--accent-color);
+    }
+
+    .drawer-utilities {
+        margin-top: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+        background-color: var(--bg-panel);
+        padding: 20px;
+        border-radius: 12px;
+        border: 1px solid var(--border-color);
+    }
+
+    .drawer-utility-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+    }
+
+    .drawer-donate {
+        margin-right: 0;
+        justify-content: center;
+        background-color: var(--bg-input);
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+    }
+}

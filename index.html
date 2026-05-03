@@ -3,6 +3,7 @@
 <head>
     <link rel="icon" type="image/png" href="/favicon.png">
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Online E-Cards</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
@@ -10,7 +11,7 @@
     <link rel="stylesheet" href="/static/css/theme.css?v=1">
 
     <link rel="stylesheet" href="/static/css/card.css?v=12">
-    <link rel="stylesheet" href="/static/css/css.css?v=12">
+    <link rel="stylesheet" href="/static/css/css.css?v=13">
     <link rel="stylesheet" href="/static/css/view.css?v=12">
     <link rel="stylesheet" href="/static/css/create.css?v=12">
     <link rel="stylesheet" href="/static/css/cards/v2_card.css?v=12">
@@ -22,7 +23,8 @@
     <!-- Brand Name locked to the left -->
     <div class="nav-left-controls">
         <a href="/home" class="nav-brand">Online E-Cards</a>
-        <select id="globalThemeSelector" class="theme-dropdown" title="Change Website Theme">
+
+        <select id="globalThemeSelector" class="theme-dropdown desktop-only" title="Change Website Theme">
             <option value="dark">🌙 Dark</option>
             <option value="birthday">🎉 Birthday</option>
             <option value="valentine">💖 Valentine</option>
@@ -30,25 +32,23 @@
     </div>
 
     <!-- The container that stretches the buttons (Centered) -->
-    <div class="nav-links-container">
+    <div class="nav-links-container desktop-only">
         <a href="/home" class="nav-link">Home</a>
         <a href="/about" class="nav-link">About</a>
         <a href="/view" class="nav-link">View</a>
         <a href="/create" class="nav-link">Create</a>
-        <a href="/contact" class="nav-link">Contact</a> <!-- Added Contact! -->
+        <a href="/contact" class="nav-link">Contact</a>
     </div>
 
-    <!-- NEW: Safe Controls locked to the right -->
-    <!-- NEW: Safe Controls locked to the right -->
-    <div class="nav-toggle-controls">
-
+    <!-- Safe Controls locked to the right -->
+    <div class="nav-toggle-controls desktop-only">
         <!-- The fully clickable Donate Button -->
         <a href="https://ko-fi.com/vicstadev" target="_blank" class="nav-donate-btn" title="Buy me a coffee!">
             <span class="donate-icon">☕</span>
             <span class="donate-text">Donate</span>
         </a>
 
-        <!-- The Banner Toggle (Safe from blockers!) -->
+        <!-- The Banner Toggle -->
         <span class="toggle-label">Ads</span>
         <label class="switch">
             <input type="checkbox" id="supportToggleSwitch" checked>
@@ -63,6 +63,9 @@
             </div>
         </div>
     </div>
+
+    <!-- THE NEW MOBILE HAMBURGER BUTTON -->
+    <button class="hamburger-btn" id="hamburgerBtn" aria-label="Open Menu">☰</button>
 </nav>
 
 <div id="supportBannerLeft" class="support-banner">
@@ -93,6 +96,49 @@
     </div>
 </div>
 
+<!-- ========================================= -->
+<!-- THE MOBILE DRAWER & OVERLAY               -->
+<!-- ========================================= -->
+<div class="drawer-overlay" id="drawerOverlay"></div>
+<div class="mobile-drawer" id="mobileDrawer">
+    <div class="drawer-header">
+        <span class="drawer-title">Menu</span>
+        <button class="close-drawer-btn" id="closeDrawer">&times;</button>
+    </div>
+
+    <div class="drawer-links">
+        <a href="/home" class="mobile-nav-link">Home</a>
+        <a href="/about" class="mobile-nav-link">About</a>
+        <a href="/view" class="mobile-nav-link">View</a>
+        <a href="/create" class="mobile-nav-link">Create</a>
+        <a href="/contact" class="mobile-nav-link">Contact</a>
+    </div>
+
+    <div class="drawer-utilities">
+        <div class="drawer-utility-item">
+            <label class="toggle-label">Theme</label>
+            <select id="mobileThemeSelector" class="theme-dropdown">
+                <option value="dark">🌙 Dark</option>
+                <option value="birthday">🎉 Birthday</option>
+                <option value="valentine">💖 Valentine</option>
+            </select>
+        </div>
+
+        <div class="drawer-utility-item">
+            <span class="toggle-label">Ads</span>
+            <label class="switch">
+                <input type="checkbox" id="mobileSupportToggleSwitch" checked>
+                <span class="slider round"></span>
+            </label>
+        </div>
+
+        <a href="https://ko-fi.com/vicstadev" target="_blank" class="nav-donate-btn drawer-donate">
+            <span class="donate-icon">☕</span>
+            <span class="donate-text">Donate</span>
+        </a>
+    </div>
+</div>
+
 <script src="/static/js/lz-string.min.js"></script>
 <script src="/static/js/jquery-3.7.1.min.js"></script>
 <script src="/static/js/js.js"></script>
@@ -100,6 +146,7 @@
 <script src="/static/js/cards/cardV1.js"></script>
 <script src="/static/js/cards/cardV2.js"></script>
 <script src="/static/js/registry.js?v=12"></script>
+<script src="/static/js/mobileNav.js?v=12"></script>
 
 <script src="/static/js/animations/BouncingShapes.js?v=1"></script>
 <script src="/static/js/animations/FloatingSprites.js?v=1"></script>
@@ -136,40 +183,44 @@
     // GLOBAL THEME MANAGER
     // =========================================
     const themeSelector = document.getElementById("globalThemeSelector");
+    const mobileThemeSelector = document.getElementById("mobileThemeSelector");
     const savedTheme = localStorage.getItem("siteTheme") || "dark";
 
     function applySiteTheme(themeValue) {
-        // 1. Update the CSS Variables (UI Colors)
         if (themeValue === "dark") {
-            document.body.removeAttribute("data-theme"); // Defaults back to :root
+            document.body.removeAttribute("data-theme");
         } else {
             document.body.setAttribute("data-theme", themeValue);
         }
 
-        // 2. Update the Animated Background Layer
         if (typeof AnimController !== "undefined") {
             AnimController.init();
             AnimController.setTheme(themeValue);
         }
     }
 
-    // Set the dropdown to whatever the user picked last time
+    // Set BOTH dropdowns to the saved theme
     themeSelector.value = savedTheme;
+    if(mobileThemeSelector) mobileThemeSelector.value = savedTheme;
 
-    // Instantly apply the CSS so there is no "flash" of the wrong colors
     if (savedTheme !== "dark") document.body.setAttribute("data-theme", savedTheme);
 
-    // Wait for background.js to build the canvas, THEN apply the animation theme
     window.addEventListener("load", () => {
-        applySiteTheme(themeSelector.value);
+        applySiteTheme(savedTheme);
     });
 
-    // Listen for the user clicking the dropdown
-    themeSelector.addEventListener("change", (e) => {
+    // Master function to handle theme changes from EITHER dropdown
+    function handleThemeChange(e) {
         const newTheme = e.target.value;
-        localStorage.setItem("siteTheme", newTheme); // Save it!
+        localStorage.setItem("siteTheme", newTheme);
+        themeSelector.value = newTheme; // Keep desktop synced
+        if(mobileThemeSelector) mobileThemeSelector.value = newTheme; // Keep mobile synced
         applySiteTheme(newTheme);
-    });
+    }
+
+    themeSelector.addEventListener("change", handleThemeChange);
+    if(mobileThemeSelector) mobileThemeSelector.addEventListener("change", handleThemeChange);
+
 </script>
 
 </body>
