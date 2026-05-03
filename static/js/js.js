@@ -150,3 +150,28 @@ window.addEventListener("load", function () {
         });
     }
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    // --- FIX FOR MOBILE DRAWER 404s ---
+    document.querySelectorAll('.mobile-nav-link').forEach(link => {
+        link.addEventListener('click', (e) => {
+            // 1. Stop the browser from physically trying to load /create and causing a 404
+            e.preventDefault();
+
+            // 2. Find the matching desktop link and trigger its exact routing logic
+            const targetHref = link.getAttribute('href');
+            const desktopLink = document.querySelector(`.nav-link[href="${targetHref}"]`);
+            if (desktopLink) {
+                desktopLink.click();
+            }
+
+            // 3. Close the mobile drawer so they can actually see the new page!
+            const drawer = document.querySelector('.mobile-drawer');
+            const overlay = document.querySelector('.drawer-overlay');
+            if (drawer) drawer.classList.remove('active');
+            if (overlay) overlay.classList.remove('active');
+        });
+    });
+
+});
