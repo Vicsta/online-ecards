@@ -90,7 +90,7 @@ function renderTemplateGrid() {
     });
 }
 
-// 4. Your Existing Editor Logic (Now with Bulletproof Fetching!)
+// 4. Your Existing Editor Logic
 function runCreatePage(selectedVersion) {
     let container = document.getElementById("createCard");
     let menuArea = document.getElementById("dynamicMenuArea");
@@ -103,7 +103,6 @@ function runCreatePage(selectedVersion) {
     cardData = template.defaultData();
 
     // --- THE BULLETPROOF PATH BUILDER ---
-    // This finds the true root of your website, even if you are deep in a virtual SPA route
     let rootPath = window.location.pathname;
     ["/create", "/view", "/home", "/about"].forEach(page => {
         if (rootPath.includes(page)) {
@@ -121,8 +120,6 @@ function runCreatePage(selectedVersion) {
         fetch(absoluteCardUrl).then(res => res.text())
     ]).then(([menuHtml, cardHtml]) => {
 
-        // --- THE FAKE RESPONSE CHECK ---
-        // If the server gave us a 404 page disguised as a success, catch it here!
         if (!cardHtml.includes('scene')) {
             console.error("Fetched file did not contain the 3D scene! Server returned:", cardHtml.substring(0, 100));
             return alert("Failed to fetch the true card HTML. The server intercepted the request.");
@@ -133,7 +130,6 @@ function runCreatePage(selectedVersion) {
 
         createCard = template.initCard(container);
 
-        // If the template has its own dynamic UI builder, let it run!
         if (template.onLoad) template.onLoad(template, cardData, createCard);
 
         template.applyStyles(cardData, createCard);
@@ -143,7 +139,7 @@ function runCreatePage(selectedVersion) {
         console.error("Fetch Error details:", err);
     });
 
-    // --- Export Link Logic (With Success Modal & Ad Loop) ---
+    // --- Export Link Logic ---
     document.getElementById("exportBtn").onclick = () => {
 
         // 1. Inject Theme & Generate Link
@@ -172,60 +168,21 @@ function runCreatePage(selectedVersion) {
         const previewBtn = document.getElementById("sm-preview-btn");
 
         // Reset states
-        stateVictory.style.display = "block";
-        stateAd.style.display = "none";
-        stateReward.style.display = "none";
+        if (stateVictory) stateVictory.style.display = "block";
+        if (stateAd) stateAd.style.display = "none";
+        if (stateReward) stateReward.style.display = "none";
 
         // Set the preview button link
-        previewBtn.href = testUrl;
+        if (previewBtn) previewBtn.href = testUrl;
 
-        // 4. Show Modal & Fire Initial Confetti
-        modal.style.display = "flex";
-        fireConfetti(100);
+        // 4. Show Modal & Fire Initial Confetti using the GLOBAL function
+        if (modal) modal.style.display = "flex";
+        if (typeof window.fireConfetti === "function") window.fireConfetti(100);
 
-        // --- MODAL BUTTON LISTENERS ---
-
-        // Close buttons
-        const closeModal = () => { modal.style.display = "none"; };
-        document.getElementById("sm-close-btn").onclick = closeModal;
-        document.getElementById("sm-close-reward-btn").onclick = closeModal;
-
-        // Watch Ad Logic
-        const triggerAd = () => {
-            // Switch to Fake Ad Screen
-            stateVictory.style.display = "none";
-            stateReward.style.display = "none";
-            stateAd.style.display = "block";
-
-            // Simulating an ad playing for 3 seconds
-            setTimeout(() => {
-                // Switch to Reward Screen
-                stateAd.style.display = "none";
-                stateReward.style.display = "block";
-
-                // MASSIVE CONFETTI!
-                fireConfetti(250, 1.2);
-            }, 3000);
-        };
-
-        document.getElementById("sm-watch-ad-btn").onclick = triggerAd;
-        document.getElementById("sm-watch-another-btn").onclick = triggerAd;
+        // Note: The global JS handles closing and the Ad button clicks now!
     };
 
-// --- HELPER: Confetti Cannon ---
-    function fireConfetti(particleCount, spreadMultiplier = 1) {
-        if (typeof confetti !== "function") return; // Failsafe if CDN doesn't load
-
-        // Fires from slightly above the bottom of the screen
-        confetti({
-            particleCount: particleCount,
-            spread: 70 * spreadMultiplier,
-            origin: { y: 0.8 },
-            colors: ['#ffcc00', '#ff0055', '#00ccff', '#22cc44'],
-            zIndex: 9999 /* <--- THIS IS THE MAGIC FIX */
-        });
-    }
-}
+} // <--- THIS WAS THE MISSING BRACE!
 
 // 5. Input Bindings
 function setupDynamicBindings(bindingsMap, template) {
@@ -276,7 +233,7 @@ function setupTabs(template) {
 
 // 7. Initialize
 if (document.readyState === "complete" || document.readyState === "interactive") {
-    initCreateFlow(); // Changed to the new start function
+    initCreateFlow();
 } else {
-    document.addEventListener("DOMContentLoaded", initCreateFlow); // Changed to the new start function
+    document.addEventListener("DOMContentLoaded", initCreateFlow);
 }
