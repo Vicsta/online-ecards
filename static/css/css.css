@@ -105,6 +105,11 @@ button, input, select, textarea {
     box-sizing: border-box;
 }
 
+#view {
+    padding-top: 130px !important; /* Forces the 3D card far enough down to breathe */
+    align-items: center !important; /* Keeps it locked to the center of the viewport */
+}
+
 /* --- PAGES LAYOUT (Home & About) --- */
 .page-container {
     max-width: 1000px;

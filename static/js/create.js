@@ -34,6 +34,14 @@ function showEditor(versionId) {
     if(chooserDiv) chooserDiv.style.display = "none";
     if(editorDiv) editorDiv.style.display = "flex";
 
+    // --- NEW: THE DUPLICATE ID BUG FIX ---
+    // Destroy the view page card if it exists. This prevents the 3D engine
+    // from accidentally attaching to the hidden View tab instead of the Editor!
+    let viewContainer = document.getElementById("cardViewContainer");
+    if (viewContainer) {
+        viewContainer.innerHTML = "";
+    }
+
     // Turn Left Ad OFF
     document.body.setAttribute("data-editor-active", "true");
 
