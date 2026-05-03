@@ -135,8 +135,15 @@ function runCreatePage(selectedVersion) {
         console.error("Fetch Error details:", err);
     });
 
-    // --- Export Link Logic ---
+// --- Export Link Logic ---
     document.getElementById("exportBtn").onclick = () => {
+
+        // --- NEW: INJECT CURRENT THEME BEFORE SAVING ---
+        let globalDropdown = document.getElementById("globalThemeSelector");
+        if (globalDropdown) {
+            cardData.siteTheme = globalDropdown.value; // Saves "valentine", "dark", etc.
+        }
+
         let compressedData = encodeCardJSON(cardData);
         let baseUrl = window.location.origin;
         let clipboardUrl = baseUrl + "/view?c=" + compressedData;

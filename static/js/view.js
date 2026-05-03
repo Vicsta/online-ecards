@@ -37,6 +37,17 @@ function runViewPage() {
         emptyState.style.display = "none";
         container.style.display = "flex";
 
+        // --- NEW: APPLY THE SENDER'S SAVED WEBSITE THEME ---
+        if (cardData.siteTheme && typeof applySiteTheme === "function") {
+            applySiteTheme(cardData.siteTheme);
+
+            // Optional: Sync the dropdowns in the navbar so they match
+            let globalDropdown = document.getElementById("globalThemeSelector");
+            let mobileDropdown = document.getElementById("mobileThemeSelector");
+            if (globalDropdown) globalDropdown.value = cardData.siteTheme;
+            if (mobileDropdown) mobileDropdown.value = cardData.siteTheme;
+        }
+
         let template = CardRegistry[cardData.version];
         if (!template) {
             alert("This card uses an unknown or outdated template.");

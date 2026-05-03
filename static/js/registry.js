@@ -243,6 +243,17 @@ const CardRegistry = {
                                 let selectedId = e.currentTarget.getAttribute("data-id");
                                 let theme = themes.find(t => t.id === selectedId);
 
+                                // --- NEW: AUTO-SWITCH THE GLOBAL WEBSITE THEME ---
+                                let globalDropdown = document.getElementById("globalThemeSelector");
+                                let mobileDropdown = document.getElementById("mobileThemeSelector");
+
+                                // If the preset ID matches a site theme (valentine, birthday, dark), switch to it!
+                                if (globalDropdown && ["dark", "birthday", "valentine"].includes(selectedId)) {
+                                    globalDropdown.value = selectedId;
+                                    if(mobileDropdown) mobileDropdown.value = selectedId;
+                                    globalDropdown.dispatchEvent(new Event('change')); // Safely triggers background update
+                                }
+
                                 // Update Globals
                                 cardData.fontColor = theme.color;
                                 cardData.fontStyle = theme.font;
