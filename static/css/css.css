@@ -18,7 +18,9 @@ button, input, select, textarea {
 .navbar {
     display: flex;
     align-items: center;
-    background-color: var(--nav-bg); /* Variable */
+    justify-content: space-between; /* NEW: Spreads the 3 zones out */
+    padding: 0 20px; /* NEW: Gives left/right breathing room */
+    background-color: var(--nav-bg);
     height: 60px;
     position: fixed;
     top: 0;
@@ -47,10 +49,10 @@ button, input, select, textarea {
 /* Container holding the buttons */
 .nav-links-container {
     display: flex;
-    width: 100%;
-    max-width: 600px;
-    margin: 0 auto;
+    justify-content: center; /* NEW: Centers the links inside this middle box */
+    flex: 1; /* NEW: Tells it to take up exactly 1/3 of the navbar */
     height: 100%;
+    min-width: 400px; /* NEW: Prevents the links from squishing into unreadable text */
 }
 
 /* Link styling */
@@ -258,11 +260,11 @@ button, input, select, textarea {
 
 /* --- RIGHT NAVBAR CONTROLS (Ad Toggle) --- */
 .nav-toggle-controls {
-    position: absolute;
-    right: 30px;
     display: flex;
     align-items: center;
+    justify-content: flex-end; /* NEW: Pushes the buttons flush to the right wall */
     gap: 10px;
+    flex: 1; /* NEW: Tells it to take up exactly 1/3 of the navbar */
 }
 
 .toggle-label {
@@ -534,12 +536,11 @@ body.support-hidden .support-banner-mobile {
 
 /* --- LEFT NAV CONTROLS (Brand & Theme Selector) --- */
 .nav-left-controls {
-    position: absolute;
-    left: 30px;
     display: flex;
     align-items: center;
     gap: 20px;
     z-index: 100;
+    flex: 1; /* NEW: Tells it to take up exactly 1/3 of the navbar */
 }
 
 /* The Dropdown Styling */
@@ -574,7 +575,7 @@ body.support-hidden .support-banner-mobile {
 }
 
 /* --- MOBILE STYLES (Triggers on screens smaller than 900px) --- */
-@media (max-width: 900px) {
+@media (max-width: 950px) {
 
     /* 1. Hide Desktop Navigation Components */
     .desktop-only {
