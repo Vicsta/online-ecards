@@ -204,7 +204,7 @@ function runCreatePage(selectedVersion) {
         document.getElementById("sm-watch-another-btn").onclick = triggerAd;
     };
 
-    // --- HELPER: Confetti Cannon ---
+// --- HELPER: Confetti Cannon ---
     function fireConfetti(particleCount, spreadMultiplier = 1) {
         if (typeof confetti !== "function") return; // Failsafe if CDN doesn't load
 
@@ -213,7 +213,8 @@ function runCreatePage(selectedVersion) {
             particleCount: particleCount,
             spread: 70 * spreadMultiplier,
             origin: { y: 0.8 },
-            colors: ['#ffcc00', '#ff0055', '#00ccff', '#22cc44']
+            colors: ['#ffcc00', '#ff0055', '#00ccff', '#22cc44'],
+            zIndex: 9999 /* <--- THIS IS THE MAGIC FIX */
         });
     }
 }
