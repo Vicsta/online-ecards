@@ -180,7 +180,7 @@ button, input, select, textarea {
 .feature-row {
     display: flex;
     align-items: center;
-    gap: 60px;
+    gap: 60px; /* Back to a normal gap! */
     margin: 80px 0;
 }
 
@@ -218,23 +218,23 @@ button, input, select, textarea {
     margin-top: 20px;
 }
 
-/* The visual placeholder */
+/* --- THE ORGANIC FLOATING EMOJI --- */
 .feature-visual {
-    flex: 1;
-    background: var(--bg-panel); /* Variable */
-    border-radius: 15px;
-    height: 350px;
     display: flex;
     align-items: center;
-    justify-content: center;
-    border: 1px solid var(--border-color); /* Variable */
-    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-    font-size: 6rem;
-    transition: transform 0.3s ease;
+    justify-content: center; /* This is the magic line that centers it! */
+    font-size: 5.2rem;
+
+    /* REMOVED: width: 150px and flex-shrink: 0 */
+    flex: 1; /* This makes it take up exactly half the row again */
+
+    transition: transform 0.3s ease, filter 0.3s ease;
+    filter: drop-shadow(0 10px 15px rgba(0,0,0,0.2));
 }
 
 .feature-visual:hover {
-    transform: translateY(-5px) scale(1.02);
+    transform: translateY(-8px) scale(1.1) rotate(5deg); /* A playful little tilt on hover */
+    filter: drop-shadow(0 15px 25px rgba(0,0,0,0.3));
 }
 
 /* --- MOBILE RESPONSIVENESS --- */
