@@ -312,5 +312,10 @@ body[data-editor-active="true"] #create {
 
 body[data-editor-active="true"] #cardEditor {
     min-width: 1200px;
-    padding-right: 200px;
+    /* padding-right removed because Flexbox ignores it */
+}
+
+/* NEW: The Magic Bumper! */
+body[data-editor-active="true"] #createCard {
+    margin-right: 300px !important; /* Forces a massive invisible wall to the right of the card */
 }
