@@ -106,7 +106,6 @@ button, input, select, textarea {
 }
 
 #view {
-    padding-top: 130px !important; /* Forces the 3D card far enough down to breathe */
     align-items: center !important; /* Keeps it locked to the center of the viewport */
 }
 
