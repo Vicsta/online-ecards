@@ -139,6 +139,48 @@
     </div>
 </div>
 
+<!-- ========================================= -->
+<!-- THE SUCCESS & AD MODAL                    -->
+<!-- ========================================= -->
+<div id="successModalOverlay" class="modal-overlay">
+    <div class="modal-content success-modal">
+
+        <!-- STATE 1: Victory Screen -->
+        <div id="sm-state-victory">
+            <h2 style="color: var(--text-main); margin-top: 0;">🎉 Card Ready!</h2>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Your link has been generated and copied to your clipboard.</p>
+
+            <div class="success-actions">
+                <a href="#" id="sm-preview-btn" target="_blank" class="hero-btn" style="display: block; text-align: center; margin-bottom: 15px;">👀 Preview Card</a>
+                <button id="sm-close-btn" class="button" style="background: var(--bg-input); color: var(--text-main); margin-top: 0;">Keep Editing</button>
+            </div>
+
+            <div class="ad-prompt-box">
+                <div style="font-size: 1.2rem; margin-bottom: 5px;">☕ Support the Dev!</div>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 15px;">This tool is 100% free. If you want to help keep the servers running, you can watch a short ad!</p>
+                <button id="sm-watch-ad-btn" class="button" style="margin-top: 0;">Watch Ad 💖</button>
+            </div>
+        </div>
+
+        <!-- STATE 2: The Fake Ad Screen -->
+        <div id="sm-state-ad" style="display: none; text-align: center; padding: 40px 0;">
+            <h3 style="color: var(--accent-color);">[ Ad Video Placeholder ]</h3>
+            <p style="color: var(--text-muted);">Simulating a 3-second ad...</p>
+            <div class="spinner"></div> <!-- We will add a simple CSS spinner -->
+        </div>
+
+        <!-- STATE 3: The Reward Screen -->
+        <div id="sm-state-reward" style="display: none; text-align: center;">
+            <h2 style="color: var(--text-main); margin-top: 0;">You're a Legend! 👑</h2>
+            <p style="color: var(--text-muted); margin-bottom: 30px;">Thank you so much for supporting the site. Every little bit helps keep this project alive!</p>
+
+            <button id="sm-watch-another-btn" class="button" style="margin-bottom: 15px;">Watch Another? 🔄</button>
+            <button id="sm-close-reward-btn" class="button" style="background: var(--bg-input); color: var(--text-main); margin-top: 0;">Back to Card</button>
+        </div>
+
+    </div>
+</div>
+
 <script src="/static/js/lz-string.min.js"></script>
 <script src="/static/js/jquery-3.7.1.min.js"></script>
 <script src="/static/js/js.js"></script>
@@ -151,6 +193,8 @@
 <script src="/static/js/animations/BouncingShapes.js?v=1"></script>
 <script src="/static/js/animations/FloatingSprites.js?v=1"></script>
 <script src="/static/js/animations/AnimController.js?v=1"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <script>
     function loadScript(src) {

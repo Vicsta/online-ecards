@@ -135,14 +135,12 @@ function runCreatePage(selectedVersion) {
         console.error("Fetch Error details:", err);
     });
 
-// --- Export Link Logic ---
+    // --- Export Link Logic (With Success Modal & Ad Loop) ---
     document.getElementById("exportBtn").onclick = () => {
 
-        // --- NEW: INJECT CURRENT THEME BEFORE SAVING ---
+        // 1. Inject Theme & Generate Link
         let globalDropdown = document.getElementById("globalThemeSelector");
-        if (globalDropdown) {
-            cardData.siteTheme = globalDropdown.value; // Saves "valentine", "dark", etc.
-        }
+        if (globalDropdown) cardData.siteTheme = globalDropdown.value;
 
         let compressedData = encodeCardJSON(cardData);
         let baseUrl = window.location.origin;
@@ -155,11 +153,69 @@ function runCreatePage(selectedVersion) {
             testUrl = baseUrl + localRoot + "?c=" + compressedData;
         }
 
-        let resultDiv = document.getElementById("exportResult");
-        resultDiv.style.display = "block";
-        resultDiv.innerHTML = `<a href="${testUrl}" target="_blank" style="color: #8ab4f8; text-decoration: underline;">Click to Test Link</a><br><br><small style="color: #bbb;">Link copied to clipboard!</small>`;
+        // 2. Copy to clipboard
         navigator.clipboard.writeText(clipboardUrl).catch(err => console.error(err));
+
+        // 3. Setup Modal Elements
+        const modal = document.getElementById("successModalOverlay");
+        const stateVictory = document.getElementById("sm-state-victory");
+        const stateAd = document.getElementById("sm-state-ad");
+        const stateReward = document.getElementById("sm-state-reward");
+        const previewBtn = document.getElementById("sm-preview-btn");
+
+        // Reset states
+        stateVictory.style.display = "block";
+        stateAd.style.display = "none";
+        stateReward.style.display = "none";
+
+        // Set the preview button link
+        previewBtn.href = testUrl;
+
+        // 4. Show Modal & Fire Initial Confetti
+        modal.style.display = "flex";
+        fireConfetti(100);
+
+        // --- MODAL BUTTON LISTENERS ---
+
+        // Close buttons
+        const closeModal = () => { modal.style.display = "none"; };
+        document.getElementById("sm-close-btn").onclick = closeModal;
+        document.getElementById("sm-close-reward-btn").onclick = closeModal;
+
+        // Watch Ad Logic
+        const triggerAd = () => {
+            // Switch to Fake Ad Screen
+            stateVictory.style.display = "none";
+            stateReward.style.display = "none";
+            stateAd.style.display = "block";
+
+            // Simulating an ad playing for 3 seconds
+            setTimeout(() => {
+                // Switch to Reward Screen
+                stateAd.style.display = "none";
+                stateReward.style.display = "block";
+
+                // MASSIVE CONFETTI!
+                fireConfetti(250, 1.2);
+            }, 3000);
+        };
+
+        document.getElementById("sm-watch-ad-btn").onclick = triggerAd;
+        document.getElementById("sm-watch-another-btn").onclick = triggerAd;
     };
+
+    // --- HELPER: Confetti Cannon ---
+    function fireConfetti(particleCount, spreadMultiplier = 1) {
+        if (typeof confetti !== "function") return; // Failsafe if CDN doesn't load
+
+        // Fires from slightly above the bottom of the screen
+        confetti({
+            particleCount: particleCount,
+            spread: 70 * spreadMultiplier,
+            origin: { y: 0.8 },
+            colors: ['#ffcc00', '#ff0055', '#00ccff', '#22cc44']
+        });
+    }
 }
 
 // 5. Input Bindings
