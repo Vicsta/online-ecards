@@ -113,7 +113,7 @@ class FloatingSpritesAnim {
         this.container.style.width = "100vw";
         this.container.style.height = "100vh";
         this.container.style.pointerEvents = "none";
-        this.container.style.zIndex = "0";
+        this.container.style.zIndex = "-1";
         this.container.style.overflow = "hidden";
 
         this.init();
