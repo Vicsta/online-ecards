@@ -4,18 +4,14 @@
 // Update this list whenever you drop new GIFs, PNGs, or JPGs into your folders!
 const AssetLibrary = {
     "Backgrounds": [
-        "/assets/backgrounds/stars.jpg",
-        "/assets/backgrounds/confetti.gif",
-        "/assets/backgrounds/hearts.png"
-    ],
-    "Cats": [
-        "/assets/cats/cat1.png",
-        "/assets/cats/funny-cat-dancing.gif",
-        "/assets/cats/kitten.jpg"
+        "/assets/backgrounds/test1.jpeg",
+        "/assets/backgrounds/test2.jpeg",
+        "/assets/backgrounds/test3.jpeg"
     ],
     "Patterns": [
-        "/assets/patterns/polkadot.png",
-        "/assets/patterns/matrix-rain.gif"
+        "/assets/patterns/test4.jpeg",
+        "/assets/patterns/test5.jpeg",
+        "/assets/patterns/test6.jpeg"
     ]
 };
 
