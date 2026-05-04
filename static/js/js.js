@@ -1,50 +1,81 @@
-// --- NEW: DYNAMIC BASE PATH & ROUTING ---
+const themeData = {
+    "birthday": {
+        title: "Free 3D Birthday E-Cards",
+        text: "Customize colors, text, and add confetti to the perfect digital birthday card.",
+        image: "/static/assets/seo/birthday-hero.jpg" // IMPORTANT: Generate an image in ComfyUI and put it here!
+    },
+    "valentine": {
+        title: "Custom Valentine's Day E-Cards",
+        text: "Send a romantic, interactive 3D folding card to your partner.",
+        image: "/static/assets/seo/valentine-hero.jpg"
+    }
+};
+
 const getAppRoot = () => {
     let cleanUrl = window.location.href.split('?')[0];
     if (cleanUrl.includes("online-e-card/")) {
-        // Local WebStorm environment
         return new URL(cleanUrl.split("online-e-card/")[0] + "online-e-card/").pathname;
     }
-    // Production environment
     return "/";
 };
 
 const APP_ROOT = getAppRoot();
 
-// Inject the magic <base> tag so all relative assets (images, css) know where the root is
 (function injectBaseTag() {
     let baseTag = document.querySelector('base') || document.createElement('base');
     baseTag.href = APP_ROOT;
     document.head.appendChild(baseTag);
 })();
 
+// NEW: Added "landing" to the official pages array
+const pages = ["home", "about", "view", "create", "contact", "landing", "not"];
+let curPage = 0;
 
-const pages = ["home", "about", "view", "create", "contact", "not"];
-let curPage = 0; // Default index
-
-// --- NEW: SEO TITLE DICTIONARY ---
 const seoTitles = {
     "home": "Free 3D Online E-Card Maker | Custom Greeting Cards",
     "create": "Create 3D E-Cards Free | Custom Greeting Maker",
     "view": "View Your 3D E-Card | Online Greeting",
     "about": "About | Online E-Cards Tool",
     "contact": "Contact Us | Online E-Cards",
+    "landing": "Free Custom E-Cards | Online Greeting Builder",
     "not": "Page Not Found | Online E-Cards"
 };
 
 window.addEventListener("load", function () {
 
-    // --- 1. THE STATE MANAGER ---
     function updateAppState(pageName) {
-        console.log("--- STATE CHANGE ---");
         console.log("Current Page:", pageName);
-
         document.body.setAttribute('data-current-page', pageName);
         document.body.setAttribute('data-editor-active', 'false');
 
-        // --- NEW: Inject the targeted SEO Title! ---
         if (seoTitles[pageName]) {
             document.title = seoTitles[pageName];
+        }
+
+        // --- NEW: LANDING PAGE DATA INJECTION ---
+        // If the router opens the landing page, inject the data immediately!
+        if (pageName === 'landing') {
+            let pathSegments = window.location.pathname.split("/").filter(Boolean);
+            let requestedTheme = pathSegments[pathSegments.length - 1]; // Grabs "birthday" from "/theme/birthday"
+
+            if (themeData[requestedTheme]) {
+                document.title = themeData[requestedTheme].title; // Perfect SEO override
+
+                // Slight delay to ensure the HTML div is fully loaded before replacing text
+                setTimeout(() => {
+                    let titleEl = document.getElementById("landingTitle");
+                    let textEl = document.getElementById("landingText");
+                    let imgEl = document.getElementById("landingImage");
+                    let btnEl = document.getElementById("landingCtaBtn");
+
+                    if (titleEl) titleEl.innerText = themeData[requestedTheme].title;
+                    if (textEl) textEl.innerText = themeData[requestedTheme].text;
+                    if (imgEl) imgEl.src = themeData[requestedTheme].image;
+
+                    // Set the button to link right to the builder with the theme selected!
+                    if (btnEl) btnEl.href = APP_ROOT + "create?theme=" + requestedTheme;
+                }, 50);
+            }
         }
 
         if (pageName === 'create') {
@@ -59,16 +90,12 @@ window.addEventListener("load", function () {
         updateBannerVisibility(bannersEnabled);
     }
 
-    // --- 2. BULLETPROOF NAV HIGHLIGHTER ---
     function updateNav(currentPathCheck) {
-        // Strip the base path out so we are just left with the page name
         let currentPath = window.location.pathname.replace(APP_ROOT, "");
         if (currentPath === "" || currentPath.includes("index.html")) currentPath = "home";
-        // Remove trailing slashes
         if (currentPath.endsWith("/")) currentPath = currentPath.slice(0, -1);
 
         $(".nav-link").removeClass("active");
-
         $(".nav-link").each(function() {
             let linkTarget = $(this).attr("href").replace("/", "");
             if (linkTarget === currentPath || linkTarget === currentPathCheck) {
@@ -77,27 +104,50 @@ window.addEventListener("load", function () {
         });
     }
 
-    // --- 3. INITIAL LOAD LOGIC ---
     (function () {
         let redirect = sessionStorage.redirect;
         delete sessionStorage.redirect;
 
+        let activeUrlObj = redirect ? new URL(redirect) : new URL(location.href);
         let checkPage = "home";
 
-        if (redirect) {
-            let urlObj = new URL(redirect);
-            checkPage = urlObj.pathname.split("/").pop().split("?")[0];
-            if (urlObj.searchParams.has("c")) checkPage = "view";
-            else if (checkPage === "" || checkPage === "index.html") checkPage = "home";
-            if (!pages.includes(checkPage)) checkPage = "not";
+        if (activeUrlObj.searchParams.has("theme")) {
+            let requestedTheme = activeUrlObj.searchParams.get("theme");
+            if (themeData[requestedTheme] || requestedTheme === "dark") {
+                localStorage.setItem("siteTheme", requestedTheme);
+                let ts = document.getElementById("globalThemeSelector");
+                let mts = document.getElementById("mobileThemeSelector");
+                if (ts) ts.value = requestedTheme;
+                if (mts) mts.value = requestedTheme;
+                if (requestedTheme === "dark") {
+                    document.body.removeAttribute("data-theme");
+                } else {
+                    document.body.setAttribute("data-theme", requestedTheme);
+                }
+                if (typeof AnimController !== "undefined" && AnimController.setTheme) {
+                    AnimController.setTheme(requestedTheme);
+                }
+            }
+        }
 
+        // --- NEW: URL INTERCEPTOR FOR LANDING PAGES ---
+        if (redirect) {
+            if (activeUrlObj.pathname.includes("/theme/")) {
+                checkPage = "landing";
+            } else {
+                checkPage = activeUrlObj.pathname.split("/").pop().split("?")[0];
+                if (activeUrlObj.searchParams.has("c")) checkPage = "view";
+                else if (checkPage === "" || checkPage === "index.html") checkPage = "home";
+                if (!pages.includes(checkPage)) checkPage = "not";
+            }
             history.replaceState(null, "", redirect);
         } else {
-            let urlObj = new URL(location.href);
-            if (urlObj.searchParams.has("c")) {
+            if (activeUrlObj.pathname.includes("/theme/")) {
+                checkPage = "landing";
+            } else if (activeUrlObj.searchParams.has("c")) {
                 checkPage = "view";
             } else {
-                checkPage = urlObj.pathname.split("/").pop().split("?")[0];
+                checkPage = activeUrlObj.pathname.split("/").pop().split("?")[0];
                 if (checkPage === "" || checkPage === "index.html") checkPage = "home";
                 if (!pages.includes(checkPage)) checkPage = "not";
             }
@@ -111,11 +161,12 @@ window.addEventListener("load", function () {
         updateNav(checkPage);
     })();
 
-    // --- 4. NAVIGATION LISTENERS ---
     window.onpopstate = function () {
         let urlObj = new URL(location.href);
         let ext = urlObj.pathname.split("/").pop().split("?")[0];
-        if (urlObj.searchParams.has("c")) ext = "view";
+
+        if (urlObj.pathname.includes("/theme/")) ext = "landing";
+        else if (urlObj.searchParams.has("c")) ext = "view";
         else if (ext === "" || ext === "index.html") ext = "home";
         else if (!pages.includes(ext)) ext = "not";
 
@@ -123,47 +174,81 @@ window.addEventListener("load", function () {
         updateNav(ext);
     };
 
-    $(".nav-link").on("click", function(e) {
-        e.preventDefault();
-        let target = $(this).attr("href").replace("/", "");
+    // --- NEW: BULLETPROOF CLICK LISTENER ---
+    $("body").on("click", "a.nav-link, a.seo-link", function(e) {
+        let targetHref = $(this).attr("href");
 
-        if (pages.includes(target)) {
-            // Push the state using the APP_ROOT so it doesn't escape the folder!
-            history.pushState(null, "", APP_ROOT + target);
-            loadPage(pages.indexOf(target));
-            updateNav(target);
+        // Ignore external links
+        if(targetHref.startsWith("http")) return;
+
+        e.preventDefault();
+
+        // Clean the path to prevent localhost folder escaping
+        let cleanTarget = targetHref;
+        if (cleanTarget.startsWith(APP_ROOT)) cleanTarget = cleanTarget.replace(APP_ROOT, "");
+        if (cleanTarget.startsWith("/")) cleanTarget = cleanTarget.substring(1);
+
+        // STRIP THE QUERY PARAMETERS SO THE ROUTER CAN READ THE PAGE NAME
+        let routePath = cleanTarget.split("?")[0];
+        let baseRoute = routePath.split("/")[0]; // gets "theme" or "home"
+
+        if (baseRoute === "theme") {
+            history.pushState(null, "", APP_ROOT + cleanTarget);
+            loadPage(pages.indexOf("landing"));
+            $(".nav-link").removeClass("active");
+
+        } else if (pages.includes(routePath)) {
+            // Push the full URL (including the ?theme= part) to the browser
+            history.pushState(null, "", APP_ROOT + cleanTarget);
+
+            // --- INSTANT THEME APPLICATION ---
+            // If they clicked a link with a theme, apply it right now before the page even loads!
+            if (cleanTarget.includes("?theme=")) {
+                let themeVal = cleanTarget.split("?theme=")[1];
+                if (themeData[themeVal] || themeVal === "dark") {
+                    localStorage.setItem("siteTheme", themeVal);
+                    let ts = document.getElementById("globalThemeSelector");
+                    let mts = document.getElementById("mobileThemeSelector");
+                    if (ts) ts.value = themeVal;
+                    if (mts) mts.value = themeVal;
+
+                    if (themeVal === "dark") {
+                        document.body.removeAttribute("data-theme");
+                    } else {
+                        document.body.setAttribute("data-theme", themeVal);
+                    }
+
+                    if (typeof AnimController !== "undefined" && AnimController.setTheme) {
+                        AnimController.setTheme(themeVal);
+                    }
+                }
+            }
+
+            // Load the actual page (e.g., 'create')
+            loadPage(pages.indexOf(routePath));
+            updateNav(routePath);
+
         } else {
             history.pushState(null, "", APP_ROOT + "404");
             loadPage(pages.indexOf("not"));
         }
     });
 
-    // --- NEW: VIEW PAGE EMPTY STATE BUTTON ---
-    // Because this is inside js.js, it has full access to APP_ROOT, loadPage, and updateNav!
     const emptyCreateBtn = document.getElementById("emptyStateCreateBtn");
     if (emptyCreateBtn) {
         emptyCreateBtn.addEventListener("click", function(e) {
             e.preventDefault();
-
-            // 1. Update the URL bar cleanly
             history.pushState(null, "", APP_ROOT + "create");
-
-            // 2. Tell the SPA to cross-fade to the Create page
             loadPage(pages.indexOf("create"));
-
-            // 3. Highlight the word "Create" in the top navbar
             updateNav("create");
         });
     }
 
-    // --- 5. PAGE TRANSITION LOGIC ---
     function loadPage(x) {
         if (x === curPage) return;
-
         let previousPage = curPage;
         curPage = x;
 
-        // Trigger State Manager
         updateAppState(pages[curPage]);
 
         $("#" + pages[previousPage]).stop(true, true).fadeOut("fast", function () {
@@ -176,9 +261,7 @@ window.addEventListener("load", function () {
         });
     }
 
-    // --- 6. SAFE TOGGLE LOGIC ---
     const toggleSwitch = document.getElementById("supportToggleSwitch");
-    // Ensure mobile toggle syncs as well if it exists
     const mobileToggleSwitch = document.getElementById("mobileSupportToggleSwitch");
 
     function updateBannerVisibility(isEnabled) {
@@ -193,44 +276,28 @@ window.addEventListener("load", function () {
         let bannersEnabled = localStorage.getItem("bannersEnabled") !== "false";
         toggleSwitch.checked = bannersEnabled;
         if(mobileToggleSwitch) mobileToggleSwitch.checked = bannersEnabled;
-
         updateBannerVisibility(bannersEnabled);
 
         const toggleHandler = function() {
             let isEnabled = this.checked;
             localStorage.setItem("bannersEnabled", isEnabled ? "true" : "false");
             updateBannerVisibility(isEnabled);
-
-            // Keep both toggles in sync visually
             if(toggleSwitch) toggleSwitch.checked = isEnabled;
             if(mobileToggleSwitch) mobileToggleSwitch.checked = isEnabled;
         };
-
         toggleSwitch.addEventListener("change", toggleHandler);
         if(mobileToggleSwitch) mobileToggleSwitch.addEventListener("change", toggleHandler);
     }
 });
 
-
-// =========================================
-// GLOBAL DOCUMENT LISTENERS (No dependencies on window.load)
-// =========================================
 document.addEventListener("DOMContentLoaded", () => {
-
-    // --- FIX FOR MOBILE DRAWER 404s ---
     document.querySelectorAll('.mobile-nav-link').forEach(link => {
         link.addEventListener('click', (e) => {
-            // 1. Stop the browser from physically trying to load /create and causing a 404
             e.preventDefault();
-
-            // 2. Find the matching desktop link and trigger its exact routing logic
             const targetHref = link.getAttribute('href');
             const desktopLink = document.querySelector(`.nav-link[href="${targetHref}"]`);
-            if (desktopLink) {
-                desktopLink.click();
-            }
+            if (desktopLink) desktopLink.click();
 
-            // 3. Close the mobile drawer so they can actually see the new page!
             const drawer = document.querySelector('.mobile-drawer');
             const overlay = document.querySelector('.drawer-overlay');
             if (drawer) drawer.classList.remove('active');
@@ -238,7 +305,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // --- GLOBAL CONFETTI CANNON ---
     window.fireConfetti = function(particleCount, spreadMultiplier = 1) {
         if (typeof confetti !== "function") return;
         confetti({
@@ -250,29 +316,22 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     };
 
-    // --- BULLETPROOF AD & MODAL BUTTON LISTENER ---
     document.addEventListener('click', (e) => {
-
-        // 1. Check if they clicked a "Close" button
         if (e.target.closest('.close-modal-btn')) {
             const modal = document.getElementById("successModalOverlay");
             if (modal) modal.style.display = "none";
-            return; // Stop running here
+            return;
         }
 
-        // 2. Check if they clicked a "Watch Ad" button
         const adBtn = e.target.closest('.trigger-ad-modal-btn');
-        if (!adBtn) return; // Ignore clicks on anything else
-
+        if (!adBtn) return;
         e.preventDefault();
 
-        // FORCE-CLOSE THE MOBILE DRAWER (If open)
         const drawer = document.querySelector('.mobile-drawer');
         const overlay = document.querySelector('.drawer-overlay');
         if (drawer) drawer.classList.remove('active');
         if (overlay) overlay.classList.remove('active');
 
-        // TRIGGER THE MODAL LOGIC
         const modal = document.getElementById("successModalOverlay");
         const stateVictory = document.getElementById("sm-state-victory");
         const stateAd = document.getElementById("sm-state-ad");
@@ -280,20 +339,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if(!modal || !stateAd) return;
 
-        // Hide Victory and Reward screens, show Ad loader
         if(stateVictory) stateVictory.style.display = "none";
         if(stateReward) stateReward.style.display = "none";
         stateAd.style.display = "block";
         modal.style.display = "flex";
 
-        // Simulate the 3-second ad
         setTimeout(() => {
             stateAd.style.display = "none";
             if(stateReward) stateReward.style.display = "block";
-
-            // Boom! Calls the global function we just created above.
             window.fireConfetti(250, 1.2);
         }, 3000);
     });
-
 });

@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Highly targeted SEO Title -->
     <title>Free 3D Online E-Card Maker | Custom Greeting Cards</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
@@ -18,7 +17,6 @@
     <link rel="stylesheet" href="/static/css/cards/v2_card.css?v=15">
     <link rel="stylesheet" href="/static/css/background.css?v=1">
 
-    <!-- Structured Data to tell Google this is a Web Application -->
     <script type="application/ld+json">
         {
             "@context": "https://schema.org",
@@ -39,7 +37,6 @@
 <body>
 
 <nav class="navbar">
-    <!-- Brand Name locked to the left -->
     <div class="nav-left-controls">
         <a href="/home" class="nav-brand">Online E-Cards</a>
 
@@ -60,7 +57,6 @@
         </select>
     </div>
 
-    <!-- The container that stretches the buttons (Centered) -->
     <div class="nav-links-container desktop-only">
         <a href="/home" class="nav-link">Home</a>
         <a href="/about" class="nav-link">About</a>
@@ -69,23 +65,18 @@
         <a href="/contact" class="nav-link">Contact</a>
     </div>
 
-    <!-- Safe Controls locked to the right -->
     <div class="nav-toggle-controls desktop-only">
-
-        <!-- The fully clickable Donate Button -->
         <a href="https://ko-fi.com/vicstadev" target="_blank" class="nav-donate-btn" title="Buy me a coffee!">
             <span class="donate-icon">☕</span>
             <span class="donate-text">Donate</span>
         </a>
 
-        <!-- The Banner Toggle -->
         <span class="toggle-label">Ads</span>
         <label class="switch">
             <input type="checkbox" id="supportToggleSwitch" checked>
             <span class="slider round"></span>
         </label>
 
-        <!-- The Tooltip -->
         <div class="tooltip-container">
             <div class="tooltip-icon">?</div>
             <div class="tooltip-text">
@@ -94,27 +85,23 @@
         </div>
     </div>
 
-    <!-- THE NEW MOBILE HAMBURGER BUTTON -->
     <button class="hamburger-btn" id="hamburgerBtn" aria-label="Open Menu">☰</button>
 </nav>
 
-<div id="supportBannerLeft" class="support-banner">
-    <span class="banner-placeholder">Banner Space</span>
-</div>
+<div id="supportBannerLeft" class="support-banner"><span class="banner-placeholder">Banner Space</span></div>
+<div id="supportBannerRight" class="support-banner right"><span class="banner-placeholder">Banner Space</span></div>
+<div id="supportBannerMobile" class="support-banner-mobile"><span class="banner-placeholder">Mobile Banner Space</span></div>
 
-<div id="supportBannerRight" class="support-banner right">
-    <span class="banner-placeholder">Banner Space</span>
-</div>
-
-<div id="supportBannerMobile" class="support-banner-mobile">
-    <span class="banner-placeholder">Mobile Banner Space</span>
-</div>
-
+<!-- ALL OUR FULL PAGES -->
 <div class="fullPage" id="home"></div>
 <div class="fullPage" id="view"></div>
 <div class="fullPage" id="about"></div>
 <div class="fullPage" id="create"></div>
 <div class="fullPage" id="contact"></div>
+
+<!-- NEW: The SEO Landing Page Container -->
+<div class="fullPage" id="landing"></div>
+
 
 <div id="presetModalOverlay" class="modal-overlay">
     <div class="modal-content">
@@ -126,9 +113,6 @@
     </div>
 </div>
 
-<!-- ========================================= -->
-<!-- THE MOBILE DRAWER & OVERLAY               -->
-<!-- ========================================= -->
 <div class="drawer-overlay" id="drawerOverlay"></div>
 <div class="mobile-drawer" id="mobileDrawer">
     <div class="drawer-header">
@@ -145,7 +129,6 @@
     </div>
 
     <div class="drawer-utilities">
-
         <div class="drawer-utility-item">
             <label class="toggle-label">Theme</label>
             <select id="mobileThemeSelector" class="theme-dropdown">
@@ -185,12 +168,8 @@
     </div>
 </div>
 
-<!-- ========================================= -->
-<!-- THE SUCCESS & AD MODAL                    -->
-<!-- ========================================= -->
 <div id="successModalOverlay" class="modal-overlay">
     <div class="modal-content success-modal">
-
         <div id="sm-state-victory">
             <h2 style="color: var(--text-main); margin-top: 0;">🎉 Card Ready!</h2>
             <p style="color: var(--text-muted); font-size: 0.9rem;">Your link has been generated and copied to your clipboard.</p>
@@ -221,30 +200,19 @@
             <button class="button trigger-ad-modal-btn" style="margin-bottom: 15px;">Watch Another? 🔄</button>
             <button class="button close-modal-btn" style="background: var(--bg-input); color: var(--text-main); margin-top: 0;">Close</button>
         </div>
-
     </div>
 </div>
 
-<!-- ========================================= -->
-<!-- THE ASSET BROWSER MODAL                   -->
-<!-- ========================================= -->
 <div id="assetModalOverlay" class="modal-overlay">
     <div class="modal-content" style="max-height: 85vh; display: flex; flex-direction: column;">
-
         <div class="modal-header" style="margin-bottom: 15px;">
             <div style="display: flex; align-items: center; gap: 15px;">
-                <!-- Hidden by default, shows when inside a folder -->
                 <button id="assetBackBtn" class="button" style="margin: 0; padding: 8px 15px; display: none;">← Back</button>
                 <h3 id="assetModalTitle">Choose an Asset</h3>
             </div>
             <button id="closeAssetModal" class="close-btn">&times;</button>
         </div>
-
-        <!-- The scrolling container for the grid -->
-        <div id="assetGrid" class="preset-grid" style="overflow-y: auto; padding-right: 10px; flex-grow: 1;">
-            <!-- Javascript will inject folders or images here -->
-        </div>
-
+        <div id="assetGrid" class="preset-grid" style="overflow-y: auto; padding-right: 10px; flex-grow: 1;"></div>
     </div>
 </div>
 
@@ -260,7 +228,6 @@
 <script src="/static/js/animations/BouncingShapes.js?v=1"></script>
 <script src="/static/js/animations/FloatingSprites.js?v=1"></script>
 <script src="/static/js/animations/AnimController.js?v=3"></script>
-
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <script>
@@ -271,7 +238,6 @@
         document.head.appendChild(script);
     }
 
-    // Router function accepts and applies the newTitle
     function loadPage(page, elementToReplace, pageScript, newTitle) {
         fetch(page)
             .then(response => {
@@ -281,8 +247,6 @@
             .then(html => {
                 document.getElementById(elementToReplace).innerHTML = html;
                 if(pageScript) loadScript(pageScript);
-
-                // Set the dynamic SEO title when the page loads
                 if (newTitle) {
                     document.title = newTitle;
                 }
@@ -290,12 +254,14 @@
             .catch(error => console.error('Error loading page:', error));
     }
 
-    // Highly descriptive SEO titles passed to every page route
     loadPage("templates/home.html", "home", "/static/js/home.js", "Free 3D Online E-Card Maker | Custom Greeting Cards");
     loadPage("templates/view.html", "view", "/static/js/view.js?v=15", "View Your 3D E-Card | Online Greeting");
     loadPage("templates/about.html", "about", "/static/js/about.js", "About | Online E-Cards Tool");
     loadPage("templates/contact.html", "contact", "/static/js/contact.js", "Contact Us | Online E-Cards");
     loadPage("templates/create.html", "create", "/static/js/create.js?v=15", "Create 3D E-Cards Free | Custom Greeting Maker");
+
+    // NEW: Inject the Landing Page!
+    loadPage("templates/landing.html", "landing", null, "Custom E-Cards");
 
     const themeSelector = document.getElementById("globalThemeSelector");
     const mobileThemeSelector = document.getElementById("mobileThemeSelector");
@@ -307,7 +273,6 @@
         } else {
             document.body.setAttribute("data-theme", themeValue);
         }
-
         if (typeof AnimController !== "undefined") {
             AnimController.init();
             AnimController.setTheme(themeValue);
@@ -333,7 +298,6 @@
 
     themeSelector.addEventListener("change", handleThemeChange);
     if(mobileThemeSelector) mobileThemeSelector.addEventListener("change", handleThemeChange);
-
 </script>
 
 </body>
