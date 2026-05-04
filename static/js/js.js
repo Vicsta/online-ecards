@@ -123,6 +123,24 @@ window.addEventListener("load", function () {
         }
     });
 
+    // --- NEW: VIEW PAGE EMPTY STATE BUTTON ---
+    // Because this is inside js.js, it has full access to APP_ROOT, loadPage, and updateNav!
+    const emptyCreateBtn = document.getElementById("emptyStateCreateBtn");
+    if (emptyCreateBtn) {
+        emptyCreateBtn.addEventListener("click", function(e) {
+            e.preventDefault();
+
+            // 1. Update the URL bar cleanly
+            history.pushState(null, "", APP_ROOT + "create");
+
+            // 2. Tell the SPA to cross-fade to the Create page
+            loadPage(pages.indexOf("create"));
+
+            // 3. Highlight the word "Create" in the top navbar
+            updateNav("create");
+        });
+    }
+
     // --- 5. PAGE TRANSITION LOGIC ---
     function loadPage(x) {
         if (x === curPage) return;
@@ -206,62 +224,62 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // --- GLOBAL CONFETTI CANNON ---
-        // Moved here so it works on every page, not just the Create page!
-        window.fireConfetti = function(particleCount, spreadMultiplier = 1) {
-            if (typeof confetti !== "function") return;
-            confetti({
-                particleCount: particleCount,
-                spread: 70 * spreadMultiplier,
-                origin: { y: 0.8 },
-                colors: ['#ffcc00', '#ff0055', '#00ccff', '#22cc44'],
-                zIndex: 9999
-            });
-        };
-
-        // --- BULLETPROOF AD & MODAL BUTTON LISTENER ---
-        document.addEventListener('click', (e) => {
-
-            // 1. Check if they clicked a "Close" button
-            if (e.target.closest('.close-modal-btn')) {
-                const modal = document.getElementById("successModalOverlay");
-                if (modal) modal.style.display = "none";
-                return; // Stop running here
-            }
-
-            // 2. Check if they clicked a "Watch Ad" button
-            const adBtn = e.target.closest('.trigger-ad-modal-btn');
-            if (!adBtn) return; // Ignore clicks on anything else
-
-            e.preventDefault();
-
-            // FORCE-CLOSE THE MOBILE DRAWER (If open)
-            const drawer = document.querySelector('.mobile-drawer');
-            const overlay = document.querySelector('.drawer-overlay');
-            if (drawer) drawer.classList.remove('active');
-            if (overlay) overlay.classList.remove('active');
-
-            // TRIGGER THE MODAL LOGIC
-            const modal = document.getElementById("successModalOverlay");
-            const stateVictory = document.getElementById("sm-state-victory");
-            const stateAd = document.getElementById("sm-state-ad");
-            const stateReward = document.getElementById("sm-state-reward");
-
-            if(!modal || !stateAd) return;
-
-            // Hide Victory and Reward screens, show Ad loader
-            if(stateVictory) stateVictory.style.display = "none";
-            if(stateReward) stateReward.style.display = "none";
-            stateAd.style.display = "block";
-            modal.style.display = "flex";
-
-            // Simulate the 3-second ad
-            setTimeout(() => {
-                stateAd.style.display = "none";
-                if(stateReward) stateReward.style.display = "block";
-
-                // Boom! Calls the global function we just created above.
-                window.fireConfetti(250, 1.2);
-            }, 3000);
+    // Moved here so it works on every page, not just the Create page!
+    window.fireConfetti = function(particleCount, spreadMultiplier = 1) {
+        if (typeof confetti !== "function") return;
+        confetti({
+            particleCount: particleCount,
+            spread: 70 * spreadMultiplier,
+            origin: { y: 0.8 },
+            colors: ['#ffcc00', '#ff0055', '#00ccff', '#22cc44'],
+            zIndex: 9999
         });
+    };
+
+    // --- BULLETPROOF AD & MODAL BUTTON LISTENER ---
+    document.addEventListener('click', (e) => {
+
+        // 1. Check if they clicked a "Close" button
+        if (e.target.closest('.close-modal-btn')) {
+            const modal = document.getElementById("successModalOverlay");
+            if (modal) modal.style.display = "none";
+            return; // Stop running here
+        }
+
+        // 2. Check if they clicked a "Watch Ad" button
+        const adBtn = e.target.closest('.trigger-ad-modal-btn');
+        if (!adBtn) return; // Ignore clicks on anything else
+
+        e.preventDefault();
+
+        // FORCE-CLOSE THE MOBILE DRAWER (If open)
+        const drawer = document.querySelector('.mobile-drawer');
+        const overlay = document.querySelector('.drawer-overlay');
+        if (drawer) drawer.classList.remove('active');
+        if (overlay) overlay.classList.remove('active');
+
+        // TRIGGER THE MODAL LOGIC
+        const modal = document.getElementById("successModalOverlay");
+        const stateVictory = document.getElementById("sm-state-victory");
+        const stateAd = document.getElementById("sm-state-ad");
+        const stateReward = document.getElementById("sm-state-reward");
+
+        if(!modal || !stateAd) return;
+
+        // Hide Victory and Reward screens, show Ad loader
+        if(stateVictory) stateVictory.style.display = "none";
+        if(stateReward) stateReward.style.display = "none";
+        stateAd.style.display = "block";
+        modal.style.display = "flex";
+
+        // Simulate the 3-second ad
+        setTimeout(() => {
+            stateAd.style.display = "none";
+            if(stateReward) stateReward.style.display = "block";
+
+            // Boom! Calls the global function we just created above.
+            window.fireConfetti(250, 1.2);
+        }, 3000);
+    });
 
 });
