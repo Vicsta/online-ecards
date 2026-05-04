@@ -13,29 +13,36 @@ class CardV2 {
 
     next() {
         if (this.currentState < this.maxState) {
-            this.leaves[this.currentState].classList.add('flipped');
+            let activeLeaf = this.currentState; // Identify the flying page
+            this.leaves[activeLeaf].classList.add('flipped');
             this.currentState++;
-            this.updateBook();
+            this.updateBook(activeLeaf); // Force it to the top
         }
     }
 
     prev() {
         if (this.currentState > 0) {
             this.currentState--;
-            this.leaves[this.currentState].classList.remove('flipped');
-            this.updateBook();
+            let activeLeaf = this.currentState; // Identify the flying page
+            this.leaves[activeLeaf].classList.remove('flipped');
+            this.updateBook(activeLeaf); // Force it to the top
         }
     }
 
-    updateBook() {
+    updateBook(activeLeafIndex = -1) {
         this.leaves.forEach((leaf, i) => {
-            if (i < this.currentState) {
-                leaf.style.zIndex = i + 1;
-            } else {
-                leaf.style.zIndex = this.leaves.length - i;
+            // Build the base z-index pyramid
+            let z = (i < this.currentState) ? i : (this.leaves.length - i);
+
+            // If this is the page flying through the air, force it above EVERYTHING
+            if (i === activeLeafIndex) {
+                z = 50;
             }
+
+            leaf.style.zIndex = z;
         });
 
+        // Shift the entire book to stay centered
         if (this.leaves.length === 1) {
             this.scene.style.transform = this.currentState === 1 ? "translateX(50%)" : "translateX(0%)";
         } else {

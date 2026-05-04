@@ -13,6 +13,9 @@ body, html {
     transition: transform 1s;
 }
 
+/* =========================================
+   V1 CLASSIC CARD STYLES
+   ========================================= */
 .cardFront {
     z-index: 2;
     width: 100%;
@@ -29,22 +32,8 @@ body, html {
     display: flex;
     align-items: center;
     justify-content: center;
-    /*font-size: 1.5em;*/
     font-weight: bold;
 }
-
-/* Individual section styling */
-/*.top_section {*/
-/*    background-color: #f4a261; !* Light orange *!*/
-/*}*/
-
-/*.middle_section {*/
-/*    background-color: #2a9d8f; !* Teal *!*/
-/*}*/
-
-/*.bottom_section {*/
-/*    background-color: #e76f51; !* Red *!*/
-/*}*/
 
 .cardBack {
     bottom: 100%;
@@ -84,7 +73,6 @@ body, html {
 .card_face--inside-left {
     background-color: #dff7ff; /* Light blue for the inside pages */
     transform: rotateY(-180deg); /* Adjust if needed for initial state */
-    /*left: 50%; !* Position inside pages to the right for a book effect *!*/
     box-sizing: border-box;
     border-right: 1px solid rgba(1, 1, 1, 0.2); /* Example border */
 }
@@ -122,11 +110,6 @@ body, html {
     transform: rotateY(180deg);
 }
 
-/*
-
-
-*/
-
 .testBox {
     position: absolute;
     height: 100px;
@@ -137,4 +120,75 @@ body, html {
     display: flex;
     align-content: center;
     justify-items: center;
+}
+
+/* =========================================
+   V2 INFINITE BOOK ENGINE STYLES
+   ========================================= */
+
+.book-leaf {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    transform-origin: left center;
+    transform-style: preserve-3d;
+    transition: transform 0.6s ease-in-out;
+    z-index: 1;
+}
+
+.book-leaf.flipped {
+    transform: rotateY(-180deg); /* Keeps the perfect door-swing hinge */
+}
+
+.book-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    background-color: white;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+/* FIX: Forces physical 3D thickness (2px thick pages) */
+.book-face.front {
+    transform: rotateY(0deg) translateZ(1px);
+}
+
+.book-face.back {
+    transform: rotateY(180deg) translateZ(1px);
+}
+
+/* V2 Navigation Arrows */
+.nav-btn {
+    position: absolute;
+    width: 35px;
+    height: 35px;
+    bottom: 15px;
+    cursor: pointer;
+    z-index: 10;
+    user-select: none;
+    transition: transform 0.2s ease;
+    opacity: 0.8;
+}
+
+.nav-btn:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.nav-btn.next {
+    right: 15px;
+}
+
+.nav-btn.prev {
+    left: 15px;
+    transform: rotateY(180deg); /* Flips the arrow image so it points left */
+}
+
+.nav-btn.prev:hover {
+    transform: rotateY(180deg) scale(1.1);
 }
