@@ -145,31 +145,43 @@ window.addEventListener("load", function () {
 
     // --- 6. SAFE TOGGLE LOGIC ---
     const toggleSwitch = document.getElementById("supportToggleSwitch");
-    const leftBanner = document.getElementById("supportBannerLeft");
-    const rightBanner = document.getElementById("supportBannerRight");
-    const mobileBanner = document.getElementById("supportBannerMobile");
+    // Ensure mobile toggle syncs as well if it exists
+    const mobileToggleSwitch = document.getElementById("mobileSupportToggleSwitch");
 
     function updateBannerVisibility(isEnabled) {
         if (isEnabled) {
-            document.body.classList.remove('support-hidden'); // Changed from ads-disabled
+            document.body.classList.remove('support-hidden');
         } else {
-            document.body.classList.add('support-hidden');    // Changed from ads-disabled
+            document.body.classList.add('support-hidden');
         }
     }
 
     if (toggleSwitch) {
         let bannersEnabled = localStorage.getItem("bannersEnabled") !== "false";
         toggleSwitch.checked = bannersEnabled;
+        if(mobileToggleSwitch) mobileToggleSwitch.checked = bannersEnabled;
+
         updateBannerVisibility(bannersEnabled);
 
-        toggleSwitch.addEventListener("change", function() {
+        const toggleHandler = function() {
             let isEnabled = this.checked;
             localStorage.setItem("bannersEnabled", isEnabled ? "true" : "false");
             updateBannerVisibility(isEnabled);
-        });
+
+            // Keep both toggles in sync visually
+            if(toggleSwitch) toggleSwitch.checked = isEnabled;
+            if(mobileToggleSwitch) mobileToggleSwitch.checked = isEnabled;
+        };
+
+        toggleSwitch.addEventListener("change", toggleHandler);
+        if(mobileToggleSwitch) mobileToggleSwitch.addEventListener("change", toggleHandler);
     }
 });
 
+
+// =========================================
+// GLOBAL DOCUMENT LISTENERS (No dependencies on window.load)
+// =========================================
 document.addEventListener("DOMContentLoaded", () => {
 
     // --- FIX FOR MOBILE DRAWER 404s ---
@@ -192,5 +204,64 @@ document.addEventListener("DOMContentLoaded", () => {
             if (overlay) overlay.classList.remove('active');
         });
     });
+
+    // --- GLOBAL CONFETTI CANNON ---
+        // Moved here so it works on every page, not just the Create page!
+        window.fireConfetti = function(particleCount, spreadMultiplier = 1) {
+            if (typeof confetti !== "function") return;
+            confetti({
+                particleCount: particleCount,
+                spread: 70 * spreadMultiplier,
+                origin: { y: 0.8 },
+                colors: ['#ffcc00', '#ff0055', '#00ccff', '#22cc44'],
+                zIndex: 9999
+            });
+        };
+
+        // --- BULLETPROOF AD & MODAL BUTTON LISTENER ---
+        document.addEventListener('click', (e) => {
+
+            // 1. Check if they clicked a "Close" button
+            if (e.target.closest('.close-modal-btn')) {
+                const modal = document.getElementById("successModalOverlay");
+                if (modal) modal.style.display = "none";
+                return; // Stop running here
+            }
+
+            // 2. Check if they clicked a "Watch Ad" button
+            const adBtn = e.target.closest('.trigger-ad-modal-btn');
+            if (!adBtn) return; // Ignore clicks on anything else
+
+            e.preventDefault();
+
+            // FORCE-CLOSE THE MOBILE DRAWER (If open)
+            const drawer = document.querySelector('.mobile-drawer');
+            const overlay = document.querySelector('.drawer-overlay');
+            if (drawer) drawer.classList.remove('active');
+            if (overlay) overlay.classList.remove('active');
+
+            // TRIGGER THE MODAL LOGIC
+            const modal = document.getElementById("successModalOverlay");
+            const stateVictory = document.getElementById("sm-state-victory");
+            const stateAd = document.getElementById("sm-state-ad");
+            const stateReward = document.getElementById("sm-state-reward");
+
+            if(!modal || !stateAd) return;
+
+            // Hide Victory and Reward screens, show Ad loader
+            if(stateVictory) stateVictory.style.display = "none";
+            if(stateReward) stateReward.style.display = "none";
+            stateAd.style.display = "block";
+            modal.style.display = "flex";
+
+            // Simulate the 3-second ad
+            setTimeout(() => {
+                stateAd.style.display = "none";
+                if(stateReward) stateReward.style.display = "block";
+
+                // Boom! Calls the global function we just created above.
+                window.fireConfetti(250, 1.2);
+            }, 3000);
+        });
 
 });

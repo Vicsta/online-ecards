@@ -162,13 +162,14 @@
 
             <div class="success-actions">
                 <a href="#" id="sm-preview-btn" target="_blank" class="hero-btn" style="display: block; text-align: center; margin-bottom: 15px;">👀 Preview Card</a>
-                <button id="sm-close-btn" class="button" style="background: var(--bg-input); color: var(--text-main); margin-top: 0;">Keep Editing</button>
+                <!-- Changed to "Close" and added close-modal-btn class -->
+                <button class="button close-modal-btn" style="background: var(--bg-input); color: var(--text-main); margin-top: 0;">Close</button>
             </div>
 
             <div class="ad-prompt-box">
                 <div style="font-size: 1.2rem; margin-bottom: 5px;">☕ Support the Dev!</div>
                 <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 15px;">This tool is 100% free. If you want to help keep the servers running, you can watch a short ad!</p>
-                <button id="sm-watch-ad-btn" class="button" style="margin-top: 0;">Watch Ad 💖</button>
+                <button id="sm-watch-ad-btn" class="button trigger-ad-modal-btn" style="margin-top: 0;">Watch Ad 💖</button>
             </div>
         </div>
 
@@ -186,8 +187,11 @@
             <h2 style="color: var(--text-main); margin-top: 0;">You're a Legend! 👑</h2>
             <p style="color: var(--text-muted); margin-bottom: 30px;">Thank you so much for supporting the site. Every little bit helps keep this project alive!</p>
 
-            <button id="sm-watch-another-btn" class="button" style="margin-bottom: 15px;">Watch Another? 🔄</button>
-            <button id="sm-close-reward-btn" class="button" style="background: var(--bg-input); color: var(--text-main); margin-top: 0;">Back to Card</button>
+            <!-- Added trigger-ad-modal-btn class so it safely loops the ad! -->
+            <button class="button trigger-ad-modal-btn" style="margin-bottom: 15px;">Watch Another? 🔄</button>
+
+            <!-- Changed to "Close" and added close-modal-btn class -->
+            <button class="button close-modal-btn" style="background: var(--bg-input); color: var(--text-main); margin-top: 0;">Close</button>
         </div>
 
     </div>
