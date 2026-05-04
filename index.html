@@ -4,7 +4,9 @@
     <link rel="icon" type="image/png" href="/favicon.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Online E-Cards</title>
+
+    <!-- Highly targeted SEO Title -->
+    <title>Free 3D Online E-Card Maker | Custom Greeting Cards</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
 
@@ -15,6 +17,24 @@
     <link rel="stylesheet" href="/static/css/create.css?v=15">
     <link rel="stylesheet" href="/static/css/cards/v2_card.css?v=15">
     <link rel="stylesheet" href="/static/css/background.css?v=1">
+
+    <!-- Structured Data to tell Google this is a Web Application -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "Online E-Cards",
+            "url": "https://online-ecards.com",
+            "description": "A free online tool to build, customize, and share interactive 3D greeting cards.",
+            "applicationCategory": "DesignApplication",
+            "operatingSystem": "All",
+            "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "USD"
+            }
+        }
+    </script>
 </head>
 <body>
 
@@ -251,7 +271,8 @@
         document.head.appendChild(script);
     }
 
-    function loadPage(page, elementToReplace, pageScript) {
+    // Router function accepts and applies the newTitle
+    function loadPage(page, elementToReplace, pageScript, newTitle) {
         fetch(page)
             .then(response => {
                 if (!response.ok) throw new Error('Network response was not ok');
@@ -260,15 +281,21 @@
             .then(html => {
                 document.getElementById(elementToReplace).innerHTML = html;
                 if(pageScript) loadScript(pageScript);
+
+                // Set the dynamic SEO title when the page loads
+                if (newTitle) {
+                    document.title = newTitle;
+                }
             })
             .catch(error => console.error('Error loading page:', error));
     }
 
-    loadPage("templates/home.html", "home", "/static/js/home.js");
-    loadPage("templates/view.html", "view", "/static/js/view.js?v=15");
-    loadPage("templates/about.html", "about", "/static/js/about.js");
-    loadPage("templates/contact.html", "contact", "/static/js/contact.js");
-    loadPage("templates/create.html", "create", "/static/js/create.js?v=15");
+    // Highly descriptive SEO titles passed to every page route
+    loadPage("templates/home.html", "home", "/static/js/home.js", "Free 3D Online E-Card Maker | Custom Greeting Cards");
+    loadPage("templates/view.html", "view", "/static/js/view.js?v=15", "View Your 3D E-Card | Online Greeting");
+    loadPage("templates/about.html", "about", "/static/js/about.js", "About | Online E-Cards Tool");
+    loadPage("templates/contact.html", "contact", "/static/js/contact.js", "Contact Us | Online E-Cards");
+    loadPage("templates/create.html", "create", "/static/js/create.js?v=15", "Create 3D E-Cards Free | Custom Greeting Maker");
 
     const themeSelector = document.getElementById("globalThemeSelector");
     const mobileThemeSelector = document.getElementById("mobileThemeSelector");

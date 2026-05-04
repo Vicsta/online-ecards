@@ -22,6 +22,16 @@ const APP_ROOT = getAppRoot();
 const pages = ["home", "about", "view", "create", "contact", "not"];
 let curPage = 0; // Default index
 
+// --- NEW: SEO TITLE DICTIONARY ---
+const seoTitles = {
+    "home": "Free 3D Online E-Card Maker | Custom Greeting Cards",
+    "create": "Create 3D E-Cards Free | Custom Greeting Maker",
+    "view": "View Your 3D E-Card | Online Greeting",
+    "about": "About | Online E-Cards Tool",
+    "contact": "Contact Us | Online E-Cards",
+    "not": "Page Not Found | Online E-Cards"
+};
+
 window.addEventListener("load", function () {
 
     // --- 1. THE STATE MANAGER ---
@@ -31,6 +41,11 @@ window.addEventListener("load", function () {
 
         document.body.setAttribute('data-current-page', pageName);
         document.body.setAttribute('data-editor-active', 'false');
+
+        // --- NEW: Inject the targeted SEO Title! ---
+        if (seoTitles[pageName]) {
+            document.title = seoTitles[pageName];
+        }
 
         if (pageName === 'create') {
             let editorDiv = document.getElementById("cardEditor");
@@ -113,7 +128,7 @@ window.addEventListener("load", function () {
         let target = $(this).attr("href").replace("/", "");
 
         if (pages.includes(target)) {
-            // FIXED: We now push the state using the APP_ROOT so it doesn't escape the folder!
+            // Push the state using the APP_ROOT so it doesn't escape the folder!
             history.pushState(null, "", APP_ROOT + target);
             loadPage(pages.indexOf(target));
             updateNav(target);
@@ -224,7 +239,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // --- GLOBAL CONFETTI CANNON ---
-    // Moved here so it works on every page, not just the Create page!
     window.fireConfetti = function(particleCount, spreadMultiplier = 1) {
         if (typeof confetti !== "function") return;
         confetti({
