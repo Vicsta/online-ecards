@@ -11,6 +11,10 @@
     box-shadow: 0 10px 30px rgba(0,0,0,0.4); /* Kept dark for depth */
     color: var(--text-main); /* Variable */
     border: 1px solid var(--border-color); /* Variable */
+
+    /* THE FIX: Pushes the box up */
+    margin-top: 60px; /* Gives it a nice set distance from the navbar */
+    margin-bottom: auto; /* Forces the flexbox to dump all the empty space below the box */
 }
 
 .empty-state-icon {
