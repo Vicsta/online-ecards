@@ -1,29 +1,34 @@
 // ========================================================
-// 1. THE INDIVIDUAL SPRITE (Heart/Confetti)
+// 1. THE INDIVIDUAL SPRITE (GPU-Accelerated DOM)
 // ========================================================
 class FloatingSprite {
     constructor(parent) {
         this.parent = parent;
         this.el = document.createElement("div");
 
+        // Randomize starting positions using vw/vh so it auto-scales to the screen
         this.x = Math.random() * 100;
-        this.y = Math.random() * 100;
-        this.size = Math.random() * 1.5 + 1;
+        this.y = Math.random() * 120 - 10; // Start randomly across the whole screen height
+
+        this.size = Math.random() * 1.5 + 1.2; // rem size
         this.speed = Math.random() * 1.5 + 0.5;
         this.rotation = Math.random() * 360;
-        this.rotationSpeed = (Math.random() - 0.5) * 4;
+        this.rotationSpeed = (Math.random() - 0.5) * 2;
         this.sway = Math.random() * 3;
 
+        // Grab a random emoji from the theme config!
         this.el.innerHTML = parent.emojis[Math.floor(Math.random() * parent.emojis.length)];
 
+        // GPU-Accelerated CSS Setup
         this.el.style.position = "absolute";
         this.el.style.top = "0px";
         this.el.style.left = "0px";
         this.el.style.fontSize = this.size + "rem";
-        this.el.style.opacity = Math.random() * 0.5 + 0.3;
+        this.el.style.opacity = Math.random() * 0.5 + 0.4;
         this.el.style.userSelect = "none";
+        this.el.style.pointerEvents = "none"; // Let clicks pass through to the site
         this.el.style.zIndex = "-1";
-        this.el.style.willChange = "transform";
+        this.el.style.willChange = "transform"; // Tells the GPU to take over
 
         parent.container.appendChild(this.el);
 
@@ -36,23 +41,29 @@ class FloatingSprite {
     // THE LOCKED PHYSICS MATH
     updatePhysics() {
         if (this.parent.direction === 'up') {
-            this.y -= this.speed * 0.4;
-            if (this.y < -10) this.y = 110;
+            this.y -= this.speed * 0.15;
+            if (this.y < -15) this.y = 115; // Wrap to bottom
         } else {
-            this.y += this.speed * 0.4;
-            if (this.y > 110) this.y = -10;
+            this.y += this.speed * 0.15;
+            if (this.y > 115) this.y = -15; // Wrap to top
         }
 
-        this.x += Math.sin(this.y / 10) * (this.sway * 0.1);
+        // Horizontal sway
+        this.x += Math.sin(this.y / 10) * (this.sway * 0.05);
+
+        // Horizontal wrap around
+        if (this.x < -5) this.x = 105;
+        if (this.x > 105) this.x = -5;
+
         this.rotation += this.rotationSpeed;
     }
 
-    // THE SCREEN PAINTING
+    // THE SCREEN PAINTING (Pushed to the GPU)
     renderDOM() {
         this.el.style.transform = `translate3d(${this.x}vw, ${this.y}vh, 0) rotate(${this.rotation}deg)`;
     }
 
-    // THE GAME LOOP
+    // THE GAME LOOP (Your original smooth math)
     animate(currentTime) {
         if (!this.parent.active) return;
 
@@ -84,17 +95,26 @@ class FloatingSprite {
 class FloatingSpritesAnim {
     constructor(container, config) {
         this.container = container;
+        this.config = config || {};
         this.sprites = [];
         this.active = true;
-        this.direction = config.direction;
 
-        if (config.sprite === 'heart') {
-            this.emojis = ['💖', '💕', '💗', '💓', '💘'];
-            this.count = 30;
-        } else {
-            this.emojis = ['✨', '🎉', '🎊', '🎈', '⭐'];
-            this.count = 50;
-        }
+        // Read the custom emoji array and direction from the AnimController
+        this.emojis = this.config.emojis || ['✨'];
+        this.direction = this.config.direction || 'up';
+
+        // Spawn 35 of them (a good balance of full screen without clutter)
+        this.count = 35;
+
+        // Fix container stacking so it stays in the background
+        this.container.style.position = "fixed";
+        this.container.style.top = "0";
+        this.container.style.left = "0";
+        this.container.style.width = "100vw";
+        this.container.style.height = "100vh";
+        this.container.style.pointerEvents = "none";
+        this.container.style.zIndex = "0";
+        this.container.style.overflow = "hidden";
 
         this.init();
     }
@@ -106,8 +126,8 @@ class FloatingSpritesAnim {
     }
 
     destroy() {
-        this.active = false;
-        this.sprites.forEach(sprite => sprite.el.remove());
+        this.active = false; // Kills the animation loops
+        this.sprites.forEach(sprite => sprite.el.remove()); // Wipes the DOM elements
         this.sprites = [];
     }
 }

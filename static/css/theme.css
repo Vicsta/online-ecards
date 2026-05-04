@@ -4,61 +4,159 @@
 
 /* --- DEFAULT THEME: Midnight Modern (Dark) --- */
 :root {
-    /* Backgrounds */
-    --bg-main: #222222;         /* Page background */
-    --bg-panel: #2a2a2a;        /* Cards, Menus, Modals */
-    --bg-input: #191919;        /* Text boxes */
-    --nav-bg: #222222;          /* Navbar */
+    --bg-main: #222222;
+    --bg-panel: #2a2a2a;
+    --bg-input: #191919;
+    --nav-bg: #222222;
 
-    /* Text Colors */
-    --text-main: #eeeeee;       /* Standard text */
-    --text-muted: #aaaaaa;      /* Subtitles, hints */
-    
-    /* Accents & Borders */
-    --accent-color: #8ab4f8;    /* Your signature pale blue */
+    --text-main: #eeeeee;
+    --text-muted: #aaaaaa;
+
+    --accent-color: #8ab4f8;
     --accent-hover: #a0c4ff;
     --border-color: #444444;
 
-    /* Global Typography */
     --font-main: 'Arial', sans-serif;
     --font-size-base: 16px;
     --font-size-h1: 3.5rem;
 }
 
-/* --- THEME: Classic Birthday (Light) --- */
+/* --- THEME: Classic Birthday (Light - Blue/Orange) --- */
 [data-theme="birthday"] {
     --bg-main: #e6f2ff;
     --bg-panel: #ffffff;
     --bg-input: #f0f8ff;
     --nav-bg: #cce4ff;
-
     --text-main: #004080;
     --text-muted: #444444;
-
-    --accent-color: #ff9933;    /* Orange accent for contrast */
+    --accent-color: #ff9933;
     --accent-hover: #ffb366;
     --border-color: #b3d9ff;
-
     --font-main: 'Georgia', serif;
 }
 
 /* --- THEME: Valentine (Pink/Red) --- */
 [data-theme="valentine"] {
-    /* Backgrounds */
-    --bg-main: #ffe6ee;         /* A soft blush for the main wallpaper */
-    --bg-panel: #ffccd9;        /* A deeper, visible pink for your menus/cards! */
-    --bg-input: #ffffff;        /* Pure white for text boxes so text is easy to read */
-    --nav-bg: #ffb3c6;          /* Slightly darker pink for the top navbar */
-
-    /* Text Colors */
+    --bg-main: #ffe6ee;
+    --bg-panel: #ffccd9;
+    --bg-input: #ffffff;
+    --nav-bg: #ffb3c6;
     --text-main: #660022;
     --text-muted: #993355;
-
-    /* Accents & Borders */
     --accent-color: #cc0044;
     --accent-hover: #ff3377;
     --border-color: #ff99b3;
-
-    /* The new Bubbly/Rounded Font! */
     --font-main: 'Varela Round', sans-serif;
+}
+
+/* --- THEME: Thank You (Yellow/Sunny) --- */
+[data-theme="thankyou"] {
+    --bg-main: #fffde6;
+    --bg-panel: #fff5cc;
+    --bg-input: #ffffff;
+    --nav-bg: #ffeb99;
+    --text-main: #664d00;
+    --text-muted: #997a00;
+    --accent-color: #e6a800;
+    --accent-hover: #ffbb00;
+    --border-color: #ffd633;
+    --font-main: 'Varela Round', sans-serif;
+}
+
+/* --- THEME: Good Luck (Green) --- */
+[data-theme="goodluck"] {
+    --bg-main: #eafaf1;
+    --bg-panel: #d5f5e3;
+    --bg-input: #ffffff;
+    --nav-bg: #abebc6;
+    --text-main: #145a32;
+    --text-muted: #27ae60;
+    --accent-color: #229954;
+    --accent-hover: #2ecc71;
+    --border-color: #58d68d;
+    --font-main: 'Georgia', serif;
+}
+
+/* --- THEME: Get Well Soon (Teal/Mint) --- */
+[data-theme="getwell"] {
+    --bg-main: #e0f7fa;
+    --bg-panel: #b2ebf2;
+    --bg-input: #ffffff;
+    --nav-bg: #80deea;
+    --text-main: #006064;
+    --text-muted: #0097a7;
+    --accent-color: #00838f;
+    --accent-hover: #00acc1;
+    --border-color: #4dd0e1;
+    --font-main: 'Arial', sans-serif;
+}
+
+/* --- THEME: Graduation (Navy Blue & Gold) --- */
+[data-theme="graduation"] {
+    --bg-main: #e8eaf6;
+    --bg-panel: #c5cae9;
+    --bg-input: #ffffff;
+    --nav-bg: #9fa8da;
+    --text-main: #1a237e;
+    --text-muted: #3f51b5;
+    --accent-color: #fbc02d;
+    --accent-hover: #fdd835;
+    --border-color: #7986cb;
+    --font-main: 'Georgia', serif;
+}
+
+/* --- THEME: Halloween (Purple & Orange) --- */
+[data-theme="halloween"] {
+    --bg-main: #f3e5f5;
+    --bg-panel: #e1bee7;
+    --bg-input: #ffffff;
+    --nav-bg: #ce93d8;
+    --text-main: #4a148c;
+    --text-muted: #7b1fa2;
+    --accent-color: #f57c00;
+    --accent-hover: #ff9800;
+    --border-color: #ba68c8;
+    --font-main: 'Arial', sans-serif;
+}
+
+/* --- THEME: Christmas (Red, Green, & Snow) --- */
+[data-theme="christmas"] {
+    --bg-main: #f4f6f6;
+    --bg-panel: #ffffff;
+    --bg-input: #fdfefd;
+    --nav-bg: #eaeded;
+    --text-main: #145a32; /* Deep Green Text */
+    --text-muted: #555555;
+    --accent-color: #c0392b; /* Festive Red */
+    --accent-hover: #e74c3c;
+    --border-color: #a9dfbf; /* Soft Green Border */
+    --font-main: 'Georgia', serif;
+}
+
+/* --- THEME: Easter (Pastel Spring) --- */
+[data-theme="easter"] {
+    --bg-main: #f5eef8;
+    --bg-panel: #fdf2e9;
+    --bg-input: #ffffff;
+    --nav-bg: #e8daef;
+    --text-main: #4a235a;
+    --text-muted: #884ea0;
+    --accent-color: #5dade2; /* Pastel Blue */
+    --accent-hover: #85c1e9;
+    --border-color: #f5b041; /* Soft Yellow */
+    --font-main: 'Varela Round', sans-serif;
+}
+
+/* --- THEME: New Year (Black & Gold) --- */
+[data-theme="newyear"] {
+    --bg-main: #111111;
+    --bg-panel: #1a1a1a;
+    --bg-input: #2a2a2a;
+    --nav-bg: #000000;
+    --text-main: #f1c40f; /* Gold text */
+    --text-muted: #b2babb;
+    --accent-color: #d4af37; /* Metallic Gold */
+    --accent-hover: #f4d03f;
+    --border-color: #4d4d4d;
+    --font-main: 'Arial', sans-serif;
 }

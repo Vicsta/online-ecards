@@ -8,8 +8,7 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="/static/css/theme.css?v=1">
-
+    <link rel="stylesheet" href="/static/css/theme.css?v=3">
     <link rel="stylesheet" href="/static/css/card.css?v=14">
     <link rel="stylesheet" href="/static/css/css.css?v=14">
     <link rel="stylesheet" href="/static/css/view.css?v=14">
@@ -25,9 +24,19 @@
         <a href="/home" class="nav-brand">Online E-Cards</a>
 
         <select id="globalThemeSelector" class="theme-dropdown desktop-only" title="Change Website Theme">
-            <option value="dark">🌙 Dark</option>
+            <option value="dark">🌙 Dark Mode</option>
+            <option disabled>──────────</option>
             <option value="birthday">🎉 Birthday</option>
             <option value="valentine">💖 Valentine</option>
+            <option value="thankyou">🌻 Thank You</option>
+            <option value="goodluck">🍀 Good Luck</option>
+            <option value="getwell">🍵 Get Well Soon</option>
+            <option value="graduation">🎓 Graduation</option>
+            <option disabled>──────────</option>
+            <option value="halloween">🎃 Halloween</option>
+            <option value="christmas">🎄 Christmas</option>
+            <option value="easter">🐰 Easter</option>
+            <option value="newyear">🎆 New Year</option>
         </select>
     </div>
 
@@ -120,9 +129,17 @@
         <div class="drawer-utility-item">
             <label class="toggle-label">Theme</label>
             <select id="mobileThemeSelector" class="theme-dropdown">
-                <option value="dark">🌙 Dark</option>
+                <option value="dark">🌙 Dark Mode</option>
                 <option value="birthday">🎉 Birthday</option>
                 <option value="valentine">💖 Valentine</option>
+                <option value="thankyou">🌻 Thank You</option>
+                <option value="goodluck">🍀 Good Luck</option>
+                <option value="getwell">🍵 Get Well Soon</option>
+                <option value="graduation">🎓 Graduation</option>
+                <option value="halloween">🎃 Halloween</option>
+                <option value="christmas">🎄 Christmas</option>
+                <option value="easter">🐰 Easter</option>
+                <option value="newyear">🎆 New Year</option>
             </select>
         </div>
 
@@ -139,7 +156,6 @@
             <span class="donate-text">Donate</span>
         </a>
 
-        <!-- NEW: The Watch Ad Button -->
         <div class="drawer-utility-item">
             <button class="nav-donate-btn drawer-donate trigger-ad-modal-btn" style="width: 100%; border: 1px solid var(--border-color); cursor: pointer;">
                 <span class="donate-icon" style="font-size: 1.3rem;">📺</span>
@@ -155,14 +171,12 @@
 <div id="successModalOverlay" class="modal-overlay">
     <div class="modal-content success-modal">
 
-        <!-- STATE 1: Victory Screen -->
         <div id="sm-state-victory">
             <h2 style="color: var(--text-main); margin-top: 0;">🎉 Card Ready!</h2>
             <p style="color: var(--text-muted); font-size: 0.9rem;">Your link has been generated and copied to your clipboard.</p>
 
             <div class="success-actions">
                 <a href="#" id="sm-preview-btn" target="_blank" class="hero-btn" style="display: block; text-align: center; margin-bottom: 15px;">👀 Preview Card</a>
-                <!-- Changed to "Close" and added close-modal-btn class -->
                 <button class="button close-modal-btn" style="background: var(--bg-input); color: var(--text-main); margin-top: 0;">Close</button>
             </div>
 
@@ -173,7 +187,6 @@
             </div>
         </div>
 
-        <!-- STATE 2: The Fake Ad Screen (Placeholder) -->
         <div id="sm-state-ad" style="display: none; text-align: center; padding: 40px 0;">
             <div style="background: var(--bg-input); padding: 30px; border-radius: 8px; border: 1px dashed var(--border-color); margin-bottom: 20px;">
                 <h3 style="color: var(--accent-color); margin: 0;">[ Ad Video Placeholder ]</h3>
@@ -182,15 +195,10 @@
             <div class="spinner"></div>
         </div>
 
-        <!-- STATE 3: The Reward Screen -->
         <div id="sm-state-reward" style="display: none; text-align: center;">
             <h2 style="color: var(--text-main); margin-top: 0;">You're a Legend! 👑</h2>
             <p style="color: var(--text-muted); margin-bottom: 30px;">Thank you so much for supporting the site. Every little bit helps keep this project alive!</p>
-
-            <!-- Added trigger-ad-modal-btn class so it safely loops the ad! -->
             <button class="button trigger-ad-modal-btn" style="margin-bottom: 15px;">Watch Another? 🔄</button>
-
-            <!-- Changed to "Close" and added close-modal-btn class -->
             <button class="button close-modal-btn" style="background: var(--bg-input); color: var(--text-main); margin-top: 0;">Close</button>
         </div>
 
@@ -208,7 +216,7 @@
 
 <script src="/static/js/animations/BouncingShapes.js?v=1"></script>
 <script src="/static/js/animations/FloatingSprites.js?v=1"></script>
-<script src="/static/js/animations/AnimController.js?v=1"></script>
+<script src="/static/js/animations/AnimController.js?v=3"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
@@ -239,9 +247,6 @@
     loadPage("templates/contact.html", "contact", "/static/js/contact.js");
     loadPage("templates/create.html", "create", "/static/js/create.js?v=14");
 
-    // =========================================
-    // GLOBAL THEME MANAGER
-    // =========================================
     const themeSelector = document.getElementById("globalThemeSelector");
     const mobileThemeSelector = document.getElementById("mobileThemeSelector");
     const savedTheme = localStorage.getItem("siteTheme") || "dark";
@@ -259,7 +264,6 @@
         }
     }
 
-    // Set BOTH dropdowns to the saved theme
     themeSelector.value = savedTheme;
     if(mobileThemeSelector) mobileThemeSelector.value = savedTheme;
 
@@ -269,12 +273,11 @@
         applySiteTheme(savedTheme);
     });
 
-    // Master function to handle theme changes from EITHER dropdown
     function handleThemeChange(e) {
         const newTheme = e.target.value;
         localStorage.setItem("siteTheme", newTheme);
-        themeSelector.value = newTheme; // Keep desktop synced
-        if(mobileThemeSelector) mobileThemeSelector.value = newTheme; // Keep mobile synced
+        themeSelector.value = newTheme;
+        if(mobileThemeSelector) mobileThemeSelector.value = newTheme;
         applySiteTheme(newTheme);
     }
 

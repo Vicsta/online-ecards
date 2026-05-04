@@ -2,11 +2,23 @@ const AnimController = (function() {
     let currentAnimation = null;
     let container = null;
 
-    // The mapping of Themes to their specific animations
+    // Mapping Themes to highly specific emoji arrays and directions!
     const themeMap = {
-        'dark': { type: 'BouncingShapes', config: { theme: 'dark', shape: 'square' } },
-        'birthday': { type: 'FloatingSprites', config: { sprite: 'confetti', direction: 'down' } },
-        'valentine': { type: 'FloatingSprites', config: { sprite: 'heart', direction: 'up' } }
+        'dark':       { type: 'BouncingShapes',  config: { theme: 'dark', shape: 'square' } },
+
+        // STANDARD OCCASIONS
+        'birthday':   { type: 'FloatingSprites', config: { sprite: 'emoji', emojis: ['🎉', '🎂', '🎈'], direction: 'down' } },
+        'valentine':  { type: 'FloatingSprites', config: { sprite: 'emoji', emojis: ['💖', '💘', '🌹'], direction: 'up' } },
+        'thankyou':   { type: 'FloatingSprites', config: { sprite: 'emoji', emojis: ['🌻', '🙏', '✨'], direction: 'down' } },
+        'goodluck':   { type: 'FloatingSprites', config: { sprite: 'emoji', emojis: ['🍀', '🤞', '🐞'], direction: 'up' } },
+        'getwell':    { type: 'FloatingSprites', config: { sprite: 'emoji', emojis: ['🍵', '🩹', '💙', '💊'], direction: 'up' } },
+        'graduation': { type: 'FloatingSprites', config: { sprite: 'emoji', emojis: ['🎓', '📜', '⭐'], direction: 'down' } },
+
+        // HOLIDAYS
+        'halloween':  { type: 'FloatingSprites', config: { sprite: 'emoji', emojis: ['🎃', '👻', '🦇'], direction: 'up' } },
+        'christmas':  { type: 'FloatingSprites', config: { sprite: 'emoji', emojis: ['🎄', '❄️', '⛄'], direction: 'down' } },
+        'easter':     { type: 'FloatingSprites', config: { sprite: 'emoji', emojis: ['🐰', '🥚', '🌷'], direction: 'up' } },
+        'newyear':    { type: 'FloatingSprites', config: { sprite: 'emoji', emojis: ['🎆', '🥂', '🎇'], direction: 'down' } }
     };
 
     function clearCurrentAnimation() {
@@ -35,7 +47,7 @@ const AnimController = (function() {
 
             const setup = themeMap[themeName] || themeMap['dark']; // Fallback to dark
 
-            // Factory Pattern: Launch the correct animation class
+            // Factory Pattern: Launch the correct animation class and pass the emoji config!
             if (setup.type === 'BouncingShapes') {
                 currentAnimation = new BouncingShapesAnim(container, setup.config);
             } else if (setup.type === 'FloatingSprites') {
