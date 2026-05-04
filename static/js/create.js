@@ -1,7 +1,7 @@
 let createCard = null;
 let cardData = null;
 
-// 1. The New Entry Point
+// 1. The Entry Point
 function initCreateFlow() {
     let params = new URLSearchParams(window.location.search);
     let selectedVersion = params.get("v");
@@ -9,7 +9,6 @@ function initCreateFlow() {
     let backBtn = document.getElementById("backToGridBtn");
     if (backBtn) {
         backBtn.onclick = () => {
-            console.log("Action: Back to Grid (Activating Left Banner)");
             history.replaceState(null, "", window.location.pathname);
             document.body.setAttribute("data-editor-active", "false");
             renderTemplateGrid();
@@ -19,52 +18,41 @@ function initCreateFlow() {
     if (selectedVersion && CardRegistry[selectedVersion]) {
         showEditor(selectedVersion);
     } else {
-        // Ensure Left Ad is ON if we start at the grid
         document.body.setAttribute("data-editor-active", "false");
         renderTemplateGrid();
     }
 }
 
-// 3. Switch to Editor State
+// 2. Switch to Editor State
 function showEditor(versionId) {
-    console.log("Action: Opening Editor for:", versionId, "(Hiding Left Banner)");
     let chooserDiv = document.getElementById("templateChooser");
     let editorDiv = document.getElementById("cardEditor");
 
     if(chooserDiv) chooserDiv.style.display = "none";
     if(editorDiv) editorDiv.style.display = "flex";
 
-    // --- NEW: THE DUPLICATE ID BUG FIX ---
-    // Destroy the view page card if it exists. This prevents the 3D engine
-    // from accidentally attaching to the hidden View tab instead of the Editor!
     let viewContainer = document.getElementById("cardViewContainer");
     if (viewContainer) {
         viewContainer.innerHTML = "";
     }
 
-    // Turn Left Ad OFF
     document.body.setAttribute("data-editor-active", "true");
-
     history.replaceState(null, "", "?v=" + versionId);
     runCreatePage(versionId);
 }
 
-// 2. Build the Grid
+// 3. Build the Grid
 function renderTemplateGrid() {
     let chooserDiv = document.getElementById("templateChooser");
     let editorDiv = document.getElementById("cardEditor");
     let grid = document.getElementById("templateGrid");
 
-    if (!chooserDiv || !grid) return console.error("Grid DOM missing!");
+    if (!chooserDiv || !grid) return;
 
-    // Explicitly hide the editor and show the grid
     chooserDiv.style.display = "block";
     editorDiv.style.display = "none";
-
-    // Clear grid to prevent duplicates
     grid.innerHTML = "";
 
-    // Loop through registry and build cards
     Object.keys(CardRegistry).forEach(key => {
         let template = CardRegistry[key];
         let cardHTML = `
@@ -90,144 +78,88 @@ function renderTemplateGrid() {
     });
 }
 
-// 4. Your Existing Editor Logic (Now with Bulletproof Fetching!)
+// 4. Editor Logic & Fetching
 function runCreatePage(selectedVersion) {
     let container = document.getElementById("createCard");
     let menuArea = document.getElementById("dynamicMenuArea");
 
-    if (!container || !menuArea) return console.error("Create DOM elements missing!");
+    if (!container || !menuArea) return console.error("Create DOM missing!");
 
     let template = CardRegistry[selectedVersion];
-    if (!template) return console.error("Template not found in Registry!");
+    if (!template) return console.error("Template not found!");
 
     cardData = template.defaultData();
 
-    // --- THE BULLETPROOF PATH BUILDER ---
-    // This finds the true root of your website, even if you are deep in a virtual SPA route
-    let rootPath = window.location.pathname;
-    ["/create", "/view", "/home", "/about"].forEach(page => {
-        if (rootPath.includes(page)) {
-            rootPath = rootPath.split(page)[0]; // Cut off the virtual route
-        }
-    });
-    if (!rootPath.endsWith("/")) rootPath += "/";
-    let basePath = window.location.origin + rootPath;
+    // --- YOUR LOCALHOST HARDCODE ---
+    let basePath = window.location.origin;
+    if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+        basePath += "/online-ecards/online-e-card/";
+    } else {
+        basePath += "/";
+    }
 
-    let absoluteMenuUrl = basePath + template.menuHtml;
-    let absoluteCardUrl = basePath + template.cardHtml;
+    let cleanMenuPath = template.menuHtml.startsWith('/') ? template.menuHtml.substring(1) : template.menuHtml;
+    let cleanCardPath = template.cardHtml.startsWith('/') ? template.cardHtml.substring(1) : template.cardHtml;
+
+    let absoluteMenuUrl = basePath + cleanMenuPath;
+    let absoluteCardUrl = basePath + cleanCardPath;
 
     Promise.all([
-        fetch(absoluteMenuUrl).then(res => res.text()),
-        fetch(absoluteCardUrl).then(res => res.text())
+        fetch(absoluteMenuUrl).then(res => {
+            if (!res.ok) throw new Error(`Server returned ${res.status} for Menu file`);
+            return res.text();
+        }),
+        fetch(absoluteCardUrl).then(res => {
+            if (!res.ok) throw new Error(`Server returned ${res.status} for Card file`);
+            return res.text();
+        })
     ]).then(([menuHtml, cardHtml]) => {
-
-        // --- THE FAKE RESPONSE CHECK ---
-        // If the server gave us a 404 page disguised as a success, catch it here!
-        if (!cardHtml.includes('scene')) {
-            console.error("Fetched file did not contain the 3D scene! Server returned:", cardHtml.substring(0, 100));
-            return alert("Failed to fetch the true card HTML. The server intercepted the request.");
+        if (cardHtml.toLowerCase().includes('<!doctype html>') || cardHtml.toLowerCase().includes('<head>')) {
+            return alert("Fetch Failed! Server routed to index.html instead of the template.");
         }
 
         menuArea.innerHTML = menuHtml;
         container.innerHTML = cardHtml;
 
         createCard = template.initCard(container);
-
-        // If the template has its own dynamic UI builder, let it run!
         if (template.onLoad) template.onLoad(template, cardData, createCard);
 
         template.applyStyles(cardData, createCard);
         setupDynamicBindings(template.bindings(), template);
         setupTabs(template);
+
     }).catch(err => {
-        console.error("Fetch Error details:", err);
+        console.error("FETCH ERROR:", err);
+        alert("Could not load the template files.");
     });
 
-    // --- Export Link Logic (With Success Modal & Ad Loop) ---
+    // 5. Export Button Logic
     document.getElementById("exportBtn").onclick = () => {
-
-        // 1. Inject Theme & Generate Link
         let globalDropdown = document.getElementById("globalThemeSelector");
         if (globalDropdown) cardData.siteTheme = globalDropdown.value;
 
         let compressedData = encodeCardJSON(cardData);
-        let baseUrl = window.location.origin;
-        let clipboardUrl = baseUrl + "/view?c=" + compressedData;
-        let testUrl = clipboardUrl;
+        let clipboardUrl = basePath + "view?c=" + compressedData;
 
-        if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
-            let localRoot = window.location.pathname.replace("/create", "").replace("index.html", "");
-            if (localRoot === "") localRoot = "/";
-            testUrl = baseUrl + localRoot + "?c=" + compressedData;
-        }
-
-        // 2. Copy to clipboard
         navigator.clipboard.writeText(clipboardUrl).catch(err => console.error(err));
 
-        // 3. Setup Modal Elements
         const modal = document.getElementById("successModalOverlay");
         const stateVictory = document.getElementById("sm-state-victory");
         const stateAd = document.getElementById("sm-state-ad");
         const stateReward = document.getElementById("sm-state-reward");
         const previewBtn = document.getElementById("sm-preview-btn");
 
-        // Reset states
-        stateVictory.style.display = "block";
-        stateAd.style.display = "none";
-        stateReward.style.display = "none";
+        if (stateVictory) stateVictory.style.display = "block";
+        if (stateAd) stateAd.style.display = "none";
+        if (stateReward) stateReward.style.display = "none";
+        if (previewBtn) previewBtn.href = clipboardUrl;
 
-        // Set the preview button link
-        previewBtn.href = testUrl;
-
-        // 4. Show Modal & Fire Initial Confetti
-        modal.style.display = "flex";
-        fireConfetti(100);
-
-        // --- MODAL BUTTON LISTENERS ---
-
-        // Close buttons
-        const closeModal = () => { modal.style.display = "none"; };
-        document.getElementById("sm-close-btn").onclick = closeModal;
-        document.getElementById("sm-close-reward-btn").onclick = closeModal;
-
-        // Watch Ad Logic
-        const triggerAd = () => {
-            // Switch to Fake Ad Screen
-            stateVictory.style.display = "none";
-            stateReward.style.display = "none";
-            stateAd.style.display = "block";
-
-            // Simulating an ad playing for 3 seconds
-            setTimeout(() => {
-                // Switch to Reward Screen
-                stateAd.style.display = "none";
-                stateReward.style.display = "block";
-
-                // MASSIVE CONFETTI!
-                fireConfetti(250, 1.2);
-            }, 3000);
-        };
-
-        document.getElementById("sm-watch-ad-btn").onclick = triggerAd;
-        document.getElementById("sm-watch-another-btn").onclick = triggerAd;
+        if (modal) modal.style.display = "flex";
+        if (typeof window.fireConfetti === "function") window.fireConfetti(100);
     };
-
-// --- HELPER: Confetti Cannon ---
-    function fireConfetti(particleCount, spreadMultiplier = 1) {
-        if (typeof confetti !== "function") return; // Failsafe if CDN doesn't load
-
-        // Fires from slightly above the bottom of the screen
-        confetti({
-            particleCount: particleCount,
-            spread: 70 * spreadMultiplier,
-            origin: { y: 0.8 },
-            colors: ['#ffcc00', '#ff0055', '#00ccff', '#22cc44'],
-            zIndex: 9999 /* <--- THIS IS THE MAGIC FIX */
-        });
-    }
 }
 
-// 5. Input Bindings
+// 6. Input Bindings
 function setupDynamicBindings(bindingsMap, template) {
     Object.keys(bindingsMap).forEach(inputId => {
         let key = bindingsMap[inputId];
@@ -252,7 +184,7 @@ function setupDynamicBindings(bindingsMap, template) {
     });
 }
 
-// 6. Menu Tabs
+// 7. Menu Tabs
 function setupTabs(template) {
     const tabs = document.querySelectorAll(".menuPageTab");
     const menus = document.querySelectorAll(".leftMenu");
@@ -264,7 +196,6 @@ function setupTabs(template) {
             tabs.forEach(t => t.classList.remove("menuPageTabSelected"));
             tabs[index].classList.add("menuPageTabSelected");
 
-            // Use the template's custom flipping logic
             if (createCard && template.onTabSwitch) {
                 template.onTabSwitch(index, createCard);
             }
@@ -274,9 +205,8 @@ function setupTabs(template) {
     if(tabs.length > 0) tabs[0].classList.add("menuPageTabSelected");
 }
 
-// 7. Initialize
 if (document.readyState === "complete" || document.readyState === "interactive") {
-    initCreateFlow(); // Changed to the new start function
+    initCreateFlow();
 } else {
-    document.addEventListener("DOMContentLoaded", initCreateFlow); // Changed to the new start function
+    document.addEventListener("DOMContentLoaded", initCreateFlow);
 }

@@ -1,10 +1,30 @@
+// --- NEW: DYNAMIC BASE PATH & ROUTING ---
+const getAppRoot = () => {
+    let cleanUrl = window.location.href.split('?')[0];
+    if (cleanUrl.includes("online-e-card/")) {
+        // Local WebStorm environment
+        return new URL(cleanUrl.split("online-e-card/")[0] + "online-e-card/").pathname;
+    }
+    // Production environment
+    return "/";
+};
+
+const APP_ROOT = getAppRoot();
+
+// Inject the magic <base> tag so all relative assets (images, css) know where the root is
+(function injectBaseTag() {
+    let baseTag = document.querySelector('base') || document.createElement('base');
+    baseTag.href = APP_ROOT;
+    document.head.appendChild(baseTag);
+})();
+
+
 const pages = ["home", "about", "view", "create", "contact", "not"];
 let curPage = 0; // Default index
 
 window.addEventListener("load", function () {
 
-    // --- 1. THE STATE MANAGER (NEW) ---
-    // This single function guarantees the body attributes are always correct
+    // --- 1. THE STATE MANAGER ---
     function updateAppState(pageName) {
         console.log("--- STATE CHANGE ---");
         console.log("Current Page:", pageName);
@@ -12,32 +32,31 @@ window.addEventListener("load", function () {
         document.body.setAttribute('data-current-page', pageName);
         document.body.setAttribute('data-editor-active', 'false');
 
-        // If we land on create, check if the editor should be active
         if (pageName === 'create') {
             let editorDiv = document.getElementById("cardEditor");
             let params = new URLSearchParams(window.location.search);
-
-            // The ultimate truth: Is the editor div actually visible, OR does the URL ask for it?
             if ((editorDiv && editorDiv.style.display === "flex") || params.has("v")) {
                 document.body.setAttribute('data-editor-active', 'true');
             }
         }
 
         let bannersEnabled = localStorage.getItem("bannersEnabled") !== "false";
-        console.log("Support Banners Enabled:", bannersEnabled);
         updateBannerVisibility(bannersEnabled);
     }
 
     // --- 2. BULLETPROOF NAV HIGHLIGHTER ---
     function updateNav(currentPathCheck) {
-        let currentPath = window.location.pathname;
-        if (currentPath === "/" || currentPath === "/index.html") currentPath = "/home";
+        // Strip the base path out so we are just left with the page name
+        let currentPath = window.location.pathname.replace(APP_ROOT, "");
+        if (currentPath === "" || currentPath.includes("index.html")) currentPath = "home";
+        // Remove trailing slashes
+        if (currentPath.endsWith("/")) currentPath = currentPath.slice(0, -1);
 
         $(".nav-link").removeClass("active");
 
         $(".nav-link").each(function() {
-            let linkPath = $(this).attr("href");
-            if (linkPath === currentPath || linkPath === "/" + currentPathCheck) {
+            let linkTarget = $(this).attr("href").replace("/", "");
+            if (linkTarget === currentPath || linkTarget === currentPathCheck) {
                 $(this).addClass("active");
             }
         });
@@ -63,14 +82,13 @@ window.addEventListener("load", function () {
             if (urlObj.searchParams.has("c")) {
                 checkPage = "view";
             } else {
-                let ext = urlObj.pathname.split("/").pop().split("?")[0];
-                if (pages.includes(ext) && ext !== "") checkPage = ext;
+                checkPage = urlObj.pathname.split("/").pop().split("?")[0];
+                if (checkPage === "" || checkPage === "index.html") checkPage = "home";
+                if (!pages.includes(checkPage)) checkPage = "not";
             }
         }
 
         curPage = pages.indexOf(checkPage);
-
-        // Trigger State Manager
         updateAppState(checkPage);
 
         $(".fullPage").hide();
@@ -95,11 +113,12 @@ window.addEventListener("load", function () {
         let target = $(this).attr("href").replace("/", "");
 
         if (pages.includes(target)) {
-            history.pushState(null, "", "/" + target);
+            // FIXED: We now push the state using the APP_ROOT so it doesn't escape the folder!
+            history.pushState(null, "", APP_ROOT + target);
             loadPage(pages.indexOf(target));
             updateNav(target);
         } else {
-            history.pushState(null, "", "/404");
+            history.pushState(null, "", APP_ROOT + "404");
             loadPage(pages.indexOf("not"));
         }
     });
