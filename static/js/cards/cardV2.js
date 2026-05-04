@@ -2,10 +2,9 @@ class CardV2 {
     constructor(sceneElement) {
         this.scene = sceneElement;
         this.leaves = Array.from(sceneElement.querySelectorAll('.book-leaf'));
-        this.currentState = 0; // 0 = Closed cover, 1 = First open spread, etc.
+        this.currentState = 0;
         this.maxState = this.leaves.length;
 
-        // Attach listeners to whatever buttons exist in the DOM right now
         this.scene.querySelectorAll('.nav-btn.next').forEach(btn => btn.onclick = (e) => { e.stopPropagation(); this.next(); });
         this.scene.querySelectorAll('.nav-btn.prev').forEach(btn => btn.onclick = (e) => { e.stopPropagation(); this.prev(); });
 
@@ -29,27 +28,23 @@ class CardV2 {
     }
 
     updateBook() {
-        // Fix z-indexing so pages stack correctly based on which side they are on
         this.leaves.forEach((leaf, i) => {
             if (i < this.currentState) {
-                leaf.style.zIndex = i + 1; // Flipped to the left
+                leaf.style.zIndex = i + 1;
             } else {
-                leaf.style.zIndex = this.leaves.length - i; // Stacked on the right
+                leaf.style.zIndex = this.leaves.length - i;
             }
         });
 
-        // Shift the entire book to stay centered on the screen
         if (this.leaves.length === 1) {
-            // Postcard logic
             this.scene.style.transform = this.currentState === 1 ? "translateX(50%)" : "translateX(0%)";
         } else {
-            // Book logic
             if (this.currentState === 0) {
-                this.scene.style.transform = "translateX(0%)"; // Closed, resting right
+                this.scene.style.transform = "translateX(0%)";
             } else if (this.currentState === this.maxState) {
-                this.scene.style.transform = "translateX(100%)"; // Fully open, resting left
+                this.scene.style.transform = "translateX(100%)";
             } else {
-                this.scene.style.transform = "translateX(50%)"; // Center hinge
+                this.scene.style.transform = "translateX(50%)";
             }
         }
     }
@@ -58,30 +53,25 @@ class CardV2 {
 const cardV2_defaults = {
     version: "v2",
     font: "Arial", fontSize: "16px", padding: "10px",
-    sheets: 2, // 2 sheets = 4 faces (Standard Folded Card)
+    sheets: 2,
     faces: [
-        { bg: "", rows: 1, rowData: [{text: "Front Cover", bg: ""}] },
-        { bg: "", rows: 2, rowData: [{text: "Inside Left Top", bg: ""}, {text: "Inside Left Bottom", bg: ""}] },
-        { bg: "", rows: 2, rowData: [{text: "Inside Right Top", bg: ""}, {text: "Inside Right Bottom", bg: ""}] },
-        { bg: "", rows: 1, rowData: [{text: "Back Cover", bg: ""}] }
+        { bg: "", rows: 1, rowData: [{text: "Front Cover", bg: "", color: "#333333", bold: false, italic: false, textBg: "transparent"}] },
+        { bg: "", rows: 2, rowData: [{text: "Inside Left Top", bg: "", color: "#333333", bold: false, italic: false, textBg: "transparent"}, {text: "Inside Left Bottom", bg: "", color: "#333333", bold: false, italic: false, textBg: "transparent"}] },
+        { bg: "", rows: 2, rowData: [{text: "Inside Right Top", bg: "", color: "#333333", bold: false, italic: false, textBg: "transparent"}, {text: "Inside Right Bottom", bg: "", color: "#333333", bold: false, italic: false, textBg: "transparent"}] },
+        { bg: "", rows: 1, rowData: [{text: "Back Cover", bg: "", color: "#333333", bold: false, italic: false, textBg: "transparent"}] }
     ]
 };
 
-// Empty bindings because V2 builds its UI dynamically via the Registry
 const cardV2_bindings = {};
 
 function applyCustomizationToCardV2(json, cardObj) {
     let scene = document.getElementById("v2BookEngine");
     if (!scene) return;
 
-    // Wipe the scene clean to rebuild it
     scene.innerHTML = "";
-
-    // Global Styles
     scene.style.fontFamily = json.font;
     scene.style.fontSize = json.fontSize;
 
-    // Helper
     function applyBg(element, bgValue, defaultColor) {
         if (!element) return;
         if (!bgValue || bgValue.trim() === "") {
@@ -99,9 +89,8 @@ function applyCustomizationToCardV2(json, cardObj) {
     }
 
     let totalFaces = json.sheets * 2;
-    let arrowSrc = "static/images/Arrow%20Right.png"; // Ensure this path is correct!
+    let arrowSrc = "static/images/Arrow%20Right.png";
 
-    // Build the physical leaves
     for (let s = 0; s < json.sheets; s++) {
         let leafDiv = document.createElement("div");
         leafDiv.className = "book-leaf";
@@ -112,24 +101,38 @@ function applyCustomizationToCardV2(json, cardObj) {
         frontFace.className = "book-face front";
         frontFace.style.padding = json.padding;
 
-        let fData = json.faces[frontFaceIndex] || { bg: "", rows: 1, rowData: [{text:"", bg:""}] };
+        let fData = json.faces[frontFaceIndex] || { bg: "", rows: 1, rowData: [{text:"", bg:"", color: "#333333", bold: false, italic: false, textBg: "transparent"}] };
 
-        // FORCE FACE TO BE WHITE
         applyBg(frontFace, fData.bg, "white");
 
         for (let r = 0; r < fData.rows; r++) {
             let row = document.createElement("div");
             row.className = "v2-row";
             row.style.height = `${100 / fData.rows}%`;
-            let rData = fData.rowData[r] || {text:"", bg:""};
-            row.textContent = rData.text;
 
-            // ROWS REMAIN TRANSPARENT BY DEFAULT
+            row.style.display = "flex";
+            row.style.alignItems = "center";
+            row.style.justifyContent = "center";
+
+            let rData = fData.rowData[r] || {text:"", bg:"", color: "#333333", bold: false, italic: false, textBg: "transparent"};
+
+            let textSpan = document.createElement("span");
+            textSpan.textContent = rData.text;
+            textSpan.style.color = rData.color || "inherit";
+            textSpan.style.fontWeight = rData.bold ? "bold" : "normal";
+            textSpan.style.fontStyle = rData.italic ? "italic" : "normal";
+
+            if (rData.textBg && rData.textBg !== "transparent") {
+                textSpan.style.backgroundColor = rData.textBg;
+                textSpan.style.padding = "4px 10px";
+                textSpan.style.borderRadius = "6px";
+            }
+
+            row.appendChild(textSpan);
             applyBg(row, rData.bg, "transparent");
             frontFace.appendChild(row);
         }
 
-        // Add Next Button
         if (frontFaceIndex < totalFaces - 1) {
             let nextBtn = document.createElement("img");
             nextBtn.className = "nav-btn next";
@@ -143,24 +146,38 @@ function applyCustomizationToCardV2(json, cardObj) {
         backFace.className = "book-face back";
         backFace.style.padding = json.padding;
 
-        let bData = json.faces[backFaceIndex] || { bg: "", rows: 1, rowData: [{text:"", bg:""}] };
+        let bData = json.faces[backFaceIndex] || { bg: "", rows: 1, rowData: [{text:"", bg:"", color: "#333333", bold: false, italic: false, textBg: "transparent"}] };
 
-        // FORCE FACE TO BE WHITE
         applyBg(backFace, bData.bg, "white");
 
         for (let r = 0; r < bData.rows; r++) {
             let row = document.createElement("div");
             row.className = "v2-row";
             row.style.height = `${100 / bData.rows}%`;
-            let rData = bData.rowData[r] || {text:"", bg:""};
-            row.textContent = rData.text;
 
-            // ROWS REMAIN TRANSPARENT BY DEFAULT
+            row.style.display = "flex";
+            row.style.alignItems = "center";
+            row.style.justifyContent = "center";
+
+            let rData = bData.rowData[r] || {text:"", bg:"", color: "#333333", bold: false, italic: false, textBg: "transparent"};
+
+            let textSpan = document.createElement("span");
+            textSpan.textContent = rData.text;
+            textSpan.style.color = rData.color || "inherit";
+            textSpan.style.fontWeight = rData.bold ? "bold" : "normal";
+            textSpan.style.fontStyle = rData.italic ? "italic" : "normal";
+
+            if (rData.textBg && rData.textBg !== "transparent") {
+                textSpan.style.backgroundColor = rData.textBg;
+                textSpan.style.padding = "4px 10px";
+                textSpan.style.borderRadius = "6px";
+            }
+
+            row.appendChild(textSpan);
             applyBg(row, rData.bg, "transparent");
             backFace.appendChild(row);
         }
 
-        // Add Prev Button
         let prevBtn = document.createElement("img");
         prevBtn.className = "nav-btn prev";
         prevBtn.src = arrowSrc;
@@ -171,23 +188,17 @@ function applyCustomizationToCardV2(json, cardObj) {
         scene.appendChild(leafDiv);
     }
 
-    // --- CLEAN ENGINE RE-INITIALIZATION FIX ---
     if (cardObj) {
         let oldState = cardObj.currentState || 0;
 
-        // 1. Manually update the core properties without breaking the Javascript instance
         cardObj.scene = scene;
         cardObj.leaves = Array.from(scene.querySelectorAll('.book-leaf'));
-        cardObj.maxState = cardObj.leaves.length; // Ensure max limit perfectly matches new sheet count
-
-        // 2. Cap the current state so we don't try to open to a page that no longer exists!
+        cardObj.maxState = cardObj.leaves.length;
         cardObj.currentState = Math.min(oldState, cardObj.maxState);
 
-        // 3. Re-bind the physical next/prev buttons to the correct instance methods
         scene.querySelectorAll('.nav-btn.next').forEach(btn => btn.onclick = (e) => { e.stopPropagation(); cardObj.next(); });
         scene.querySelectorAll('.nav-btn.prev').forEach(btn => btn.onclick = (e) => { e.stopPropagation(); cardObj.prev(); });
 
-        // 4. Apply the physical flips
         for(let i = 0; i < cardObj.currentState; i++) {
             cardObj.leaves[i].classList.add("flipped");
         }
