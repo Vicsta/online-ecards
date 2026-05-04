@@ -205,6 +205,29 @@
     </div>
 </div>
 
+<!-- ========================================= -->
+<!-- THE ASSET BROWSER MODAL                   -->
+<!-- ========================================= -->
+<div id="assetModalOverlay" class="modal-overlay">
+    <div class="modal-content" style="max-height: 85vh; display: flex; flex-direction: column;">
+
+        <div class="modal-header" style="margin-bottom: 15px;">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <!-- Hidden by default, shows when inside a folder -->
+                <button id="assetBackBtn" class="button" style="margin: 0; padding: 8px 15px; display: none;">← Back</button>
+                <h3 id="assetModalTitle">Choose an Asset</h3>
+            </div>
+            <button id="closeAssetModal" class="close-btn">&times;</button>
+        </div>
+
+        <!-- The scrolling container for the grid -->
+        <div id="assetGrid" class="preset-grid" style="overflow-y: auto; padding-right: 10px; flex-grow: 1;">
+            <!-- Javascript will inject folders or images here -->
+        </div>
+
+    </div>
+</div>
+
 <script src="/static/js/lz-string.min.js"></script>
 <script src="/static/js/jquery-3.7.1.min.js"></script>
 <script src="/static/js/js.js"></script>

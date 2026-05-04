@@ -1,3 +1,124 @@
+// =========================================
+// 1. THE MANUAL ASSET MAP
+// =========================================
+// Update this list whenever you drop new GIFs, PNGs, or JPGs into your folders!
+const AssetLibrary = {
+    "Backgrounds": [
+        "/assets/backgrounds/stars.jpg",
+        "/assets/backgrounds/confetti.gif",
+        "/assets/backgrounds/hearts.png"
+    ],
+    "Cats": [
+        "/assets/cats/cat1.png",
+        "/assets/cats/funny-cat-dancing.gif",
+        "/assets/cats/kitten.jpg"
+    ],
+    "Patterns": [
+        "/assets/patterns/polkadot.png",
+        "/assets/patterns/matrix-rain.gif"
+    ]
+};
+
+// =========================================
+// 2. THE MODAL LOGIC ENGINE
+// =========================================
+document.addEventListener("DOMContentLoaded", () => {
+    const modal = document.getElementById("assetModalOverlay");
+    const grid = document.getElementById("assetGrid");
+    const backBtn = document.getElementById("assetBackBtn");
+    const title = document.getElementById("assetModalTitle");
+    const closeBtn = document.getElementById("closeAssetModal");
+
+    if (!modal) return;
+
+    // This remembers which specific text box asked for an image
+    let currentTargetInputId = null;
+
+    // --- A. Draw the Folders ---
+    function renderFolders() {
+        grid.innerHTML = "";
+        title.textContent = "Choose a Folder";
+        backBtn.style.display = "none";
+
+        Object.keys(AssetLibrary).forEach(folderName => {
+            let folderHtml = `
+                <div class="asset-folder" data-folder="${folderName}">
+                    <div class="asset-folder-icon">📁</div>
+                    <div class="asset-folder-name">${folderName}</div>
+                    <div style="font-size: 0.8rem; color: var(--text-muted);">${AssetLibrary[folderName].length} items</div>
+                </div>
+            `;
+            grid.insertAdjacentHTML('beforeend', folderHtml);
+        });
+
+        // Make folders clickable
+        document.querySelectorAll(".asset-folder").forEach(folder => {
+            folder.addEventListener("click", (e) => {
+                let fName = e.currentTarget.getAttribute("data-folder");
+                renderImages(fName);
+            });
+        });
+    }
+
+    // --- B. Draw the Images/GIFs inside a folder ---
+    function renderImages(folderName) {
+        grid.innerHTML = "";
+        title.textContent = folderName;
+        backBtn.style.display = "block"; // Turn on the back button
+
+        let images = AssetLibrary[folderName] || [];
+
+        images.forEach(imgPath => {
+            let imgHtml = `
+                <img src="${imgPath}" class="asset-thumbnail" data-path="${imgPath}" loading="lazy" alt="Asset">
+            `;
+            grid.insertAdjacentHTML('beforeend', imgHtml);
+        });
+
+        // Make images clickable to apply them
+        document.querySelectorAll(".asset-thumbnail").forEach(img => {
+            img.addEventListener("click", (e) => {
+                let selectedPath = e.currentTarget.getAttribute("data-path");
+
+                // Find the text box that requested the image
+                if (currentTargetInputId) {
+                    let targetInput = document.getElementById(currentTargetInputId);
+                    if (targetInput) {
+                        // Paste the URL/Path
+                        targetInput.value = selectedPath;
+
+                        // Force the input to trigger so your 3D card updates instantly!
+                        targetInput.dispatchEvent(new Event('input'));
+                    }
+                }
+
+                modal.style.display = "none"; // Close modal when done
+            });
+        });
+    }
+
+    // --- C. Standard Modal Buttons ---
+    backBtn.addEventListener("click", renderFolders);
+    closeBtn.addEventListener("click", () => modal.style.display = "none");
+    modal.addEventListener("click", (e) => {
+        if (e.target === modal) modal.style.display = "none";
+    });
+
+    // --- D. The Master Listener for "🖼️" Buttons ---
+    document.addEventListener("click", (e) => {
+        // Did they click a button with the class 'asset-btn'?
+        const btn = e.target.closest(".asset-btn");
+        if (btn) {
+            // Save the ID of the text box it belongs to (e.g., "bgInputFace1")
+            currentTargetInputId = btn.getAttribute("data-target");
+
+            // Open the modal starting at the folder view
+            renderFolders();
+            modal.style.display = "flex";
+        }
+    });
+});
+
 const CardRegistry = {
     "v1": {
         id: "v1",
@@ -83,10 +204,14 @@ const CardRegistry = {
                         menu.className = "leftMenu hidden";
                         menu.id = `v2MenuFace${f}`;
 
-                        // NO INLINE ONINPUT STRINGS HERE
+                        // --- HYBRID INPUT: FACE BACKGROUND ---
                         let menuHTML = `
                             <label><b>${faceName} Background</b></label>
-                            <input type="text" placeholder="URL or Hex (#ffcc00)" value="${faceData.bg || ''}" id="bgInputFace${f}">
+                            <div class="hybrid-input-group">
+                                <input type="text" placeholder="URL or Hex (#ffcc00)" value="${faceData.bg || ''}" id="bgInputFace${f}">
+                                <input type="color" id="bgColorFace${f}" value="#ffffff" title="Pick a Color">
+                                <button type="button" class="icon-btn asset-btn" title="Choose Pattern" data-target="bgInputFace${f}">🖼️</button>
+                            </div>
                             <hr style="width: 100%; margin: 10px 0;">
 
                             <label style="color: #8ab4f8;"><b>Number of Rows (1-10)</b></label>
@@ -98,12 +223,32 @@ const CardRegistry = {
                         menu.innerHTML = menuHTML;
                         menuContainer.appendChild(menu);
 
-                        // ATTACH LISTENERS PURELY IN JS
-                        document.getElementById(`bgInputFace${f}`).addEventListener("input", (e) => {
-                            cardData.faces[f].bg = e.target.value;
+                        // --- SYNC LOGIC: FACE BACKGROUND ---
+                        let textInput = document.getElementById(`bgInputFace${f}`);
+                        let colorPicker = document.getElementById(`bgColorFace${f}`);
+
+                        // Initialize color picker if text input has a valid hex
+                        if (/^#[0-9A-F]{6}$/i.test(textInput.value)) {
+                            colorPicker.value = textInput.value;
+                        }
+
+                        // Text changes -> Update Data -> Update Card -> Update Color Picker (if hex)
+                        textInput.addEventListener("input", (e) => {
+                            let val = e.target.value.trim();
+                            cardData.faces[f].bg = val;
+                            if (/^#[0-9A-F]{6}$/i.test(val)) colorPicker.value = val;
                             template.applyStyles(cardData, createCard);
                         });
 
+                        // Color Picker changes -> Update Text Input -> Update Data -> Update Card
+                        colorPicker.addEventListener("input", (e) => {
+                            let val = e.target.value;
+                            textInput.value = val;
+                            cardData.faces[f].bg = val;
+                            template.applyStyles(cardData, createCard);
+                        });
+
+                        // Row counter logic
                         document.getElementById(`rowCounterFace${f}`).addEventListener("input", (e) => {
                             let newRowCount = parseInt(e.target.value) || 1;
                             if(newRowCount > 10) newRowCount = 10;
@@ -133,25 +278,46 @@ const CardRegistry = {
                     for(let r = 0; r < faceData.rows; r++) {
                         let rowData = faceData.rowData[r] || {text:"", bg:""};
 
-                        // NO INLINE ONINPUT STRINGS HERE
+                        // --- HYBRID INPUT: ROW BACKGROUND ---
                         let html = `
                             <div style="margin-bottom: 15px; padding: 10px; background: rgba(0,0,0,0.05); border-radius: 5px;">
                                 <label><b>Row ${r + 1} Text</b></label>
                                 <input type="text" value="${rowData.text}" id="textInputF${faceIndex}R${r}">
+
                                 <label><b>Row ${r + 1} Background</b></label>
-                                <input type="text" value="${rowData.bg}" id="bgInputF${faceIndex}R${r}">
+                                <div class="hybrid-input-group">
+                                    <input type="text" placeholder="URL or Hex (#ffcc00)" value="${rowData.bg}" id="bgInputF${faceIndex}R${r}">
+                                    <input type="color" id="bgColorF${faceIndex}R${r}" value="#ffffff" title="Pick a Color">
+                                    <button type="button" class="icon-btn asset-btn" title="Choose Pattern" data-target="bgInputF${faceIndex}R${r}">🖼️</button>
+                                </div>
                             </div>
                         `;
                         container.insertAdjacentHTML('beforeend', html);
 
-                        // ATTACH LISTENERS PURELY IN JS
+                        // --- SYNC LOGIC: ROW BACKGROUND ---
+                        let rowTextBgInput = document.getElementById(`bgInputF${faceIndex}R${r}`);
+                        let rowColorPicker = document.getElementById(`bgColorF${faceIndex}R${r}`);
+
+                        if (/^#[0-9A-F]{6}$/i.test(rowTextBgInput.value)) {
+                            rowColorPicker.value = rowTextBgInput.value;
+                        }
+
                         document.getElementById(`textInputF${faceIndex}R${r}`).addEventListener("input", (e) => {
                             cardData.faces[faceIndex].rowData[r].text = e.target.value;
                             template.applyStyles(cardData, createCard);
                         });
 
-                        document.getElementById(`bgInputF${faceIndex}R${r}`).addEventListener("input", (e) => {
-                            cardData.faces[faceIndex].rowData[r].bg = e.target.value;
+                        rowTextBgInput.addEventListener("input", (e) => {
+                            let val = e.target.value.trim();
+                            cardData.faces[faceIndex].rowData[r].bg = val;
+                            if (/^#[0-9A-F]{6}$/i.test(val)) rowColorPicker.value = val;
+                            template.applyStyles(cardData, createCard);
+                        });
+
+                        rowColorPicker.addEventListener("input", (e) => {
+                            let val = e.target.value;
+                            rowTextBgInput.value = val;
+                            cardData.faces[faceIndex].rowData[r].bg = val;
                             template.applyStyles(cardData, createCard);
                         });
                     }

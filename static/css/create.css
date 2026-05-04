@@ -420,3 +420,101 @@ body[data-editor-active="true"] #cardEditor {
 body[data-editor-active="true"] #createCard {
     margin-right: 300px !important;
 }
+
+/* --- HYBRID INPUT GROUP (Text + Color Picker + Asset Btn) --- */
+.hybrid-input-group {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.hybrid-input-group input[type="text"] {
+    flex-grow: 1;
+    margin-bottom: 0;
+}
+
+.hybrid-input-group input[type="color"] {
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    cursor: pointer;
+    background: var(--bg-input);
+}
+
+.hybrid-input-group input[type="color"]::-webkit-color-swatch-wrapper { padding: 2px; }
+.hybrid-input-group input[type="color"]::-webkit-color-swatch { border: 1px solid rgba(0,0,0,0.2); border-radius: 4px; }
+
+.icon-btn {
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    margin-top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-input);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    border-radius: 6px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.icon-btn:hover {
+    background: var(--border-color);
+    transform: translateY(-2px);
+}
+
+/* =========================================
+   ASSET MODAL STYLES
+   ========================================= */
+.asset-folder {
+    background: var(--bg-input);
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.asset-folder:hover {
+    border-color: var(--accent-color);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.asset-folder-icon {
+    font-size: 3rem;
+}
+
+.asset-folder-name {
+    color: var(--text-main);
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.asset-thumbnail {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 2px solid var(--border-color);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: var(--bg-input); /* Fallback for transparent PNGs/GIFs */
+}
+
+.asset-thumbnail:hover {
+    border-color: var(--accent-color);
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px var(--accent-color);
+}
