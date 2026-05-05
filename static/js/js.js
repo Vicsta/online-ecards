@@ -345,14 +345,23 @@ document.addEventListener("DOMContentLoaded", () => {
         // 1. Open the Monetag Direct Link in a new tab to get paid
         window.open("https://omg10.com/4/10964964", "_blank");
 
-        // 2. Skip the fake loading state and go straight to the reward
+        // 2. Set up the UI for when they return
         if(stateVictory) stateVictory.style.display = "none";
-        stateAd.style.display = "none"; // Hide the spinner
+        stateAd.style.display = "none";
+        if(stateReward) stateReward.style.display = "block";
+        modal.style.display = "flex";
 
-        if(stateReward) stateReward.style.display = "block"; // Show the "You're a Legend" text
-        modal.style.display = "flex"; // Make sure the modal is visible
+        // 3. The Magic: Wait for them to come back before firing confetti!
+        const fireRewardOnReturn = () => {
+            if (!document.hidden) {
+                // They are back! Blast the confetti!
+                window.fireConfetti(300, 1.5);
+                // Remove the listener so it doesn't fire every time they switch tabs
+                document.removeEventListener("visibilitychange", fireRewardOnReturn);
+            }
+        };
 
-        // 3. Instantly blast the confetti
-        window.fireConfetti(300, 1.5);
+        // Attach the listener
+        document.addEventListener("visibilitychange", fireRewardOnReturn);
     });
 });
