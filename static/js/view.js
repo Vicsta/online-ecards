@@ -74,15 +74,17 @@ window.loadPastedLink = function() {
     try {
         let url = new URL(urlStr);
         if (url.searchParams.has("c")) {
-            // It's a valid full URL, go to it
-            window.location.href = urlStr;
+            // It's a valid full URL. Update the browser bar without refreshing!
+            history.pushState(null, "", url.pathname + url.search);
+            runViewPage(); // Re-run the view logic to build the card
         } else {
             alert("That link doesn't seem to contain any saved card data.");
         }
     } catch (e) {
-        // If they pasted raw text/garbage, encode it safely so the URL doesn't break.
-        // runViewPage() will catch it on reload and throw the "Invalid" alert.
-        window.location.href = "/view?c=" + encodeURIComponent(urlStr);
+        // If they pasted raw text/garbage, append it as a parameter
+        // without refreshing, then let runViewPage() catch the corruption!
+        history.pushState(null, "", "?c=" + encodeURIComponent(urlStr));
+        runViewPage();
     }
 };
 

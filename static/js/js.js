@@ -234,15 +234,13 @@ window.addEventListener("load", function () {
         }
     });
 
-    const emptyCreateBtn = document.getElementById("emptyStateCreateBtn");
-    if (emptyCreateBtn) {
-        emptyCreateBtn.addEventListener("click", function(e) {
-            e.preventDefault();
-            history.pushState(null, "", APP_ROOT + "create");
-            loadPage(pages.indexOf("create"));
-            updateNav("create");
-        });
-    }
+    // Handle the Start Creating Now button dynamically
+    $("body").on("click", "#emptyStateCreateBtn", function(e) {
+        e.preventDefault();
+        history.pushState(null, "", APP_ROOT + "create");
+        loadPage(pages.indexOf("create"));
+        updateNav("create");
+    });
 
     function loadPage(x) {
         if (x === curPage) return;
@@ -325,6 +323,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const adBtn = e.target.closest('.trigger-ad-modal-btn');
         if (!adBtn) return;
+
+        console.log("THE BUTTON WAS CLICKED!");
+
         e.preventDefault();
 
         const drawer = document.querySelector('.mobile-drawer');
@@ -339,15 +340,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if(!modal || !stateAd) return;
 
-        if(stateVictory) stateVictory.style.display = "none";
-        if(stateReward) stateReward.style.display = "none";
-        stateAd.style.display = "block";
-        modal.style.display = "flex";
+        // --- NEW MONETIZATION LOGIC ---
 
-        setTimeout(() => {
-            stateAd.style.display = "none";
-            if(stateReward) stateReward.style.display = "block";
-            window.fireConfetti(250, 1.2);
-        }, 3000);
+        // 1. Open the Monetag Direct Link in a new tab to get paid
+        window.open("https://omg10.com/4/10964964", "_blank");
+
+        // 2. Skip the fake loading state and go straight to the reward
+        if(stateVictory) stateVictory.style.display = "none";
+        stateAd.style.display = "none"; // Hide the spinner
+
+        if(stateReward) stateReward.style.display = "block"; // Show the "You're a Legend" text
+        modal.style.display = "flex"; // Make sure the modal is visible
+
+        // 3. Instantly blast the confetti
+        window.fireConfetti(300, 1.5);
     });
 });
