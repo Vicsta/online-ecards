@@ -161,10 +161,11 @@
         </a>
 
         <div class="drawer-utility-item">
-            <button class="nav-donate-btn drawer-donate trigger-ad-modal-btn" style="width: 100%; border: 1px solid var(--border-color); cursor: pointer;">
-                <span class="donate-icon" style="font-size: 1.3rem;">📺</span>
-                <span class="donate-text">💖 Supporter Link (new tab)</span>
-            </button>
+            <!-- Changed button to a, added href and target -->
+            <a href="https://omg10.com/4/10964964" target="_blank" class="nav-donate-btn drawer-donate trigger-ad-modal-btn" style="width: 100%; border: 1px solid var(--border-color); cursor: pointer; text-decoration: none; display: flex; align-items: center; justify-content: center;">
+                <span class="donate-icon" style="font-size: 1.3rem;">💖</span>
+                <span class="donate-text">Supporter Link (new tab)</span>
+            </a>
         </div>
     </div>
 </div>
@@ -185,8 +186,14 @@
                 <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 15px;">
                     This tool is 100% free. If you want to help keep the servers running, click below to open a supporter link in a new tab. Come right back here for your reward!
                 </p>
-                <!-- Updated with new icon and text -->
-                <button id="sm-watch-ad-btn" class="button trigger-ad-modal-btn" style="margin-top: 0;">💖 Supporter Link (new tab)</button>
+                <!-- Changed button to a, added href and target -->
+                <a href="https://omg10.com/4/10964964"
+                   target="_blank"
+                   id="sm-watch-ad-btn"
+                   class="button trigger-ad-modal-btn"
+                   style="margin-top: 0; text-decoration: none; display: block; width: 100%; box-sizing: border-box; text-align: center;">
+                    💖 Supporter Link (new tab)
+                </a>
             </div>
         </div>
 
@@ -201,8 +208,16 @@
         <div id="sm-state-reward" style="display: none; text-align: center;">
             <h2 style="color: var(--text-main); margin-top: 0;">You're a Legend! 👑</h2>
             <p style="color: var(--text-muted); margin-bottom: 30px;">Thank you so much for supporting the site. Every little bit helps keep this project alive!</p>
-            <button class="button trigger-ad-modal-btn" style="margin-bottom: 15px;">Open Another? 🔄</button>
-            <button class="button close-modal-btn" style="background: var(--bg-input); color: var(--text-main); margin-top: 0;">Close</button>
+
+            <!-- Converted to <a> tag with layout fixes -->
+            <a href="https://omg10.com/4/10964964"
+               target="_blank"
+               class="button trigger-ad-modal-btn"
+               style="margin-bottom: 15px; text-decoration: none; display: block; box-sizing: border-box; width: 100%;">
+                Open Another? 🔄
+            </a>
+
+            <button class="button close-modal-btn" style="background: var(--bg-input); color: var(--text-main); margin-top: 0; width: 100%;">Close</button>
         </div>
     </div>
 </div>

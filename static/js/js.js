@@ -324,9 +324,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const adBtn = e.target.closest('.trigger-ad-modal-btn');
         if (!adBtn) return;
 
-        console.log("THE BUTTON WAS CLICKED!");
-
-        e.preventDefault();
+        // REMOVED e.preventDefault();
+        // This allows the <a> tag to open the new tab naturally.
 
         const drawer = document.querySelector('.mobile-drawer');
         const overlay = document.querySelector('.drawer-overlay');
@@ -340,10 +339,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if(!modal || !stateAd) return;
 
-        // --- NEW MONETIZATION LOGIC ---
+        // --- UPDATED MONETIZATION LOGIC ---
 
-        // 1. Open the Monetag Direct Link in a new tab to get paid
-        window.open("https://omg10.com/4/10964964", "_blank");
+        // 1. REMOVED window.open("...", "_blank");
+        // The HTML link handles this now!
 
         // 2. Set up the UI for when they return
         if(stateVictory) stateVictory.style.display = "none";
@@ -354,14 +353,11 @@ document.addEventListener("DOMContentLoaded", () => {
         // 3. The Magic: Wait for them to come back before firing confetti!
         const fireRewardOnReturn = () => {
             if (!document.hidden) {
-                // They are back! Blast the confetti!
                 window.fireConfetti(300, 1.5);
-                // Remove the listener so it doesn't fire every time they switch tabs
                 document.removeEventListener("visibilitychange", fireRewardOnReturn);
             }
         };
 
-        // Attach the listener
         document.addEventListener("visibilitychange", fireRewardOnReturn);
     });
 });
