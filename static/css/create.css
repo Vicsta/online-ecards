@@ -11,13 +11,13 @@
 }
 
 #templateChooser h1 {
-    color: var(--text-main); /* Changed from hardcoded white to match theme */
+    color: var(--text-main);
     text-align: center;
     margin-bottom: 30px;
 }
 
 #cardEditor {
-    display: none; /* Toggled to flex by JS */
+    display: none;
     width: 100%;
     padding-top: 20px;
     box-sizing: border-box;
@@ -32,10 +32,10 @@
     height: 800px;
     width: 500px;
     min-width: 350px;
-    background: var(--bg-panel); /* Variable */
+    background: var(--bg-panel);
     border-radius: 10px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.5); /* Shadows can stay dark */
-    margin-bottom: 40px; /* FIX: Gives the shadow room to render! */
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+    margin-bottom: 40px;
     margin-right: 250px;
     margin-left: 30px;
     display: flex;
@@ -46,13 +46,12 @@
 #dynamicMenuArea {
     flex-grow: 1;
     overflow-y: auto;
-    overflow-x: hidden; /* FIX: Kills horizontal scroll at the root */
+    overflow-x: hidden;
     display: flex;
     flex-direction: column;
-    scrollbar-color: var(--accent-color) var(--bg-input); /* Firefox support */
+    scrollbar-color: var(--accent-color) var(--bg-input);
 }
 
-/* FIX: Target the actual scrolling container with the WebKit styles */
 #dynamicMenuArea::-webkit-scrollbar {
     width: 8px;
 }
@@ -96,13 +95,13 @@
 }
 
 #exportBtn {
-    background: #46c561; /* The requested contrast green */
+    background: #46c561;
     color: white;
     margin-top: 0;
 }
 
 #exportBtn:hover {
-    background: #3eb056; /* Slightly darker green on hover */
+    background: #3eb056;
     box-shadow: 0 6px 15px rgba(70, 197, 97, 0.4);
 }
 
@@ -122,25 +121,25 @@
     display: flex;
     flex-wrap: nowrap;
     overflow-x: auto;
-    background-color: var(--bg-input); /* Variable */
+    background-color: var(--bg-input);
     min-height: 50px;
-    scrollbar-color: var(--accent-color) var(--bg-input); /* Variables */
-    flex-shrink: 0; /* Prevents the tabs from squishing when scrolling */
+    scrollbar-color: var(--accent-color) var(--bg-input);
+    flex-shrink: 0;
 }
 
 #menuPageBar::-webkit-scrollbar {
     height: 8px;
 }
 #menuPageBar::-webkit-scrollbar-track {
-    background: var(--bg-input); /* Variable */
+    background: var(--bg-input);
 }
 #menuPageBar::-webkit-scrollbar-thumb {
-    background-color: var(--border-color); /* Variable */
+    background-color: var(--border-color);
     border-radius: 10px;
-    border: 2px solid var(--bg-input); /* Variable */
+    border: 2px solid var(--bg-input);
 }
 #menuPageBar::-webkit-scrollbar-thumb:hover {
-    background-color: var(--accent-color); /* Variable */
+    background-color: var(--accent-color);
 }
 
 #dynamicPageTabsContainer {
@@ -155,23 +154,23 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--bg-input); /* Variable */
-    color: var(--text-muted); /* Variable */
-    border-right: 1px solid var(--border-color); /* Variable */
+    background: var(--bg-input);
+    color: var(--text-muted);
+    border-right: 1px solid var(--border-color);
     cursor: pointer;
     transition: all 0.2s ease;
 }
 
 .menuPageTab:hover {
-    background: var(--border-color); /* Variable */
-    color: var(--text-main); /* Variable */
+    background: var(--border-color);
+    color: var(--text-main);
 }
 
 .menuPageTabSelected {
-    background: var(--bg-panel); /* Variable */
-    color: var(--accent-color); /* Variable */
+    background: var(--bg-panel);
+    color: var(--accent-color);
     font-weight: bold;
-    border-bottom: 2px solid var(--accent-color); /* Variable */
+    border-bottom: 2px solid var(--accent-color);
 }
 
 /* =========================================
@@ -186,19 +185,18 @@
     display: flex;
     align-items: stretch;
     flex-direction: column;
-    color: var(--text-main); /* Variable */
+    color: var(--text-main);
 }
 
 .hidden {
     display: none;
 }
 
-/* Modern Form Styling */
 .leftMenu label {
     margin-top: 15px;
     margin-bottom: 5px;
     font-size: 0.95em;
-    color: var(--accent-color); /* Variable */
+    color: var(--accent-color);
     font-weight: bold;
 }
 
@@ -207,9 +205,9 @@
 .leftMenu select {
     width: 100%;
     padding: 12px;
-    background: var(--bg-input); /* Variable */
-    border: 1px solid var(--border-color); /* Variable */
-    color: var(--text-main); /* Variable */
+    background: var(--bg-input);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
     border-radius: 6px;
     box-sizing: border-box;
     transition: border-color 0.3s, box-shadow 0.3s;
@@ -218,12 +216,12 @@
 .leftMenu input:focus,
 .leftMenu select:focus {
     outline: none;
-    border-color: var(--accent-color); /* Variable */
-    box-shadow: 0 0 8px var(--accent-color); /* Variable */
+    border-color: var(--accent-color);
+    box-shadow: 0 0 8px var(--accent-color);
 }
 
 .leftMenu hr {
-    border-color: var(--border-color); /* Variable */
+    border-color: var(--border-color);
     opacity: 0.5;
     width: 100%;
 }
@@ -233,8 +231,8 @@
    ========================================= */
 
 button, .button {
-    background: var(--accent-color); /* Variable */
-    color: #111; /* Keep static for contrast, or add a --bg-main var */
+    background: var(--accent-color);
+    color: #111;
     border: none;
     padding: 12px 20px;
     border-radius: 6px;
@@ -248,9 +246,9 @@ button, .button {
 }
 
 button:hover, .button:hover {
-    background: var(--accent-hover); /* Variable */
+    background: var(--accent-hover);
     transform: translateY(-3px);
-    box-shadow: 0 6px 15px var(--accent-color); /* Variable */
+    box-shadow: 0 6px 15px var(--accent-color);
 }
 button:active {
     transform: translateY(0);
@@ -264,60 +262,63 @@ button:active {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 30px;
-    max-width: 1000px;
+    max-width: 1200px;
     margin: 40px auto;
     padding: 0 20px;
 }
 
-.template-card {
-    background: var(--bg-panel); /* Variable */
+.template-card, a.gallery-card {
+    background: var(--bg-panel);
     border-radius: 10px;
     overflow: hidden;
     cursor: pointer;
     transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
     border: 2px solid transparent;
     box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    text-decoration: none;
+    display: block;
+    color: inherit;
 }
 
-.template-card:hover {
+.template-card:hover, a.gallery-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-    border-color: var(--accent-color); /* Variable */
+    border-color: var(--accent-color);
 }
 
 .template-preview {
-    height: 150px;
-    background: var(--bg-input); /* Variable */
+    height: 200px;
+    background: var(--bg-input);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--text-main); /* Variable */
-    font-size: 3em;
-    border-bottom: 1px solid var(--bg-main); /* Variable */
+    color: var(--text-main);
+    border-bottom: 1px solid var(--border-color);
+    overflow: hidden;
 }
 
 .template-info {
     padding: 20px;
-    color: var(--text-main); /* Variable */
+    color: var(--text-main);
 }
 
 .template-title {
     font-size: 1.25em;
     font-weight: bold;
-    margin-bottom: 5px;
-    color: var(--text-main); /* Variable */
+    margin-bottom: 8px;
+    color: var(--text-main);
 }
 
 .template-stats {
     font-size: 0.85em;
-    color: var(--accent-color); /* Variable */
+    color: var(--accent-color);
     margin-bottom: 10px;
     font-weight: bold;
 }
 
 .template-desc {
     font-size: 0.9em;
-    color: var(--text-muted); /* Variable */
+    color: var(--text-muted);
     line-height: 1.4;
 }
 
@@ -337,7 +338,7 @@ button:active {
     display: none;
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.85); /* Overlays usually stay dark */
+    background: rgba(0,0,0,0.85);
     z-index: 3000;
     align-items: center;
     justify-content: center;
@@ -345,11 +346,11 @@ button:active {
 }
 
 .modal-content {
-    background: var(--bg-main); /* Variable */
+    background: var(--bg-main);
     width: 85%;
     max-width: 800px;
     border-radius: 12px;
-    border: 1px solid var(--border-color); /* Variable */
+    border: 1px solid var(--border-color);
     padding: 25px;
     box-shadow: 0 15px 40px rgba(0,0,0,0.6);
 }
@@ -358,20 +359,20 @@ button:active {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid var(--border-color); /* Variable */
+    border-bottom: 1px solid var(--border-color);
     padding-bottom: 15px;
     margin-bottom: 25px;
 }
 
 .modal-header h3 {
-    color: var(--accent-color); /* Variable */
+    color: var(--accent-color);
     margin: 0;
     font-size: 1.5rem;
 }
 
 .close-btn {
     background: none; border: none;
-    color: var(--text-muted); /* Variable */
+    color: var(--text-muted);
     font-size: 2rem;
     cursor: pointer; line-height: 1;
     margin-top: 0;
@@ -381,7 +382,7 @@ button:active {
 }
 
 .close-btn:hover {
-    color: var(--text-main); /* Variable */
+    color: var(--text-main);
     background: none;
     transform: none;
     box-shadow: none;
@@ -397,8 +398,8 @@ button:active {
 }
 
 .preset-card {
-    background: var(--bg-panel); /* Variable */
-    border: 2px solid var(--border-color); /* Variable */
+    background: var(--bg-panel);
+    border: 2px solid var(--border-color);
     border-radius: 8px;
     padding: 15px;
     text-align: center;
@@ -408,8 +409,8 @@ button:active {
 
 .preset-card:hover {
     transform: translateY(-5px);
-    border-color: var(--accent-color); /* Variable */
-    box-shadow: 0 5px 15px var(--accent-color); /* Variable */
+    border-color: var(--accent-color);
+    box-shadow: 0 5px 15px var(--accent-color);
 }
 
 .preset-color-preview {
@@ -442,7 +443,7 @@ body[data-editor-active="true"] #createCard {
     margin-right: 300px !important;
 }
 
-/* --- HYBRID INPUT GROUP (Text + Color Picker + Asset Btn) --- */
+/* --- HYBRID INPUT GROUP --- */
 .hybrid-input-group {
     display: flex;
     gap: 8px;
@@ -471,8 +472,8 @@ body[data-editor-active="true"] #createCard {
 .icon-btn {
     width: 42px;
     height: 42px;
-    padding: 0 !important; /* FIX: block global padding */
-    margin: 0 !important; /* FIX: block global margin */
+    padding: 0 !important;
+    margin: 0 !important;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -483,7 +484,7 @@ body[data-editor-active="true"] #createCard {
     font-size: 1.2rem;
     cursor: pointer;
     transition: all 0.2s ease;
-    box-shadow: none !important; /* FIX: Block global shadow */
+    box-shadow: none !important;
 }
 
 .icon-btn:hover {
@@ -533,7 +534,7 @@ body[data-editor-active="true"] #createCard {
     border: 2px solid var(--border-color);
     cursor: pointer;
     transition: all 0.2s ease;
-    background: var(--bg-input); /* Fallback for transparent PNGs/GIFs */
+    background: var(--bg-input);
 }
 
 .asset-thumbnail:hover {
@@ -545,16 +546,14 @@ body[data-editor-active="true"] #createCard {
 /* =========================================
    UI SAFETY LOCKS
    ========================================= */
-/* Forces the left menu UI to ALWAYS sit above the 3D card */
 #menuPageBar,
 #settingMenu,
 #dynamicMenusContainer,
 .leftMenu {
-    position: relative; /* z-index only works if an element is positioned! */
-    z-index: 100; /* High enough to beat the card, low enough to stay behind modals */
+    position: relative;
+    z-index: 100;
 }
 
-/* Optional: Make sure the container holding the card doesn't overflow over the menu */
 #cardEditor {
     overflow: hidden;
 }
@@ -563,7 +562,6 @@ body[data-editor-active="true"] #createCard {
    TEXT FORMATTING TOOLBAR
    ========================================= */
 
-/* --- UPGRADED TEXT TOOLBAR --- */
 .text-toolbar {
     display: flex;
     gap: 5px;
@@ -575,7 +573,6 @@ body[data-editor-active="true"] #createCard {
     align-items: center;
 }
 
-/* Snaps the text input perfectly to the bottom of the toolbar */
 .toolbar-attached-input {
     border-top-left-radius: 0 !important;
     border-top-right-radius: 0 !important;
@@ -592,18 +589,17 @@ body[data-editor-active="true"] #createCard {
     margin: 0 5px;
 }
 
-/* Wraps the native color pickers so they look nice */
 .color-picker-group {
     display: flex;
     align-items: center;
     gap: 6px;
     background: var(--bg-input);
-    padding: 0 8px; /* Adjusted padding */
-    height: 32px; /* FIX: Forces exact matching height */
+    padding: 0 8px;
+    height: 32px;
     box-sizing: border-box;
     border-radius: 4px;
     border: 1px solid var(--border-color);
-    margin-left: auto; /* Pushes color tools to the right */
+    margin-left: auto;
 }
 
 .color-picker-group input[type="color"] {
@@ -618,9 +614,9 @@ body[data-editor-active="true"] #createCard {
 .style-btn {
     width: 32px;
     height: 32px;
-    padding: 0 !important;      /* FIX: Blocks global button padding */
-    margin: 0 !important;       /* FIX: Blocks global button margins */
-    box-shadow: none !important;/* FIX: Blocks global button shadow */
+    padding: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -635,7 +631,7 @@ body[data-editor-active="true"] #createCard {
 
 .style-btn:hover {
     background: var(--border-color);
-    transform: none !important; /* FIX: Stops jumping on hover */
+    transform: none !important;
     box-shadow: none !important;
 }
 
@@ -646,8 +642,124 @@ body[data-editor-active="true"] #createCard {
 }
 
 .style-btn.small-btn {
-    width: 32px; /* FIX: Matched to 32px so the X button is identical */
+    width: 32px;
     height: 32px;
     font-size: 0.9rem;
     margin-left: 5px;
+}
+
+/* =========================================
+   11. INSPIRATION GALLERY STYLES
+   ========================================= */
+
+.gallery-header-sticky {
+    position: sticky;
+    top: 0;
+    background: var(--bg-main);
+    z-index: 50;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.gallery-search-container {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+}
+
+.gallery-search-container .search-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+}
+
+.gallery-search-container input {
+    width: 100%;
+    padding: 12px 15px 12px 40px;
+    border-radius: 20px;
+    border: 2px solid var(--border-color);
+    background: var(--bg-input);
+    color: var(--text-main);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.gallery-search-container input:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 10px rgba(var(--accent-color-rgb), 0.3);
+}
+
+.gallery-search-container input::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    height: 14px;
+    width: 14px;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23999"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>') no-repeat;
+    cursor: pointer;
+}
+
+.gallery-category {
+    margin-bottom: 50px;
+}
+
+.category-title {
+    font-size: 1.5rem;
+    color: var(--text-main);
+    margin: 0 0 10px 0;
+}
+
+.collapsible-title {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: color 0.2s;
+    user-select: none;
+}
+
+.collapsible-title:hover {
+    color: var(--accent-color);
+}
+
+.collapse-icon {
+    font-size: 0.8rem;
+    transition: transform 0.3s ease;
+    color: var(--text-muted);
+}
+
+.category-divider {
+    border: 0;
+    height: 1px;
+    background: var(--border-color);
+    margin-bottom: 25px;
+}
+
+.category-grid {
+    margin-top: 0;
+    padding: 0;
+    justify-content: flex-start;
+}
+
+/* =========================================
+   12. SIDE BANNER SAFETY PADDING (>1400px)
+   ========================================= */
+
+@media (min-width: 1401px) {
+    #templateChooser {
+        padding-left: 200px !important;
+        padding-right: 200px !important;
+    }
+
+    #cardEditor {
+        padding-right: 180px !important;
+    }
 }

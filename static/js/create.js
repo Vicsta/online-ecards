@@ -1,30 +1,108 @@
 let createCard = null;
 let cardData = null;
+let galleryListenersAttached = false; // Prevents duplicate listeners
 
 // 1. The Entry Point
 function initCreateFlow() {
     let params = new URLSearchParams(window.location.search);
-    let selectedVersion = params.get("v");
+    let selectedTheme = params.get("theme");
 
     let backBtn = document.getElementById("backToGridBtn");
     if (backBtn) {
         backBtn.onclick = () => {
             history.replaceState(null, "", window.location.pathname);
             document.body.setAttribute("data-editor-active", "false");
-            renderTemplateGrid();
+            showGallery();
         };
     }
 
-    if (selectedVersion && CardRegistry[selectedVersion]) {
-        showEditor(selectedVersion);
+    setupGalleryLogic();
+
+    if (selectedTheme) {
+        showEditor("v2", selectedTheme);
     } else {
         document.body.setAttribute("data-editor-active", "false");
-        renderTemplateGrid();
+        showGallery();
     }
 }
 
-// 2. Switch to Editor State
-function showEditor(versionId) {
+// 2. Setup the Search and Collapsible Logic (BULLETPROOF EVENT DELEGATION)
+function setupGalleryLogic() {
+    // Only attach these document-level listeners once!
+    if (galleryListenersAttached) return;
+
+    // A. Real-time Search Filter
+    document.addEventListener("input", (e) => {
+        // Only run this logic if the user is typing in our specific search box
+        if (e.target.id !== "gallerySearchInput") return;
+
+        let term = e.target.value.toLowerCase().trim();
+        const categories = document.querySelectorAll(".searchable-category");
+
+        categories.forEach(category => {
+            let cards = category.querySelectorAll(".gallery-card");
+            let visibleCards = 0;
+
+            cards.forEach(card => {
+                let title = card.querySelector(".template-title").innerText.toLowerCase();
+                let tags = card.getAttribute("data-tags") || "";
+
+                if (title.includes(term) || tags.includes(term)) {
+                    card.style.display = "block";
+                    visibleCards++;
+                } else {
+                    card.style.display = "none";
+                }
+            });
+
+            // Hide the whole category if no cards match
+            if (visibleCards === 0) {
+                category.style.display = "none";
+            } else {
+                category.style.display = "block";
+            }
+        });
+    });
+
+    // B. Collapsible Headers
+    document.addEventListener("click", (e) => {
+        // Look for the closest collapsible title to the user's click
+        let titleEl = e.target.closest(".collapsible-title");
+        if (!titleEl) return;
+
+        let categoryDiv = titleEl.closest(".gallery-category");
+        if (!categoryDiv) return;
+
+        let grid = categoryDiv.querySelector(".category-grid");
+        let icon = titleEl.querySelector(".collapse-icon");
+
+        if (!grid) return;
+
+        // getComputedStyle guarantees we know the true visual state of the grid
+        let isHidden = window.getComputedStyle(grid).display === "none";
+
+        if (isHidden) {
+            grid.style.display = "grid";
+            if(icon) icon.style.transform = "rotate(0deg)";
+        } else {
+            grid.style.display = "none";
+            if(icon) icon.style.transform = "rotate(-90deg)";
+        }
+    });
+
+    galleryListenersAttached = true;
+}
+
+function showGallery() {
+    let chooserDiv = document.getElementById("templateChooser");
+    let editorDiv = document.getElementById("cardEditor");
+
+    if(chooserDiv) chooserDiv.style.display = "block";
+    if(editorDiv) editorDiv.style.display = "none";
+}
+
+// 3. Switch to Editor State
+function showEditor(versionId, themeName) {
     let chooserDiv = document.getElementById("templateChooser");
     let editorDiv = document.getElementById("cardEditor");
 
@@ -37,49 +115,11 @@ function showEditor(versionId) {
     }
 
     document.body.setAttribute("data-editor-active", "true");
-    history.replaceState(null, "", "?v=" + versionId);
-    runCreatePage(versionId);
-}
-
-// 3. Build the Grid
-function renderTemplateGrid() {
-    let chooserDiv = document.getElementById("templateChooser");
-    let editorDiv = document.getElementById("cardEditor");
-    let grid = document.getElementById("templateGrid");
-
-    if (!chooserDiv || !grid) return;
-
-    chooserDiv.style.display = "block";
-    editorDiv.style.display = "none";
-    grid.innerHTML = "";
-
-    Object.keys(CardRegistry).forEach(key => {
-        let template = CardRegistry[key];
-        let cardHTML = `
-            <div class="template-card" data-id="${key}">
-                <div class="template-preview">
-                    ${template.previewImg ? `<img src="${template.previewImg}" style="width:100%; height:100%; object-fit:cover;">` : '📄'}
-                </div>
-                <div class="template-info">
-                    <div class="template-title">${template.name}</div>
-                    <div class="template-stats">${template.stats}</div>
-                    <div class="template-desc">${template.description}</div>
-                </div>
-            </div>
-        `;
-        grid.insertAdjacentHTML('beforeend', cardHTML);
-    });
-
-    document.querySelectorAll(".template-card").forEach(card => {
-        card.addEventListener("click", (e) => {
-            let versionId = e.currentTarget.getAttribute("data-id");
-            showEditor(versionId);
-        });
-    });
+    runCreatePage(versionId, themeName);
 }
 
 // 4. Editor Logic & Fetching
-function runCreatePage(selectedVersion) {
+function runCreatePage(selectedVersion, themeName) {
     let container = document.getElementById("createCard");
     let menuArea = document.getElementById("dynamicMenuArea");
 
@@ -90,7 +130,45 @@ function runCreatePage(selectedVersion) {
 
     cardData = template.defaultData();
 
-    // --- YOUR LOCALHOST HARDCODE ---
+    // --- CARD CONTENT RECIPES ---
+    const cardRecipes = {
+        "birthday":  { bg: "#e6f2ff", color: "#004080", font: "Georgia", title: "Happy Birthday!" },
+        "valentine": { bg: "#fff0f5", color: "#cc0000", font: "Times New Roman", title: "Be Mine" },
+        "halloween": { bg: "#1a0b2e", color: "#ff9900", font: "Verdana", title: "Happy Halloween!" },
+    };
+
+    if (themeName && themeName !== "custom") {
+        let globalDropdown = document.getElementById("globalThemeSelector");
+        let mobileDropdown = document.getElementById("mobileThemeSelector");
+
+        if (globalDropdown && Array.from(globalDropdown.options).some(opt => opt.value === themeName)) {
+             globalDropdown.value = themeName;
+             globalDropdown.dispatchEvent(new Event('change'));
+             if(mobileDropdown) mobileDropdown.value = themeName;
+        }
+
+        if (cardRecipes[themeName]) {
+            let recipe = cardRecipes[themeName];
+            cardData.fontColor = recipe.color;
+            cardData.fontStyle = recipe.font;
+
+            cardData.faces.forEach((face, fIndex) => {
+                face.bg = recipe.bg;
+                face.rowData.forEach((row, rIndex) => {
+                    row.bg = "transparent";
+                    row.color = recipe.color;
+                    row.textBg = "transparent";
+
+                    if (fIndex === 0 && rIndex === 0) {
+                        row.text = recipe.title;
+                    } else {
+                        row.text = "";
+                    }
+                });
+            });
+        }
+    }
+
     let basePath = window.location.origin;
     if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
         basePath += "/online-ecards/online-e-card/";
@@ -101,23 +179,10 @@ function runCreatePage(selectedVersion) {
     let cleanMenuPath = template.menuHtml.startsWith('/') ? template.menuHtml.substring(1) : template.menuHtml;
     let cleanCardPath = template.cardHtml.startsWith('/') ? template.cardHtml.substring(1) : template.cardHtml;
 
-    let absoluteMenuUrl = basePath + cleanMenuPath;
-    let absoluteCardUrl = basePath + cleanCardPath;
-
     Promise.all([
-        fetch(absoluteMenuUrl).then(res => {
-            if (!res.ok) throw new Error(`Server returned ${res.status} for Menu file`);
-            return res.text();
-        }),
-        fetch(absoluteCardUrl).then(res => {
-            if (!res.ok) throw new Error(`Server returned ${res.status} for Card file`);
-            return res.text();
-        })
+        fetch(basePath + cleanMenuPath).then(res => res.text()),
+        fetch(basePath + cleanCardPath).then(res => res.text())
     ]).then(([menuHtml, cardHtml]) => {
-        if (cardHtml.toLowerCase().includes('<!doctype html>') || cardHtml.toLowerCase().includes('<head>')) {
-            return alert("Fetch Failed! Server routed to index.html instead of the template.");
-        }
-
         menuArea.innerHTML = menuHtml;
         container.innerHTML = cardHtml;
 
@@ -128,12 +193,8 @@ function runCreatePage(selectedVersion) {
         setupDynamicBindings(template.bindings(), template);
         setupTabs(template);
 
-    }).catch(err => {
-        console.error("FETCH ERROR:", err);
-        alert("Could not load the template files.");
-    });
+    }).catch(err => console.error(err));
 
-    // 5. Export Button Logic
     document.getElementById("exportBtn").onclick = () => {
         let globalDropdown = document.getElementById("globalThemeSelector");
         if (globalDropdown) cardData.siteTheme = globalDropdown.value;
@@ -159,24 +220,18 @@ function runCreatePage(selectedVersion) {
     };
 }
 
-// 6. Input Bindings
 function setupDynamicBindings(bindingsMap, template) {
     Object.keys(bindingsMap).forEach(inputId => {
         let key = bindingsMap[inputId];
         let input = document.getElementById(inputId);
-
         if (input) {
             let initialValue = cardData[key] || "";
-            if (typeof initialValue === "string" && initialValue.endsWith("px")) {
-                initialValue = initialValue.replace("px", "");
-            }
+            if (typeof initialValue === "string" && initialValue.endsWith("px")) initialValue = initialValue.replace("px", "");
             input.value = initialValue;
 
             input.addEventListener("input", (event) => {
                 let val = event.target.value;
-                if ((inputId.toLowerCase().includes("size") || inputId.toLowerCase().includes("padding")) && val !== "") {
-                    val += "px";
-                }
+                if ((inputId.toLowerCase().includes("size") || inputId.toLowerCase().includes("padding")) && val !== "") val += "px";
                 cardData[key] = val;
                 template.applyStyles(cardData, createCard);
             });
@@ -184,7 +239,6 @@ function setupDynamicBindings(bindingsMap, template) {
     });
 }
 
-// 7. Menu Tabs
 function setupTabs(template) {
     const tabs = document.querySelectorAll(".menuPageTab");
     const menus = document.querySelectorAll(".leftMenu");
@@ -192,13 +246,12 @@ function setupTabs(template) {
     tabs.forEach((tab, index) => {
         tab.addEventListener("click", () => {
             menus.forEach(menu => menu.classList.add("hidden"));
-            menus[index].classList.remove("hidden");
-            tabs.forEach(t => t.classList.remove("menuPageTabSelected"));
-            tabs[index].classList.add("menuPageTabSelected");
+            if(menus[index]) menus[index].classList.remove("hidden");
 
-            if (createCard && template.onTabSwitch) {
-                template.onTabSwitch(index, createCard);
-            }
+            tabs.forEach(t => t.classList.remove("menuPageTabSelected"));
+            if(tabs[index]) tabs[index].classList.add("menuPageTabSelected");
+
+            if (createCard && template.onTabSwitch) template.onTabSwitch(index, createCard);
         });
     });
 

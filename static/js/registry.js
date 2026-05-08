@@ -28,7 +28,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let currentTargetInputId = null;
 
-    // --- A. Draw the Folders ---
     function renderFolders() {
         grid.innerHTML = "";
         title.textContent = "Choose a Folder";
@@ -53,7 +52,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // --- B. Draw the Images/GIFs inside a folder ---
     function renderImages(folderName) {
         grid.innerHTML = "";
         title.textContent = folderName;
@@ -84,14 +82,12 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // --- C. Standard Modal Buttons ---
     backBtn.addEventListener("click", renderFolders);
     closeBtn.addEventListener("click", () => modal.style.display = "none");
     modal.addEventListener("click", (e) => {
         if (e.target === modal) modal.style.display = "none";
     });
 
-    // --- D. The Master Listener for "🖼️" Buttons ---
     document.addEventListener("click", (e) => {
         const btn = e.target.closest(".asset-btn");
         if (btn) {
@@ -103,33 +99,9 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // =========================================
-// 3. THE CARD REGISTRY
+// 3. THE CARD REGISTRY (V1 Removed)
 // =========================================
 const CardRegistry = {
-    "v1": {
-        id: "v1",
-        name: "Classic Greeting Card",
-        description: "A traditional card that opens to reveal left and right inner pages.",
-        stats: "4 Pages • 3 Rows per page",
-        previewImg: "static/images/previews/v1.jpeg",
-        tags: ["3D Fold", "Classic"],
-        cardHtml: "templates/cards/v1_card.html",
-        menuHtml: "templates/cards/v1_menu.html",
-        initCard: (container) => {
-            const scene = container.querySelector(".scene");
-            return scene ? new CardV1(scene) : null;
-        },
-        defaultData: () => JSON.parse(JSON.stringify(cardV1_defaults)),
-        applyStyles: (json, cardObj) => applyCustomizationToCardV1(json, cardObj),
-        bindings: () => cardV1_bindings,
-        onTabSwitch: (index, card) => {
-            if (index === 1) card.state = 0;
-            else if (index === 2 || index === 3) card.state = 1;
-            else if (index === 4) card.state = 2;
-            card.updateCardState();
-        }
-    },
-
     "v2": {
         id: "v2",
         name: "Infinite Book Card",
@@ -294,7 +266,6 @@ const CardRegistry = {
                     `;
                     container.insertAdjacentHTML('beforeend', html);
 
-                    // --- TEXT FORMATTING LISTENERS ---
                     document.getElementById(`boldBtnF${faceIndex}R${r}`).addEventListener("click", function() {
                         cardData.faces[faceIndex].rowData[r].bold = !cardData.faces[faceIndex].rowData[r].bold;
                         this.classList.toggle("active");
@@ -328,7 +299,6 @@ const CardRegistry = {
                         template.applyStyles(cardData, createCard);
                     });
 
-                    // --- ROW BACKGROUND LISTENERS ---
                     let rowTextBgInput = document.getElementById(`bgInputF${faceIndex}R${r}`);
                     let rowColorPicker = document.getElementById(`bgColorF${faceIndex}R${r}`);
 
@@ -373,7 +343,6 @@ const CardRegistry = {
                 }
             }
 
-            // Bind Global Inputs
             document.getElementById("sheetsInput").addEventListener("input", (e) => {
                 cardData.sheets = e.target.value;
                 rebuildUI();
@@ -382,101 +351,29 @@ const CardRegistry = {
             });
 
             ['fontSizeInput', 'fontStyleInput', 'paddingInput'].forEach(id => {
-                document.getElementById(id).addEventListener("input", (e) => {
-                    let key = id.replace("Input", "");
-                    let val = e.target.value;
+                let elem = document.getElementById(id);
+                if (elem) {
+                    elem.addEventListener("input", (e) => {
+                        let key = id.replace("Input", "");
+                        let val = e.target.value;
 
-                    if (id === 'paddingInput') {
-                        val = Math.min(Math.max(parseInt(val) || 0, 0), 100);
-                        e.target.value = val;
-                    }
+                        if (id === 'paddingInput') {
+                            val = Math.min(Math.max(parseInt(val) || 0, 0), 100);
+                            e.target.value = val;
+                        }
 
-                    cardData[key] = val + (id.includes("Size") || id.includes("padding") ? "px" : "");
-                    template.applyStyles(cardData, createCard);
-                });
+                        cardData[key] = val + (id.includes("Size") || id.includes("padding") ? "px" : "");
+                        template.applyStyles(cardData, createCard);
+                    });
+                }
             });
 
-            // --- PRESET MODAL LOGIC ---
-            let openBtn = document.getElementById("openPresetModalBtn");
-            let modalOverlay = document.getElementById("presetModalOverlay");
-            let closeBtn = document.getElementById("closePresetModal");
-            let presetGrid = document.getElementById("presetGrid");
-
-            if (openBtn && modalOverlay) {
-                const themes = [
-                    { id: "custom", name: "Blank Canvas", bg: "#ffffff", color: "#333333", font: "Arial", title: "" },
-                    { id: "birthday", name: "Classic Birthday", bg: "#e6f2ff", color: "#004080", font: "Georgia", title: "Happy Birthday!" },
-                    { id: "valentine", name: "Valentine's", bg: "#fff0f5", color: "#cc0000", font: "Times New Roman", title: "Be Mine" },
-                    { id: "dark", name: "Midnight Modern", bg: "#222222", color: "#eeeeee", font: "Verdana", title: "Thinking of You" },
-                    { id: "cats", name: "Four Cats Club", bg: "#ffeb3b", color: "#d84315", font: "Comic Sans MS", title: "Have a purr-fect day!" }
-                ];
-
-                openBtn.addEventListener("click", () => {
-                    modalOverlay.style.display = "flex";
-                    presetGrid.innerHTML = "";
-
-                    themes.forEach(theme => {
-                        let cardHTML = `
-                            <div class="preset-card" data-id="${theme.id}">
-                                <div class="preset-color-preview" style="background-color: ${theme.bg}; color: ${theme.color}; font-family: ${theme.font};">
-                                    Aa
-                                </div>
-                                <div style="color: #eee; font-weight: bold; margin-bottom: 5px;">${theme.name}</div>
-                                <div style="color: #aaa; font-size: 0.8rem;">Font: ${theme.font}</div>
-                            </div>
-                        `;
-                        presetGrid.insertAdjacentHTML('beforeend', cardHTML);
-                    });
-
-                    document.querySelectorAll(".preset-card").forEach(card => {
-                        card.addEventListener("click", (e) => {
-                            let selectedId = e.currentTarget.getAttribute("data-id");
-                            let theme = themes.find(t => t.id === selectedId);
-
-                            let globalDropdown = document.getElementById("globalThemeSelector");
-                            let mobileDropdown = document.getElementById("mobileThemeSelector");
-
-                            if (globalDropdown && ["dark", "birthday", "valentine"].includes(selectedId)) {
-                                globalDropdown.value = selectedId;
-                                if(mobileDropdown) mobileDropdown.value = selectedId;
-                                globalDropdown.dispatchEvent(new Event('change'));
-                            }
-
-                            cardData.fontColor = theme.color;
-                            cardData.fontStyle = theme.font;
-
-                            let fontStyleInput = document.getElementById("fontStyleInput");
-                            if(fontStyleInput) fontStyleInput.value = theme.font;
-
-                            cardData.faces.forEach((face, fIndex) => {
-                                face.bg = theme.bg;
-                                face.rowData.forEach((row, rIndex) => {
-                                    row.bg = "transparent";
-                                    row.color = theme.color;
-                                    row.textBg = "transparent";
-                                    if (fIndex === 0 && rIndex === 0 && theme.id !== "custom") {
-                                        row.text = theme.title;
-                                    } else if (theme.id !== "custom") {
-                                        row.text = "";
-                                    }
-                                });
-                            });
-
-                            rebuildUI();
-                            template.applyStyles(cardData, createCard);
-                            modalOverlay.style.display = "none";
-                        });
-                    });
-                });
-
-                closeBtn.onclick = () => modalOverlay.style.display = "none";
-                modalOverlay.onclick = (e) => {
-                    if (e.target === modalOverlay) modalOverlay.style.display = "none";
-                };
-            }
-
             rebuildUI();
-            document.getElementById("v2TabSettings").onclick = () => switchV2Tab(0);
+
+            let v2TabSettings = document.getElementById("v2TabSettings");
+            if (v2TabSettings) {
+                v2TabSettings.onclick = () => switchV2Tab(0);
+            }
         }
     }
 };
