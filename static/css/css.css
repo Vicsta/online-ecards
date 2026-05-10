@@ -607,7 +607,6 @@ body[data-current-page="create"] #create {
 }
 
 /* 4. Workspace Exception: The View Page */
-/* FIXED: Added .support-banner-mobile so it disappears on phones too */
 body[data-current-page="view"] .support-banner,
 body[data-current-page="view"] .support-banner-mobile {
     display: none !important;
@@ -650,6 +649,13 @@ body.support-hidden .support-banner-mobile {
 /* =========================================
    MOBILE DRAWER NAVIGATION LOGIC
    ========================================= */
+
+/* --- DESKTOP: HIDE MOBILE ELEMENTS --- */
+.hamburger-btn,
+.mobile-drawer,
+.drawer-overlay {
+    display: none;
+}
 
 @media (max-width: 950px) {
     .desktop-only {

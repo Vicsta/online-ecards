@@ -130,11 +130,49 @@ function runCreatePage(selectedVersion, themeName) {
 
     cardData = template.defaultData();
 
-    // --- CARD CONTENT RECIPES ---
+    // --- UPDATED: CARD CONTENT RECIPES ---
     const cardRecipes = {
         "birthday":  { bg: "#e6f2ff", color: "#004080", font: "Georgia", title: "Happy Birthday!" },
         "valentine": { bg: "#fff0f5", color: "#cc0000", font: "Times New Roman", title: "Be Mine" },
         "halloween": { bg: "#1a0b2e", color: "#ff9900", font: "Verdana", title: "Happy Halloween!" },
+
+        // NEW: Advanced Mother's Day Recipe
+        "mothersday": {
+            isAdvanced: true,
+            color: "#ffffff",
+            font: "Georgia",
+            setup: (data) => {
+                let ombrePinks = ["#ffb3c6", "#ff8fab", "#fb6f92"];
+                data.sheets = 2;
+
+                for(let i = 0; i < 4; i++) {
+                    if(!data.faces[i]) data.faces[i] = {};
+                    data.faces[i].rows = 3;
+                    data.faces[i].bg = "#ffffff";
+
+                    data.faces[i].rowData = [
+                        {text: "", bg: ombrePinks[0], color: "#ffffff", bold: true, italic: false, textBg: "transparent"},
+                        {text: "", bg: ombrePinks[1], color: "#ffffff", bold: true, italic: false, textBg: "transparent"},
+                        {text: "", bg: ombrePinks[2], color: "#ffffff", bold: true, italic: false, textBg: "transparent"}
+                    ];
+                }
+
+                // Front Page: Happy Mother's Day
+                data.faces[0].rowData[0].text = "HAPPY";
+                data.faces[0].rowData[1].text = "MOTHER'S";
+                data.faces[0].rowData[2].text = "DAY";
+
+                // Inside Left: Emojis
+                data.faces[1].rowData[0].text = "🌸💖🌷";
+                data.faces[1].rowData[1].text = "✨💝✨";
+                data.faces[1].rowData[2].text = "🌺🦋🌸";
+
+                // Inside Right: Romanian Message & "Love,"
+                data.faces[2].rowData[0].text = "Îți mulțumesc pentru dragostea ta,";
+                data.faces[2].rowData[1].text = "sunt atât de norocos să te am!";
+                data.faces[2].rowData[2].text = "Love,";
+            }
+        }
     };
 
     if (themeName && themeName !== "custom") {
@@ -149,23 +187,32 @@ function runCreatePage(selectedVersion, themeName) {
 
         if (cardRecipes[themeName]) {
             let recipe = cardRecipes[themeName];
-            cardData.fontColor = recipe.color;
-            cardData.fontStyle = recipe.font;
 
-            cardData.faces.forEach((face, fIndex) => {
-                face.bg = recipe.bg;
-                face.rowData.forEach((row, rIndex) => {
-                    row.bg = "transparent";
-                    row.color = recipe.color;
-                    row.textBg = "transparent";
+            // Check if it's an advanced recipe that needs custom layout logic
+            if (recipe.isAdvanced) {
+                recipe.setup(cardData);
+                cardData.fontColor = recipe.color;
+                cardData.fontStyle = recipe.font;
+            } else {
+                // The standard 1-row basic recipe logic
+                cardData.fontColor = recipe.color;
+                cardData.fontStyle = recipe.font;
 
-                    if (fIndex === 0 && rIndex === 0) {
-                        row.text = recipe.title;
-                    } else {
-                        row.text = "";
-                    }
+                cardData.faces.forEach((face, fIndex) => {
+                    face.bg = recipe.bg;
+                    face.rowData.forEach((row, rIndex) => {
+                        row.bg = "transparent";
+                        row.color = recipe.color;
+                        row.textBg = "transparent";
+
+                        if (fIndex === 0 && rIndex === 0) {
+                            row.text = recipe.title;
+                        } else {
+                            row.text = "";
+                        }
+                    });
                 });
-            });
+            }
         }
     }
 

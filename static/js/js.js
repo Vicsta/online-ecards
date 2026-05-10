@@ -13,6 +13,11 @@ const themeData = {
         title: "Spooky 3D Halloween E-Cards",
         text: "Send a terrifyingly fun, interactive 3D folding card.",
         image: "/static/assets/seo/spooky-hero.jpg"
+    },
+    "mothersday": {
+        title: "Beautiful 3D Mother's Day Cards",
+        text: "Show your appreciation with a custom, interactive 3D folding card.",
+        image: "/static/assets/seo/mothersday-hero.jpg"
     }
 };
 
